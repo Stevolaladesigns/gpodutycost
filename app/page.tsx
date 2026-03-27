@@ -379,12 +379,53 @@ function LandedCostForm({ user }: { user: any }) {
   };
 
   const handleCalculate = async () => {
-    if (!formData.ship_from_country) {
-      setError("Please provide an Origin Country Code (e.g. GH)");
+    // Basic validations
+    if (!formData.tracking_number?.trim()) {
+      setError("Please provide a Tracking Number");
       return;
     }
-    if (!formData.ship_to.country) {
+    if (!formData.ship_to.country?.trim()) {
       setError("Please provide a Destination Country Code (e.g. US)");
+      return;
+    }
+    if (!formData.ship_to.state?.trim()) {
+      setError("Please provide a Destination State/Region");
+      return;
+    }
+    if (!formData.ship_to.city?.trim()) {
+      setError("Please provide a Destination City");
+      return;
+    }
+    if (!formData.ship_to.postal_code?.trim()) {
+      setError("Please provide a Destination Postal Code");
+      return;
+    }
+
+    // Item validations
+    for (let i = 0; i < formData.items.length; i++) {
+      const item = formData.items[i];
+      const itemNum = formData.items.length > 1 ? ` for item ${i + 1}` : "";
+      
+      if (!item.description?.trim()) {
+        setError(`Please provide a Description${itemNum}`);
+        return;
+      }
+      if (!item.amount || Number(item.amount) <= 0) {
+        setError(`Please provide a valid Price${itemNum}`);
+        return;
+      }
+      if (!item.quantity || Number(item.quantity) <= 0) {
+        setError(`Please provide a valid Quantity${itemNum}`);
+        return;
+      }
+      if (!item.hs_code?.trim()) {
+        setError(`Please provide an HS Code${itemNum}`);
+        return;
+      }
+    }
+
+    if (formData.shipping.amount === undefined || formData.shipping.amount === null) {
+      setError("Please provide a Shipping Cost (use 0 if included)");
       return;
     }
 
@@ -402,12 +443,18 @@ function LandedCostForm({ user }: { user: any }) {
     try {
       const res = await API.getLandedCost(cleanedData);
       setResult(res);
-      await logTransaction(1, res);
     } catch (err: any) {
       setError(err.message);
       await logTransaction(0, null, err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handlePrintQuotation = async () => {
+    if (result) {
+      await logTransaction(1, result);
+      window.print();
     }
   };
 
@@ -724,7 +771,7 @@ function LandedCostForm({ user }: { user: any }) {
                 {/* Actions */}
                 <div className="flex gap-4 pt-4 border-t border-black/5">
                   <button
-                    onClick={() => window.print()}
+                    onClick={handlePrintQuotation}
                     className="flex-1 bg-gp-blue text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gp-blue/90 transition-colors shadow-lg shadow-gp-blue/20"
                   >
                     <Printer size={20} />
