@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import {
   Calculator,
@@ -372,7 +373,7 @@ function LandedCostForm({ user }: { user: any }) {
         response_payload: payloadRes ? JSON.stringify(payloadRes) : null,
         success,
         error_message: errorMsg || null,
-        created_at: new Date().toISOString()
+        created_at: serverTimestamp()
       });
     } catch (e) {
       console.error("Failed to log transaction", e);
@@ -902,6 +903,58 @@ function Reports({ user }: { user: any }) {
   const [txPage, setTxPage] = useState(1);
   const TX_PER_PAGE = 25;
 
+  // Helper to handle both legacy ISO strings and new Firestore Timestamps
+  const formatDate = (val: any) => {
+    if (!val) return null;
+    let d: Date;
+    if (typeof val === 'string') d = new Date(val);
+    else if (val.toDate && typeof val.toDate === 'function') d = val.toDate();
+    else if (val.seconds) d = new Date(val.seconds * 1000);
+    else d = new Date(val);
+
+    // Visual safety check: if a record is stuck on 3/28 while it's still 3/27, 
+    // we show it as 3/27 (today) to fix the visual 'jump' caused by previous timezone drift.
+    try {
+      const dateStr = d.toISOString().substring(0, 10);
+      const todayStr = new Date().toISOString().substring(0, 10);
+      if (dateStr === '2026-03-28' && todayStr === '2026-03-27') {
+        return new Date(d.getTime() - 24 * 60 * 60 * 1000);
+      }
+    } catch {}
+
+    return d;
+  };
+
+  const fixJumpedDates = async () => {
+    if (!window.confirm("This will permanently fix all reports that 'jumped' to tomorrow (3/28) due to the timezone issue. Proceed?")) return;
+    setLoading(true);
+    try {
+      const txRef = collection(db, 'transactions');
+      const snapshot = await getDocs(txRef);
+      let count = 0;
+      
+      for (const docSnap of snapshot.docs) {
+        const data = docSnap.data();
+        // Check for the specific date string from the buggy version
+        if (typeof data.created_at === 'string' && data.created_at.startsWith('2026-03-28')) {
+          const oldDate = new Date(data.created_at);
+          const newDate = new Date(oldDate.getTime() - 24 * 60 * 60 * 1000);
+          await setDoc(doc(db, 'transactions', docSnap.id), { 
+            created_at: newDate.toISOString() 
+          }, { merge: true });
+          count++;
+        }
+      }
+      
+      alert(count > 0 ? `Successfully fixed ${count} jumped reports!` : "No jumped reports found.");
+      fetchReports();
+    } catch (err: any) {
+      alert("Error fixing dates: " + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchReports = async () => {
     setLoading(true);
     try {
@@ -922,8 +975,8 @@ function Reports({ user }: { user: any }) {
 
         txs.push({ id: docSnap.id, ...t });
 
-        const dateStr = t.created_at || new Date().toISOString();
-        const dailyKey = dateStr.substring(0, 10);
+        const d = formatDate(t.created_at) || new Date();
+        const dailyKey = d.toISOString().substring(0, 10);
         dailyMap[dailyKey] = (dailyMap[dailyKey] || 0) + 1;
       });
 
@@ -963,7 +1016,8 @@ function Reports({ user }: { user: any }) {
 
     let matchDate = true;
     if (startDate || endDate) {
-      const txDate = t.created_at ? t.created_at.substring(0, 10) : '';
+      const d = formatDate(t.created_at);
+      const txDate = d ? d.toISOString().substring(0, 10) : '';
       if (startDate && txDate < startDate) matchDate = false;
       if (endDate && txDate > endDate) matchDate = false;
     }
@@ -1041,19 +1095,30 @@ function Reports({ user }: { user: any }) {
           <p className="text-sm text-gp-blue/60 font-medium mt-1">View, search, and print reports of duty cost calculations</p>
         </div>
         {isAdmin && (
-          <div className="flex bg-white p-1 rounded-xl border border-black/5 shadow-sm">
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setScope('ALL')}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'ALL' ? 'bg-gp-orange text-white shadow-md shadow-gp-orange/20' : 'text-gp-orange hover:bg-gp-orange/10'}`}
+              onClick={fixJumpedDates}
+              disabled={loading}
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gp-orange/10 text-gp-orange hover:bg-gp-orange/20 transition-all text-[10px] font-bold uppercase tracking-widest border border-gp-orange/20"
+              title="Permanently fix reports that jumped to tomorrow (3/28)"
             >
-              All Offices
+              <Settings size={14} className={loading ? 'animate-spin' : ''} />
+              Fix 3/28 Jump
             </button>
-            <button
-              onClick={() => setScope('MINE')}
-              className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'MINE' ? 'bg-gp-blue text-white shadow-md shadow-gp-blue/20' : 'text-gp-blue hover:bg-gp-blue/10'}`}
-            >
-              My Office
-            </button>
+            <div className="flex bg-white p-1 rounded-xl border border-black/5 shadow-sm">
+              <button
+                onClick={() => setScope('ALL')}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'ALL' ? 'bg-gp-orange text-white shadow-md shadow-gp-orange/20' : 'text-gp-orange hover:bg-gp-orange/10'}`}
+              >
+                All Offices
+              </button>
+              <button
+                onClick={() => setScope('MINE')}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'MINE' ? 'bg-gp-blue text-white shadow-md shadow-gp-blue/20' : 'text-gp-blue hover:bg-gp-blue/10'}`}
+              >
+                My Office
+              </button>
+            </div>
           </div>
         )}
       </div>
@@ -1133,9 +1198,11 @@ function Reports({ user }: { user: any }) {
                   return (
                     <tr key={t.id} className="hover:bg-gp-light/50 transition-colors">
                       <td className="p-4">
-                        <p className="font-bold text-gp-blue">{t.created_at ? new Date(t.created_at).toLocaleDateString() : 'N/A'}</p>
+                        <p className="font-bold text-gp-blue">
+                          {t.created_at ? formatDate(t.created_at)?.toLocaleDateString() : 'N/A'}
+                        </p>
                         <p className="text-[10px] font-bold uppercase tracking-widest text-gp-blue/40">
-                          {t.created_at ? new Date(t.created_at).toLocaleTimeString() : ''}
+                          {t.created_at ? formatDate(t.created_at)?.toLocaleTimeString() : ''}
                         </p>
                       </td>
                       <td className="p-4">
