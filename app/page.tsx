@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import React, { useState, useEffect } from 'react';
 import {
   Calculator,
+  LayoutDashboard,
   BarChart3,
   Users,
   LogOut,
@@ -75,6 +76,28 @@ const API = {
     }
     return json;
   }
+};
+
+// --- Helpers ---
+const formatDate = (val: any) => {
+  if (!val) return null;
+  let d: Date;
+  if (typeof val === 'string') d = new Date(val);
+  else if (val && (val as any).toDate && typeof (val as any).toDate === 'function') d = (val as any).toDate();
+  else if (val && (val as any).seconds) d = new Date((val as any).seconds * 1000);
+  else d = new Date(val);
+
+  // Visual safety check: if a record is stuck on 3/28 while it's still 3/27, 
+  // we show it as 3/27 (today) to fix the visual 'jump' caused by previous timezone drift.
+  try {
+    const dateStr = d.toISOString().substring(0, 10);
+    const todayStr = new Date().toISOString().substring(0, 10);
+    if (dateStr === '2026-03-28' && todayStr === '2026-03-27') {
+      return new Date(d.getTime() - 24 * 60 * 60 * 1000);
+    }
+  } catch {}
+
+  return d;
 };
 
 // --- Components ---
@@ -357,6 +380,7 @@ function LandedCostForm({ user }: { user: any }) {
   const [result, setResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [hasPrinted, setHasPrinted] = useState(false);
 
   const logTransaction = async (success: number, payloadRes: any, errorMsg?: string) => {
     try {
@@ -445,17 +469,19 @@ function LandedCostForm({ user }: { user: any }) {
     try {
       const res = await API.getLandedCost(cleanedData);
       setResult(res);
+      setHasPrinted(false); // Reset print status for new calculation
     } catch (err: any) {
       setError(err.message);
-      await logTransaction(0, null, err.message);
+      // Removed: logTransaction(0, null, err.message);
     } finally {
       setLoading(false);
     }
   };
 
   const handlePrintQuotation = async () => {
-    if (result) {
+    if (result && !hasPrinted) {
       await logTransaction(1, result);
+      setHasPrinted(true);
       window.print();
     }
   };
@@ -471,6 +497,7 @@ function LandedCostForm({ user }: { user: any }) {
     });
     setResult(null);
     setError('');
+    setHasPrinted(false);
   };
 
   const addItem = () => {
@@ -502,7 +529,7 @@ function LandedCostForm({ user }: { user: any }) {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="print:hidden space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 space-y-6">
@@ -774,10 +801,11 @@ function LandedCostForm({ user }: { user: any }) {
                 <div className="flex gap-4 pt-4 border-t border-black/5">
                   <button
                     onClick={handlePrintQuotation}
-                    className="flex-1 bg-gp-blue text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-gp-blue/90 transition-colors shadow-lg shadow-gp-blue/20"
+                    disabled={hasPrinted}
+                    className={`flex-1 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg ${hasPrinted ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gp-blue text-white hover:bg-gp-blue/90 shadow-gp-blue/20'}`}
                   >
                     <Printer size={20} />
-                    Print Quotation
+                    {hasPrinted ? 'Already Printed' : 'Print Quotation'}
                   </button>
                   <button
                     onClick={handleReset}
@@ -789,16 +817,17 @@ function LandedCostForm({ user }: { user: any }) {
                 </div>
 
                 {/* Print Layout */}
-                <div className="hidden print:block fixed inset-0 bg-white z-[9999] p-10 text-black overflow-hidden h-screen">
+                <div className="hidden print:block print-layout bg-white text-black w-full">
                   <style>{`
                     @media print {
-                      @page { size: auto; margin: 0; }
-                      html, body {
-                        height: 100vh;
-                        overflow: hidden;
-                        margin: 0;
-                        padding: 0;
-                      }
+                      @page { size: auto; margin: 15mm 10mm; }
+                      html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
+                      nav, header, aside, .no-print, button { display: none !important; }
+                      main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+                      .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
+                      table { width: 100%; border-collapse: collapse; }
+                      thead { display: table-header-group; }
+                      tr { page-break-inside: avoid; }
                     }
                   `}</style>
                   <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
@@ -819,6 +848,8 @@ function LandedCostForm({ user }: { user: any }) {
                         <p>Origin: {formData.ship_from_country}</p>
                         <p>Destination: {formData.ship_to.country} ({formData.ship_to.state || '-'}, {formData.ship_to.city || '-'})</p>
                         <p>Date: {new Date().toLocaleDateString()}</p>
+                        <p>Branch: {user.post_office || 'General Post Office'}</p>
+                        <p>User: {user.full_name || user.email}</p>
                       </div>
                     </div>
                     <div className="bg-black/5 p-6 rounded-2xl text-center">
@@ -829,15 +860,27 @@ function LandedCostForm({ user }: { user: any }) {
 
                   <div className="mb-10">
                     <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
-                    {formData.items.map((item, idx) => (
-                      <div key={idx} className="flex justify-between items-center py-3 border-b border-black/10">
-                        <div className="flex flex-col">
-                          <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span>
-                          <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
-                        </div>
-                        <span className="font-bold">{formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}</span>
-                      </div>
-                    ))}
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
+                          <th className="py-2">Item Description</th>
+                          <th className="py-2 text-right">Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {formData.items.map((item: any, idx: number) => (
+                          <tr key={idx} className="border-b border-black/10">
+                            <td className="py-3">
+                              <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br/>
+                              <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
+                            </td>
+                            <td className="py-3 text-right font-bold">
+                              {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
 
                   <div className="max-w-md ml-auto">
@@ -868,7 +911,7 @@ function LandedCostForm({ user }: { user: any }) {
                     </div>
                   </div>
 
-                  <div className="fixed bottom-10 left-10 right-10 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
+                  <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
                     Generated by GPO Duty Cost Portal
                   </div>
                 </div>
@@ -887,103 +930,49 @@ function LandedCostForm({ user }: { user: any }) {
   );
 };
 
-function Reports({ user }: { user: any }) {
-  const isAdmin = user.role === 'ADMIN';
+function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, isAdmin: boolean }) {
   // Non-admins are always locked to their own branch
-  const [scope, setScope] = useState(isAdmin ? 'ALL' : 'MINE');
+  const [scope, setScope] = useState<'MINE' | 'ALL'>(isAdmin ? 'ALL' : 'MINE');
   const [transactions, setTransactions] = useState<any[]>([]);
-  const [dailyData, setDailyData] = useState<any[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [printMode, setPrintMode] = useState<'LIST' | 'SINGLE'>('LIST');
+  const [selectedTx, setSelectedTx] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   // Filters
   const [searchTrackUser, setSearchTrackUser] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [loading, setLoading] = useState(false);
   const [txPage, setTxPage] = useState(1);
   const TX_PER_PAGE = 25;
-
-  // Helper to handle both legacy ISO strings and new Firestore Timestamps
-  const formatDate = (val: any) => {
-    if (!val) return null;
-    let d: Date;
-    if (typeof val === 'string') d = new Date(val);
-    else if (val.toDate && typeof val.toDate === 'function') d = val.toDate();
-    else if (val.seconds) d = new Date(val.seconds * 1000);
-    else d = new Date(val);
-
-    // Visual safety check: if a record is stuck on 3/28 while it's still 3/27, 
-    // we show it as 3/27 (today) to fix the visual 'jump' caused by previous timezone drift.
-    try {
-      const dateStr = d.toISOString().substring(0, 10);
-      const todayStr = new Date().toISOString().substring(0, 10);
-      if (dateStr === '2026-03-28' && todayStr === '2026-03-27') {
-        return new Date(d.getTime() - 24 * 60 * 60 * 1000);
-      }
-    } catch {}
-
-    return d;
-  };
-
-  const fixJumpedDates = async () => {
-    if (!window.confirm("This will permanently fix all reports that 'jumped' to tomorrow (3/28) due to the timezone issue. Proceed?")) return;
-    setLoading(true);
-    try {
-      const txRef = collection(db, 'transactions');
-      const snapshot = await getDocs(txRef);
-      let count = 0;
-      
-      for (const docSnap of snapshot.docs) {
-        const data = docSnap.data();
-        // Check for the specific date string from the buggy version
-        if (typeof data.created_at === 'string' && data.created_at.startsWith('2026-03-28')) {
-          const oldDate = new Date(data.created_at);
-          const newDate = new Date(oldDate.getTime() - 24 * 60 * 60 * 1000);
-          await setDoc(doc(db, 'transactions', docSnap.id), { 
-            created_at: newDate.toISOString() 
-          }, { merge: true });
-          count++;
-        }
-      }
-      
-      alert(count > 0 ? `Successfully fixed ${count} jumped reports!` : "No jumped reports found.");
-      fetchReports();
-    } catch (err: any) {
-      alert("Error fixing dates: " + err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const fetchReports = async () => {
     setLoading(true);
     try {
       const txRef = collection(db, 'transactions');
-      const q = query(txRef, orderBy('created_at', 'desc'));
-
+      let q;
+      if (!isAdmin) {
+        q = query(txRef, where('user_id', '==', user.id));
+      } else if (scope === 'MINE') {
+        q = query(txRef, where('post_office', '==', user.post_office));
+      } else {
+        q = query(txRef, orderBy('created_at', 'desc'));
+      }
+      
       const snapshot = await getDocs(q);
-      const txs: any[] = [];
-      const dailyMap: any = {};
+      const data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
 
-      snapshot.forEach(docSnap => {
-        const t = docSnap.data() as any;
+      if (scope === 'MINE') {
+        data.sort((a, b) => {
+          const dateA = formatDate(a.created_at)?.getTime() || 0;
+          const dateB = formatDate(b.created_at)?.getTime() || 0;
+          return dateB - dateA;
+        });
+      }
 
-        // Non-admins only see their own reports (regardless of branch)
-        if (!isAdmin && t.user_id !== user.id) return;
-        // Admins respect the scope toggle
-        if (isAdmin && scope === 'MINE' && t.user_id !== user.id) return;
-
-        txs.push({ id: docSnap.id, ...t });
-
-        const d = formatDate(t.created_at) || new Date();
-        const dailyKey = d.toISOString().substring(0, 10);
-        dailyMap[dailyKey] = (dailyMap[dailyKey] || 0) + 1;
-      });
-
-      setTransactions(txs);
-      setDailyData(Object.keys(dailyMap).sort().reverse().map(k => ({ period: k, count: dailyMap[k] })));
+      setTransactions(data);
     } catch (err) {
-      console.error(err);
+      console.error('Failed to fetch reports', err);
     } finally {
       setLoading(false);
     }
@@ -1002,6 +991,22 @@ function Reports({ user }: { user: any }) {
     } finally {
       setDeletingId(null);
     }
+  };
+
+  const handlePrintSingle = (t: any) => {
+    setPrintMode('SINGLE');
+    setSelectedTx(t);
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  };
+
+  const handlePrintList = () => {
+    setPrintMode('LIST');
+    setSelectedTx(null);
+    setTimeout(() => {
+      window.print();
+    }, 100);
   };
 
   useEffect(() => {
@@ -1033,12 +1038,20 @@ function Reports({ user }: { user: any }) {
 
   return (
     <div className="space-y-6">
-      {/* Hidden Print Layout */}
-      <div className="hidden print:block fixed inset-0 bg-white z-[9999] p-10 text-black">
+      {/* Hidden Print Layout (SUMMARY) */}
+      {printMode === 'LIST' && (
+      <div className="hidden print:block print-layout bg-white text-black w-full">
         <style>{`
           @media print {
-            @page { size: auto; margin: 10mm; }
-            html, body { background: white; color: black; }
+            @page { size: auto; margin: 15mm 10mm; }
+            html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
+            nav, header, aside, .no-print, button { display: none !important; }
+            main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+            .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
+            table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+            thead { display: table-header-group; }
+            tr { page-break-inside: avoid; }
+            th, td { overflow: hidden; word-wrap: break-word; }
           }
         `}</style>
         <div className="flex justify-between items-end border-b-2 border-gp-blue pb-4 mb-6">
@@ -1059,225 +1072,355 @@ function Reports({ user }: { user: any }) {
         </div>
         <table className="w-full text-left text-sm border-collapse">
           <thead>
-            <tr className="border-b-2 border-black/20">
-              <th className="py-2">Date</th>
-              <th className="py-2">User ID. / Branch</th>
-              <th className="py-2">Tracking #</th>
-              <th className="py-2 text-right">Cost Paid</th>
+            <tr className="border-b-2 border-black/20 bg-gray-50">
+              <th className="py-3 px-2 w-[15%]">Date</th>
+              <th className="py-3 px-2 w-[35%]">User Name / Branch</th>
+              <th className="py-3 px-2 w-[25%]">Tracking #</th>
+              <th className="py-3 px-2 w-[25%] text-right">Cost Paid</th>
             </tr>
           </thead>
           <tbody>
-            {filteredTx.map(t => {
+            {filteredTx.filter(t => t.success === 1).map(t => {
               const res = t.response_payload ? JSON.parse(t.response_payload) : null;
               const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
               return (
                 <tr key={t.id} className="border-b border-black/10">
-                  <td className="py-2">{t.created_at ? new Date(t.created_at).toLocaleDateString() : 'N/A'}</td>
-                  <td className="py-2">
-                    <span className="font-bold">{t.user_id?.substring(0, 8)}...</span><br />
-                    <span className="text-xs text-black/60">{t.post_office}</span>
+                  <td className="py-3 px-2">{t.created_at ? formatDate(t.created_at)?.toLocaleDateString() : 'N/A'}</td>
+                  <td className="py-3 px-2">
+                    <span className="font-bold">{t.user_name || 'Unknown'}</span><br />
+                    <span className="text-xs text-black/60 font-medium">{t.post_office}</span>
                   </td>
-                  <td className="py-2 font-mono text-xs">{t.tracking_number || '-'}</td>
-                  <td className="py-2 text-right font-bold">{t.currency} {total.toFixed(2)}</td>
+                  <td className="py-3 px-2 font-mono text-xs overflow-hidden break-all">{t.tracking_number || '-'}</td>
+                  <td className="py-3 px-2 text-right font-bold">{t.currency} {total.toFixed(2)}</td>
                 </tr>
               )
             })}
           </tbody>
         </table>
-      </div>
-
-      <div className="flex justify-between items-end">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2 text-gp-blue">
-            <BarChart3 className="text-gp-blue" />
-            Duty Cost Transactions
-          </h2>
-          <p className="text-sm text-gp-blue/60 font-medium mt-1">View, search, and print reports of duty cost calculations</p>
+        
+        {/* Summary / Footer Section */}
+        <div className="mt-8 border-t-4 border-black pt-6 flex justify-end text-black">
+          <div className="bg-gp-light/30 p-6 rounded-2xl border border-black/5 text-right min-w-[300px]">
+            <p className="text-xs font-black uppercase tracking-widest text-gp-blue/40 mb-2">Total Amount (Successful)</p>
+            <p className="text-3xl font-black text-gp-blue">
+              GHS {filteredTx.filter(t => t.success === 1).reduce((acc, t) => {
+                const res = t.response_payload ? JSON.parse(t.response_payload) : null;
+                return acc + (res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0);
+              }, 0).toFixed(2)}
+            </p>
+            <p className="text-[10px] font-bold text-gp-orange mt-2 uppercase tracking-tight italic">
+              * Includes {filteredTx.filter(t => t.success === 1).length} successful records
+            </p>
+          </div>
         </div>
-        {isAdmin && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={fixJumpedDates}
-              disabled={loading}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-gp-orange/10 text-gp-orange hover:bg-gp-orange/20 transition-all text-[10px] font-bold uppercase tracking-widest border border-gp-orange/20"
-              title="Permanently fix reports that jumped to tomorrow (3/28)"
-            >
-              <Settings size={14} className={loading ? 'animate-spin' : ''} />
-              Fix 3/28 Jump
-            </button>
-            <div className="flex bg-white p-1 rounded-xl border border-black/5 shadow-sm">
-              <button
-                onClick={() => setScope('ALL')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'ALL' ? 'bg-gp-orange text-white shadow-md shadow-gp-orange/20' : 'text-gp-orange hover:bg-gp-orange/10'}`}
-              >
-                All Offices
+      </div>
+      )}
+
+      {/* Hidden Print Layout (SINGLE TRANSACTION) */}
+      {printMode === 'SINGLE' && selectedTx && (
+        <div className="hidden print:block print-layout bg-white text-black w-full">
+          <style>{`
+            @media print {
+              @page { size: auto; margin: 15mm 10mm; }
+              html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
+              nav, header, aside, .no-print, button { display: none !important; }
+              main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+              .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
+              table { width: 100%; border-collapse: collapse; }
+              thead { display: table-header-group; }
+              tr { page-break-inside: avoid; }
+            }
+          `}</style>
+          {(() => {
+            const formData = selectedTx.request_payload ? JSON.parse(selectedTx.request_payload) : {};
+            const result = selectedTx.response_payload ? JSON.parse(selectedTx.response_payload) : {};
+            return (
+              <>
+                <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
+                  <div>
+                    <img src="/logo.png" className="h-16 object-contain mb-4" alt="Ghana Post" />
+                    <h1 className="text-3xl font-bold text-black uppercase tracking-tight">Duty Cost Quotation</h1>
+                    <p className="text-sm font-bold mt-1 text-black/60 tracking-widest uppercase">GPO Central System</p>
+                  </div>
+                  <div className="text-right flex flex-col items-end text-black">
+                    <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.8} height={50} fontSize={14} background="transparent" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-8 mb-10 text-black">
+                  <div>
+                    <h3 className="font-bold text-xs uppercase tracking-widest text-black/40 mb-2">Shipment details</h3>
+                    <div className="space-y-1 font-medium">
+                      <p>Origin: {formData.ship_from_country || 'GH'}</p>
+                      <p>Destination: {formData.ship_to?.country} ({formData.ship_to?.state || '-'}, {formData.ship_to?.city || '-'})</p>
+                      <p>Date: {formatDate(selectedTx.created_at)?.toLocaleDateString() || new Date().toLocaleDateString()}</p>
+                      <p>Branch: {selectedTx.post_office}</p>
+                      <p>User: {selectedTx.user_name || 'System'}</p>
+                    </div>
+                  </div>
+                  <div className="bg-black/5 p-6 rounded-2xl text-center">
+                    <p className="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Total Duty Cost</p>
+                    <p className="text-4xl font-extrabold">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
+                  </div>
+                </div>
+
+                <div className="mb-10 overflow-hidden text-black">
+                  <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
+                  <table className="w-full text-left">
+                    <thead>
+                      <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
+                        <th className="py-2">Item Description</th>
+                        <th className="py-2 text-right">Price</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {(formData.items || []).map((item: any, idx: number) => (
+                        <tr key={idx} className="border-b border-black/10">
+                          <td className="py-3">
+                            <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br/>
+                            <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
+                          </td>
+                          <td className="py-3 text-right font-bold">
+                            {formData.currency || 'GHS'} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="max-w-md ml-auto text-black">
+                  <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Cost Breakdown</h3>
+                  <div className="flex justify-between py-2 border-b border-black/5">
+                    <span className="font-medium text-black/60">Items Total</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-black/5">
+                    <span className="font-medium text-black/60">Duties</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-black/5">
+                    <span className="font-medium text-black/60">Taxes</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-black/5">
+                    <span className="font-medium text-black/60">Fees</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-black/5">
+                    <span className="font-medium text-black/60">Shipping</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-4 mt-2 border-t-2 border-black text-xl">
+                    <span className="font-extrabold">Total Landed Cost</span>
+                    <span className="font-extrabold">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
+                  </div>
+                </div>
+
+                <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
+                  Generated by GPO Duty Cost Portal
+                </div>
+              </>
+            );
+          })()}
+        </div>
+      )}
+
+      {/* Main Screen UI - Hidden during printing */}
+      <div className="print:hidden space-y-6">
+        <div className="flex justify-between items-end">
+          <div>
+            <h2 className="text-2xl font-bold flex items-center gap-2 text-gp-blue">
+              <BarChart3 className="text-gp-blue" />
+              Duty Cost Transactions
+            </h2>
+            <p className="text-sm text-gp-blue/60 font-medium mt-1">View, search, and print reports of duty cost calculations</p>
+          </div>
+          {isAdmin && (
+            <div className="flex items-center gap-2">
+              <div className="flex bg-white p-1 rounded-xl border border-black/5 shadow-sm">
+                <button
+                  onClick={() => setScope('ALL')}
+                  className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'ALL' ? 'bg-gp-orange text-white shadow-md shadow-gp-orange/20' : 'text-gp-orange hover:bg-gp-orange/10'}`}
+                >
+                  All Offices
+                </button>
+                <button
+                  onClick={() => setScope('MINE')}
+                  className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'MINE' ? 'bg-gp-blue text-white shadow-md shadow-gp-blue/20' : 'text-gp-blue hover:bg-gp-light'}`}
+                >
+                  My Office
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Filters & Actions */}
+        <div className="bg-white p-4 rounded-3xl shadow-sm border border-black/5 flex flex-wrap gap-4 items-center justify-between sticky top-0 z-30">
+          <div className="flex items-center gap-3 flex-1 min-w-[300px]">
+            <div className="relative flex-1 group">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={16} />
+              <input
+                type="text"
+                placeholder="Search by Tracking #, User, or Branch..."
+                value={searchTrackUser}
+                onChange={e => setSearchTrackUser(e.target.value)}
+                className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-black/5 bg-gp-light/50 text-sm focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium"
+              />
+            </div>
+
+            <div className="flex items-center gap-1 bg-gp-light/50 p-1 rounded-2xl border border-black/5">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
+                <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">From</span>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={e => setStartDate(e.target.value)}
+                  className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
+                />
+              </div>
+              <div className="w-[1px] h-4 bg-black/5"></div>
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
+                <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">To</span>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={e => setEndDate(e.target.value)}
+                  className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
+                />
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={handlePrintList}
+            className="bg-gp-blue text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-gp-blue/90 transition-all shadow-lg shadow-gp-blue/10 active:scale-95"
+          >
+            <Printer size={18} />
+            Print Report
+          </button>
+        </div>
+
+        {/* Transactions Table */}
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-black/5 bg-gp-light/30">
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Date & Time</th>
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">User & Branch</th>
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Tracking #</th>
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Status</th>
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60 text-right">Cost Paid</th>
+                  <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60 text-center">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/5">
+                {paginatedTx.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="p-8 text-center text-gp-blue/40 font-medium italic">
+                      No transactions found for the selected filters.
+                    </td>
+                  </tr>
+                ) : (
+                  paginatedTx.map(t => {
+                    const res = t.response_payload ? JSON.parse(t.response_payload) : null;
+                    const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
+                    const displayName = t.user_name || (t.user_id ? t.user_id.substring(0, 8) + '...' : 'Unknown');
+                    return (
+                      <tr key={t.id} className="hover:bg-gp-light/50 transition-colors">
+                        <td className="p-4">
+                          <p className="font-bold text-gp-blue">
+                            {t.created_at ? formatDate(t.created_at)?.toLocaleDateString() : 'N/A'}
+                          </p>
+                          <p className="text-[10px] font-bold uppercase tracking-widest text-gp-blue/40">
+                            {t.created_at ? formatDate(t.created_at)?.toLocaleTimeString() : ''}
+                          </p>
+                        </td>
+                        <td className="p-4">
+                          <p className="font-bold text-sm text-[#1a1a1a]">{displayName}</p>
+                          <p className="text-xs font-medium text-gp-orange">Branch: {t.post_office}</p>
+                        </td>
+                        <td className="p-4 font-mono text-sm font-semibold">{t.tracking_number || '-'}</td>
+                        <td className="p-4">
+                          {t.success === 1 ? (
+                            <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
+                              <CheckCircle2 size={12} /> Success
+                            </span>
+                          ) : (
+                            <span className="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
+                              <AlertCircle size={12} /> Failed
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <p className="font-extrabold text-lg">{t.currency} {total.toFixed(2)}</p>
+                        </td>
+                        <td className="p-4 text-center">
+                          <div className="flex items-center justify-center gap-2">
+                            <button
+                              onClick={() => handlePrintSingle(t)}
+                              title="Print receipt"
+                              className="p-2 rounded-xl text-gp-blue hover:bg-gp-blue/10 transition-all"
+                            >
+                              <Printer size={16} />
+                            </button>
+                            {isAdmin && (
+                              <button
+                                onClick={() => handleDelete(t.id)}
+                                disabled={deletingId === t.id}
+                                title="Delete this record"
+                                className="p-2 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                              >
+                                {deletingId === t.id
+                                  ? <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-500 rounded-full animate-spin" />
+                                  : <Trash2 size={16} />}
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Pagination bar */}
+        {filteredTx.length > 0 && (
+          <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-black/5">
+            <p className="text-xs font-bold text-gp-blue/40">
+              Showing {(txPage - 1) * TX_PER_PAGE + 1}–{Math.min(txPage * TX_PER_PAGE, filteredTx.length)} of {filteredTx.length}
+            </p>
+            <div className="flex items-center gap-1">
+              <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1}
+                className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                <ChevronLeft size={16} className="text-gp-blue" />
               </button>
-              <button
-                onClick={() => setScope('MINE')}
-                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${scope === 'MINE' ? 'bg-gp-blue text-white shadow-md shadow-gp-blue/20' : 'text-gp-blue hover:bg-gp-blue/10'}`}
-              >
-                My Office
+              {Array.from({ length: txTotalPages }, (_, i) => i + 1)
+                .filter(p => p === 1 || p === txTotalPages || Math.abs(p - txPage) <= 1)
+                .map((p, idx, arr) => (
+                  <React.Fragment key={p}>
+                    {idx > 0 && arr[idx - 1] !== p - 1 && <span className="px-1 text-gp-blue/30">...</span>}
+                    <button onClick={() => setTxPage(p)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${txPage === p ? 'bg-gp-orange text-white shadow-md' : 'text-gp-blue hover:bg-gp-light'}`}>
+                      {p}
+                    </button>
+                  </React.Fragment>
+                ))}
+              <button onClick={() => setTxPage(p => Math.min(txTotalPages, p + 1))} disabled={txPage === txTotalPages}
+                className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+                <ChevronRight size={16} className="text-gp-blue" />
               </button>
             </div>
           </div>
         )}
       </div>
-
-      {/* Filters & Actions */}
-      <div className="bg-white p-4 rounded-3xl shadow-sm border border-black/5 flex flex-wrap gap-4 items-center justify-between sticky top-0 z-30">
-        <div className="flex items-center gap-3 flex-1 min-w-[300px]">
-          <div className="relative flex-1 group">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={16} />
-            <input
-              type="text"
-              placeholder="Search by Tracking #, User, or Branch..."
-              value={searchTrackUser}
-              onChange={e => setSearchTrackUser(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-black/5 bg-gp-light/50 text-sm focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium"
-            />
-          </div>
-
-          <div className="flex items-center gap-1 bg-gp-light/50 p-1 rounded-2xl border border-black/5">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
-              <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">From</span>
-              <input
-                type="date"
-                value={startDate}
-                onChange={e => setStartDate(e.target.value)}
-                className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
-              />
-            </div>
-            <div className="w-[1px] h-4 bg-black/5"></div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
-              <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">To</span>
-              <input
-                type="date"
-                value={endDate}
-                onChange={e => setEndDate(e.target.value)}
-                className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
-              />
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={() => window.print()}
-          className="bg-gp-blue text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-gp-blue/90 transition-all shadow-lg shadow-gp-blue/10 active:scale-95"
-        >
-          <Printer size={18} />
-          Print Report
-        </button>
-      </div>
-
-      {/* Transactions Table */}
-      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead>
-              <tr className="border-b border-black/5 bg-gp-light/30">
-                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Date & Time</th>
-                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">User & Branch</th>
-                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Tracking #</th>
-                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Status</th>
-                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60 text-right">Cost Paid</th>
-                {isAdmin && <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60 text-center">Actions</th>}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-black/5">
-              {paginatedTx.length === 0 ? (
-                <tr>
-                  <td colSpan={isAdmin ? 6 : 5} className="p-8 text-center text-gp-blue/40 font-medium italic">
-                    No transactions found for the selected filters.
-                  </td>
-                </tr>
-              ) : (
-                paginatedTx.map(t => {
-                  const res = t.response_payload ? JSON.parse(t.response_payload) : null;
-                  const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
-                  const displayName = t.user_name || (t.user_id ? t.user_id.substring(0, 8) + '...' : 'Unknown');
-                  return (
-                    <tr key={t.id} className="hover:bg-gp-light/50 transition-colors">
-                      <td className="p-4">
-                        <p className="font-bold text-gp-blue">
-                          {t.created_at ? formatDate(t.created_at)?.toLocaleDateString() : 'N/A'}
-                        </p>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-gp-blue/40">
-                          {t.created_at ? formatDate(t.created_at)?.toLocaleTimeString() : ''}
-                        </p>
-                      </td>
-                      <td className="p-4">
-                        <p className="font-bold text-sm text-[#1a1a1a]">{displayName}</p>
-                        <p className="text-xs font-medium text-gp-orange">Branch: {t.post_office}</p>
-                      </td>
-                      <td className="p-4 font-mono text-sm font-semibold">{t.tracking_number || '-'}</td>
-                      <td className="p-4">
-                        {t.success === 1 ? (
-                          <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
-                            <CheckCircle2 size={12} /> Success
-                          </span>
-                        ) : (
-                          <span className="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
-                            <AlertCircle size={12} /> Failed
-                          </span>
-                        )}
-                      </td>
-                      <td className="p-4 text-right">
-                        <p className="font-extrabold text-lg">{t.currency} {total.toFixed(2)}</p>
-                      </td>
-                      {isAdmin && (
-                        <td className="p-4 text-center">
-                          <button
-                            onClick={() => handleDelete(t.id)}
-                            disabled={deletingId === t.id}
-                            title="Delete this record"
-                            className="p-2 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                          >
-                            {deletingId === t.id
-                              ? <div className="w-4 h-4 border-2 border-red-400/30 border-t-red-500 rounded-full animate-spin" />
-                              : <Trash2 size={16} />}
-                          </button>
-                        </td>
-                      )}
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Pagination */}
-      {filteredTx.length > 0 && (
-        <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-black/5">
-          <p className="text-xs font-bold text-gp-blue/40">
-            Showing {(txPage - 1) * TX_PER_PAGE + 1}–{Math.min(txPage * TX_PER_PAGE, filteredTx.length)} of {filteredTx.length}
-          </p>
-          <div className="flex items-center gap-1">
-            <button onClick={() => setTxPage(p => Math.max(1, p - 1))} disabled={txPage === 1}
-              className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-              <ChevronLeft size={16} className="text-gp-blue" />
-            </button>
-            {Array.from({ length: txTotalPages }, (_, i) => i + 1)
-              .filter(p => p === 1 || p === txTotalPages || Math.abs(p - txPage) <= 1)
-              .map((p, idx, arr) => (
-                <React.Fragment key={p}>
-                  {idx > 0 && arr[idx - 1] !== p - 1 && <span className="px-1 text-gp-blue/30">...</span>}
-                  <button onClick={() => setTxPage(p)}
-                    className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${txPage === p ? 'bg-gp-orange text-white shadow-md' : 'text-gp-blue hover:bg-gp-light'}`}>
-                    {p}
-                  </button>
-                </React.Fragment>
-              ))}
-            <button onClick={() => setTxPage(p => Math.min(txTotalPages, p + 1))} disabled={txPage === txTotalPages}
-              className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all">
-              <ChevronRight size={16} className="text-gp-blue" />
-            </button>
-          </div>
-        </div>
-      )}
     </div>
-  );
+    );
 }
 
 function AdminUsers() {
@@ -2211,9 +2354,344 @@ function AdminSettings({ user, setView }: { user: any; setView: (v: string) => v
   );
 }
 
+function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView: any, formatDate: any, isAdmin: boolean }) {
+  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [metrics, setMetrics] = useState({ total: 0, success: 0, failed: 0, revenue: 0, users: 0 });
+  const [timeStats, setTimeStats] = useState({ today: 0, week: 0, month: 0 });
+  const [branchStats, setBranchStats] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const txRef = collection(db, 'transactions');
+        let q;
+        if (!isAdmin) {
+          q = query(txRef, where('user_id', '==', user.id));
+        } else {
+          q = query(txRef, orderBy('created_at', 'desc'));
+        }
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
+        
+        if (!isAdmin) {
+          data.sort((a: any, b: any) => {
+            const dateA = formatDate(a.created_at)?.getTime() || 0;
+            const dateB = formatDate(b.created_at)?.getTime() || 0;
+            return dateB - dateA;
+          });
+        }
+
+        setTransactions(data);
+
+        let successCount = 0;
+        let rev = 0;
+        let todayCount = 0;
+        let weekCount = 0;
+        let monthCount = 0;
+        const branchMap: Record<string, number> = {};
+
+        const now = new Date();
+        const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const startOfWeek = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay());
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+
+        data.forEach(t => {
+          const isSuccess = t.success === 1;
+          if (isSuccess) {
+            successCount++;
+            const res = t.response_payload ? JSON.parse(t.response_payload) : null;
+            const amount = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
+            rev += amount;
+
+            if (isAdmin) {
+              const po = t.post_office || 'Unknown';
+              branchMap[po] = (branchMap[po] || 0) + 1;
+            }
+          }
+
+          const txDateObj = formatDate(t.created_at);
+          if (txDateObj) {
+            if (txDateObj >= startOfToday) todayCount++;
+            if (txDateObj >= startOfWeek) weekCount++;
+            if (txDateObj >= startOfMonth) monthCount++;
+          }
+        });
+
+        setMetrics({ total: data.length, success: successCount, failed: data.length - successCount, revenue: rev, users: 0 });
+        setTimeStats({ today: todayCount, week: weekCount, month: monthCount });
+
+        if (isAdmin) {
+          const sortedBranches = Object.keys(branchMap).map(k => ({ name: k, count: branchMap[k] })).sort((a, b) => b.count - a.count).slice(0, 5);
+          setBranchStats(sortedBranches);
+        }
+      } catch (err) {
+        console.error("Failed to load dashboard data", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, [isAdmin, user.post_office, formatDate]);
+
+  const recentTx = transactions.slice(0, 10);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center p-20 text-gp-blue/40">
+        <LayoutDashboard size={48} className="animate-pulse mb-4" />
+        <p className="font-bold tracking-widest uppercase">Loading Dashboard...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-gp-blue transition-all">
+            <LayoutDashboard className="text-gp-blue" />
+            {isAdmin ? 'System Dashboard' : 'My Dashboard'}
+          </h2>
+          <p className="text-sm text-gp-blue/60 font-medium mt-1">
+            {isAdmin ? 'Overview of all duty cost portal activity' : 'Overview of your recent transactions'}
+          </p>
+        </div>
+        {!isAdmin && (
+          <button
+            onClick={() => setView('landed')}
+            className="bg-gp-orange text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-gp-orange/90 transition-all shadow-lg shadow-gp-orange/20 active:scale-95"
+          >
+            <Plus size={18} />
+            Start New Transaction
+          </button>
+        )}
+      </div>
+
+      {/* Metrics Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 hover:border-gp-blue/20 transition-all">
+          <p className="text-xs font-bold uppercase tracking-widest text-gp-blue/40 flex items-center gap-2 mb-2">
+            <BarChart3 size={14} /> Total Tx
+          </p>
+          <p className="text-3xl font-black text-[#1a1a1a]">{metrics.total}</p>
+        </div>
+        <div className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 hover:border-green-500/20 transition-all">
+          <p className="text-xs font-bold uppercase tracking-widest text-green-600/60 flex items-center gap-2 mb-2">
+            <CheckCircle2 size={14} /> Successful
+          </p>
+          <p className="text-3xl font-black text-green-600">{metrics.success}</p>
+        </div>
+        <div className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 hover:border-red-500/20 transition-all">
+          <p className="text-xs font-bold uppercase tracking-widest text-red-500/60 flex items-center gap-2 mb-2">
+            <AlertCircle size={14} /> Failed
+          </p>
+          <p className="text-3xl font-black text-red-500">{metrics.failed}</p>
+        </div>
+        <div className="bg-white p-5 rounded-3xl shadow-sm border border-black/5 hover:border-gp-orange/20 transition-all">
+          <p className="text-xs font-bold uppercase tracking-widest text-gp-orange/60 flex items-center gap-2 mb-2">
+            <br /> Revenue / Cost
+          </p>
+          <p className="text-3xl font-black text-gp-orange">
+            <span className="text-sm mr-1">GHS</span>
+            {metrics.revenue.toFixed(2)}
+          </p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Success vs Failure Chart */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
+          <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-6">
+            Success vs Failure Rate
+          </h3>
+          <div className="flex flex-col sm:flex-row items-center gap-8">
+            <div 
+              className="w-32 h-32 rounded-full relative shadow-inner border-4 border-white"
+              style={{ 
+                background: `conic-gradient(#10b981 ${metrics.total > 0 ? (metrics.success / metrics.total) * 360 : 0}deg, #ef4444 0deg)` 
+              }}
+            >
+              <div className="absolute inset-4 bg-white rounded-full flex items-center justify-center shadow-sm">
+                <p className="text-xl font-black text-gp-blue">
+                  {metrics.total > 0 ? Math.round((metrics.success / metrics.total) * 100) : 0}%
+                </p>
+              </div>
+            </div>
+            <div className="space-y-4 flex-1 w-full">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-xs font-bold text-black/60 uppercase tracking-widest">Successful</span>
+                </div>
+                <span className="text-sm font-black text-green-600">{metrics.success}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <span className="text-xs font-bold text-black/60 uppercase tracking-widest">Failed</span>
+                </div>
+                <span className="text-sm font-black text-red-500">{metrics.failed}</span>
+              </div>
+              <div className="pt-2 border-t border-black/5 flex items-center justify-between">
+                <span className="text-[10px] font-bold text-gp-blue/40 uppercase tracking-widest">Total Volume</span>
+                <span className="text-sm font-black text-gp-blue">{metrics.total}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Transactions Over Time Bar Chart */}
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
+          <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-6">
+            Activity Volume
+          </h3>
+          <div className="flex items-end justify-between h-32 gap-4 px-2">
+            {[
+              { label: 'Today', val: timeStats.today },
+              { label: 'This Week', val: timeStats.week },
+              { label: 'This Month', val: timeStats.month }
+            ].map((stat, idx) => {
+              const maxVal = Math.max(timeStats.today, timeStats.week, timeStats.month, 1);
+              const height = (stat.val / maxVal) * 100;
+              return (
+                <div key={idx} className="flex-1 flex flex-col items-center gap-3">
+                  <div className="w-full relative group">
+                    <motion.div 
+                      initial={{ height: 0 }}
+                      animate={{ height: `${height}%` }}
+                      className="w-full bg-gp-blue/10 group-hover:bg-gp-orange/20 rounded-t-xl transition-all relative flex items-end justify-center min-h-[4px]"
+                    >
+                      <span className="absolute -top-6 text-[10px] font-black text-gp-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                        {stat.val}
+                      </span>
+                    </motion.div>
+                  </div>
+                  <span className="text-[10px] font-bold text-gp-blue/40 uppercase tracking-tighter whitespace-nowrap">{stat.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Admin Advanced Insights */}
+      {isAdmin && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
+            <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-4">
+              Time-Based Activity (All Tx)
+            </h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 bg-gp-light/50 rounded-2xl">
+                <span className="text-xs font-bold uppercase tracking-widest text-gp-blue/60">Today</span>
+                <span className="text-lg font-black text-gp-blue">{timeStats.today}</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-gp-light/50 rounded-2xl">
+                <span className="text-xs font-bold uppercase tracking-widest text-gp-blue/60">This Week</span>
+                <span className="text-lg font-black text-gp-blue">{timeStats.week}</span>
+              </div>
+              <div className="flex justify-between items-center p-3 bg-gp-light/50 rounded-2xl">
+                <span className="text-xs font-bold uppercase tracking-widest text-gp-blue/60">This Month</span>
+                <span className="text-lg font-black text-gp-blue">{timeStats.month}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
+            <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-4">
+              Top Branches (Successful Tx)
+            </h3>
+            {branchStats.length === 0 ? (
+              <p className="text-xs font-bold text-gp-blue/40 italic text-center py-4">No data available.</p>
+            ) : (
+              <div className="space-y-3">
+                {branchStats.map((b, idx) => (
+                  <div key={idx} className="flex justify-between items-center p-2.5 hover:bg-gp-light/50 rounded-xl transition-all">
+                    <span className="text-xs font-bold text-[#1a1a1a] flex items-center gap-2">
+                      <span className="w-5 h-5 bg-gp-orange/10 text-gp-orange rounded flex items-center justify-center text-[10px]">{idx + 1}</span>
+                      {b.name}
+                    </span>
+                    <span className="text-sm font-black text-gp-blue">{b.count} <span className="text-[10px] text-gp-blue/40 uppercase">Tx</span></span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Transactions Table */}
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="p-5 border-b border-black/5 flex justify-between items-center">
+          <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue">
+            Recent Transactions
+          </h3>
+          <button onClick={() => setView('reports')} className="text-xs font-bold text-gp-orange hover:text-gp-orange/80 transition-colors uppercase tracking-widest flex items-center gap-1">
+            View All <ChevronRight size={14} />
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="bg-gp-light/30 border-b border-black/5">
+                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Date</th>
+                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">User / Branch</th>
+                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Tracking #</th>
+                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60">Status</th>
+                <th className="p-4 text-xs font-bold uppercase tracking-widest text-gp-blue/60 text-right">Amount</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/5">
+              {recentTx.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="p-8 text-center text-gp-blue/40 font-medium italic">No recent transactions.</td>
+                </tr>
+              ) : (
+                recentTx.map(t => {
+                  const res = t.response_payload ? JSON.parse(t.response_payload) : null;
+                  const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
+                  const displayName = t.user_name || (t.user_id ? t.user_id.substring(0, 8) + '...' : 'Unknown');
+                  return (
+                    <tr key={t.id} className="hover:bg-gp-light/50 transition-colors">
+                      <td className="p-4">
+                        <p className="font-bold text-gp-blue">{t.created_at ? formatDate(t.created_at)?.toLocaleDateString() : 'N/A'}</p>
+                      </td>
+                      <td className="p-4">
+                        <p className="font-bold text-sm text-[#1a1a1a]">{displayName}</p>
+                        <p className="text-xs font-medium text-gp-orange">{t.post_office}</p>
+                      </td>
+                      <td className="p-4 font-mono text-sm font-semibold">{t.tracking_number || '-'}</td>
+                      <td className="p-4">
+                        {t.success === 1 ? (
+                          <span className="bg-green-100 text-green-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
+                            <CheckCircle2 size={12} /> Success
+                          </span>
+                        ) : (
+                          <span className="bg-red-100 text-red-700 px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter flex w-fit items-center gap-1">
+                            <AlertCircle size={12} /> Failed
+                          </span>
+                        )}
+                      </td>
+                      <td className="p-4 text-right font-extrabold">
+                        {t.currency} {total.toFixed(2)}
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
   const [user, setUser] = useState<any>(null);
-  const [view, setView] = useState('landed');
+  const [view, setView] = useState('dashboard');
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -2252,8 +2730,11 @@ export default function App() {
     <div className="min-h-screen bg-gp-light text-[#1a1a1a]">
       {/* Sidebar / Navigation */}
       <nav className="fixed left-0 top-0 h-full w-20 md:w-64 gp-gradient text-white flex flex-col z-50">
-        <div className="p-6 flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-lg p-1 overflow-hidden">
+        <div 
+          className="p-6 flex items-center gap-3 mb-8 cursor-pointer group"
+          onClick={() => setView('dashboard')}
+        >
+          <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shrink-0 shadow-lg p-1 overflow-hidden group-hover:ring-2 group-hover:ring-white transition-all">
             <img
               src="/logo.png"
               alt="GP"
@@ -2261,12 +2742,19 @@ export default function App() {
             />
           </div>
           <div className="hidden md:block overflow-hidden">
-            <h1 className="font-bold text-lg leading-none">GP Portal</h1>
+            <h1 className="font-bold text-lg leading-none group-hover:text-gp-orange transition-colors">GP Portal</h1>
             <p className="text-[10px] text-white/40 uppercase tracking-widest mt-1">Duty Cost v1.0</p>
           </div>
         </div>
 
         <div className="flex-1 px-3 space-y-2">
+          <button
+            onClick={() => setView('dashboard')}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'dashboard' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+          >
+            <LayoutDashboard size={20} />
+            <span className="hidden md:block font-medium">Dashboard</span>
+          </button>
           <button
             onClick={() => setView('landed')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'landed' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
@@ -2355,8 +2843,9 @@ export default function App() {
               exit={{ opacity: 0, x: -10 }}
               transition={{ duration: 0.2 }}
             >
+              {view === 'dashboard' && <Dashboard user={user} setView={setView} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
               {view === 'landed' && <LandedCostForm user={user} />}
-              {view === 'reports' && <Reports user={user} />}
+              {view === 'reports' && <Reports user={user} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
               {view === 'admin' && user.role === 'ADMIN' && <AdminUsers />}
               {view === 'settings' && <UserSettings user={user} />}
               {view === 'admin-settings' && user.role === 'ADMIN' && <AdminSettings user={user} setView={setView} />}
