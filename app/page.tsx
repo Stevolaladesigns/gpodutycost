@@ -48,6 +48,7 @@ import {
   addDoc,
   deleteDoc,
   query,
+  where,
   orderBy,
   serverTimestamp
 } from 'firebase/firestore';
@@ -899,27 +900,25 @@ function Reports({ user }: { user: any }) {
   const [endDate, setEndDate] = useState('');
   const [loading, setLoading] = useState(false);
   const [txPage, setTxPage] = useState(1);
-  const TX_PER_PAGE = 50;
+  const TX_PER_PAGE = 25;
 
   const fetchReports = async () => {
     setLoading(true);
     try {
       const txRef = collection(db, 'transactions');
-      let q = query(txRef, orderBy('created_at', 'desc'));
-      const snapshot = await getDocs(q);
+      const q = query(txRef, orderBy('created_at', 'desc'));
 
+      const snapshot = await getDocs(q);
       const txs: any[] = [];
       const dailyMap: any = {};
 
       snapshot.forEach(docSnap => {
-        const t = docSnap.data();
-        // Non-admins always see only their branch; admins respect scope toggle
-        const isOwnBranch = t.post_office === user.post_office;
-        if (!isAdmin) {
-          if (!isOwnBranch) return;
-        } else if (scope === 'MINE') {
-          if (!isOwnBranch) return;
-        }
+        const t = docSnap.data() as any;
+
+        // Non-admins only see their own reports (regardless of branch)
+        if (!isAdmin && t.user_id !== user.id) return;
+        // Admins respect the scope toggle
+        if (isAdmin && scope === 'MINE' && t.user_id !== user.id) return;
 
         txs.push({ id: docSnap.id, ...t });
 
@@ -958,7 +957,9 @@ function Reports({ user }: { user: any }) {
 
   const filteredTx = transactions.filter(t => {
     const matchSearch = (t.tracking_number?.toLowerCase() || '').includes(searchTrackUser.toLowerCase()) ||
-      (t.user_id?.toLowerCase() || '').includes(searchTrackUser.toLowerCase());
+      (t.user_id?.toLowerCase() || '').includes(searchTrackUser.toLowerCase()) ||
+      (t.user_name?.toLowerCase() || '').includes(searchTrackUser.toLowerCase()) ||
+      (t.post_office?.toLowerCase() || '').includes(searchTrackUser.toLowerCase());
 
     let matchDate = true;
     if (startDate || endDate) {
@@ -1064,7 +1065,7 @@ function Reports({ user }: { user: any }) {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={16} />
             <input
               type="text"
-              placeholder="Search Tracking # or User ID..."
+              placeholder="Search by Tracking #, User, or Branch..."
               value={searchTrackUser}
               onChange={e => setSearchTrackUser(e.target.value)}
               className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-black/5 bg-gp-light/50 text-sm focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium"
@@ -1180,7 +1181,7 @@ function Reports({ user }: { user: any }) {
       </div>
 
       {/* Pagination */}
-      {filteredTx.length > TX_PER_PAGE && (
+      {filteredTx.length > 0 && (
         <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-black/5">
           <p className="text-xs font-bold text-gp-blue/40">
             Showing {(txPage - 1) * TX_PER_PAGE + 1}–{Math.min(txPage * TX_PER_PAGE, filteredTx.length)} of {filteredTx.length}
@@ -1230,7 +1231,7 @@ function AdminUsers() {
   const [successMsg, setSuccessMsg] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [userPage, setUserPage] = useState(1);
-  const USERS_PER_PAGE = 20;
+  const USERS_PER_PAGE = 25;
   const [showCleanupModal, setShowCleanupModal] = useState(false);
 
   const fetchUsers = async () => {
@@ -1716,7 +1717,7 @@ function AdminUsers() {
             </div>
 
             {/* User List Pagination */}
-            {filteredUsers.length > USERS_PER_PAGE && (
+            {filteredUsers.length > 0 && (
               <div className="flex items-center justify-between pt-4 mt-2 border-t border-black/5">
                 <p className="text-xs font-bold text-gp-blue/40">
                   Showing {(userPage - 1) * USERS_PER_PAGE + 1}–{Math.min(userPage * USERS_PER_PAGE, filteredUsers.length)} of {filteredUsers.length}
