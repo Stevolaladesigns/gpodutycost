@@ -21,15 +21,14 @@ export async function POST(request: Request) {
     // Let's get the user doc to ensure they are an ADMIN
     const requestUserDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
     
-    const isLegacyAdmin = decodedToken.email?.toLowerCase() === 'itsupport@ghanapost.com.gh';
+    const userData = requestUserDoc.data();
     
     console.log("Create user request from UID:", decodedToken.uid);
     console.log("User doc exists?", requestUserDoc.exists);
     console.log("User doc data:", requestUserDoc.data());
 
-    // NOTE: For the very first Admin account, their document might not exist yet in Firestore.
-    // If the doc exists but role is NOT Admin (and not legacy admin), block. 
-    if (!isLegacyAdmin && requestUserDoc.exists && requestUserDoc.data()?.role !== 'ADMIN') {
+    // Allow only explicit ADMINs.
+    if (!requestUserDoc.exists || userData?.role !== 'ADMIN' || userData?.is_active === 0) {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 403 });
     }
 

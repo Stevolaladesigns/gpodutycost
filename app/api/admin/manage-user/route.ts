@@ -17,11 +17,11 @@ export async function POST(request: Request) {
   }
 
   try {
-    const isLegacyAdmin = decodedToken.email?.toLowerCase() === 'itsupport@ghanapost.com.gh';
     const requestUserDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
+    const userData = requestUserDoc.data();
     
-    // Allow users without documents (founder account) or explicit ADMINs or the legacy admin email.
-    if (!isLegacyAdmin && requestUserDoc.exists && requestUserDoc.data()?.role !== 'ADMIN') {
+    // Allow only explicit ADMINs.
+    if (!requestUserDoc.exists || userData?.role !== 'ADMIN' || userData?.is_active === 0) {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 403 });
     }
 

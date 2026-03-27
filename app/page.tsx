@@ -2105,19 +2105,17 @@ export default function App() {
     const unsub = onAuthStateChanged(auth, async (u) => {
       if (u) {
         try {
-          const isLegacyAdmin = u.email?.toLowerCase() === 'itsupport@ghanapost.com.gh';
           const docSnap = await getDoc(doc(db, 'users', u.uid));
           if (docSnap.exists()) {
             const data = docSnap.data();
-            setUser({ id: u.uid, ...data, role: isLegacyAdmin ? 'ADMIN' : (data.role || 'OPERATIONS') });
+            setUser({ id: u.uid, ...data });
           } else {
-            // No Firestore doc — check if this is the known legacy admin account
-            setUser({ id: u.uid, email: u.email, role: isLegacyAdmin ? 'ADMIN' : 'OPERATIONS', post_office: isLegacyAdmin ? 'Head-Quarters' : 'DEFAULT' });
+            // No Firestore doc? Default to OPERATIONS to prevent lockouts, but limited
+            setUser({ id: u.uid, email: u.email, role: 'OPERATIONS', post_office: 'DEFAULT' });
           }
         } catch (e) {
           console.error("Error fetching user data", e);
-          const isLegacyAdmin = u.email?.toLowerCase() === 'itsupport@ghanapost.com.gh';
-          setUser({ id: u.uid, email: u.email, role: isLegacyAdmin ? 'ADMIN' : 'OPERATIONS', post_office: isLegacyAdmin ? 'Head-Quarters' : 'DEFAULT' });
+          setUser({ id: u.uid, email: u.email, role: 'OPERATIONS', post_office: 'DEFAULT' });
         }
       } else {
         setUser(null);
