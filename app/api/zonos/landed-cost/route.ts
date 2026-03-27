@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   }
 
   const ZONOS_GRAPHQL_URL = "https://api.zonos.com/graphql";
-  const ZONOS_CREDENTIAL_TOKEN = process.env.ZONOS_CREDENTIAL_TOKEN || "credential_live_1fc1f1dd-62e5-4f9a-9359-e0c4b889315f";
+  const ZONOS_CREDENTIAL_TOKEN = process.env.ZONOS_CREDENTIAL_TOKEN;
 
   const body = await request.json();
   const { currency, ship_from_country, ship_to, items, shipping } = body;

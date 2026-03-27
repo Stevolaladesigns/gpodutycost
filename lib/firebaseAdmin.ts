@@ -4,26 +4,44 @@ import fs from 'fs';
 
 try {
   if (!admin.apps.length) {
-    const serviceAccountPath = path.resolve(process.cwd(), 'firebase-service-account.json');
-    if (fs.existsSync(serviceAccountPath)) {
-      const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+    let serviceAccount: any = null;
+
+    // 1. Try raw JSON string from env
+    if (process.env.FIREBASE_SERVICE_ACCOUNT_CONTENT) {
+      serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_CONTENT);
+    } 
+    // 2. Try JSON file path from env
+    else if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON_PATH) {
+      const p = path.resolve(process.cwd(), process.env.FIREBASE_SERVICE_ACCOUNT_JSON_PATH);
+      if (fs.existsSync(p)) {
+        serviceAccount = JSON.parse(fs.readFileSync(p, 'utf8'));
+      }
+    }
+    // 3. Fallback: Check default local paths
+    else {
+      const localPaths = [
+        path.resolve(process.cwd(), 'firebase-service-account.json'),
+        'd:/STEVE BACKUP/ghanapost duty cost/firebase-service-account.json'
+      ];
+      for (const p of localPaths) {
+        if (fs.existsSync(p)) {
+          serviceAccount = JSON.parse(fs.readFileSync(p, 'utf8'));
+          break;
+        }
+      }
+    }
+
+    if (serviceAccount) {
       admin.initializeApp({
         credential: admin.credential.cert(serviceAccount),
-        projectId: "gpodutycost"
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "gpodutycost"
       });
     } else {
-      // Fallback
-      const altPath = path.resolve('d:/STEVE BACKUP/ghanapost duty cost/firebase-service-account.json');
-      if (fs.existsSync(altPath)) {
-        const serviceAccount = JSON.parse(fs.readFileSync(altPath, 'utf8'));
-        admin.initializeApp({
-          credential: admin.credential.cert(serviceAccount),
-          projectId: "gpodutycost"
-        });
-      } else {
-        admin.initializeApp({ projectId: "gpodutycost" });
-        console.warn('[Firebase Admin] Service account not found. Admin features might be unavailable.');
-      }
+      // Final fallback: use default credentials (e.g. for GCP environments)
+      admin.initializeApp({
+        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "gpodutycost"
+      });
+      console.warn('[Firebase Admin] Service account not found. Using default credentials.');
     }
   }
 } catch (error) {
