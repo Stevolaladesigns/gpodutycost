@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Users: each authenticated user can only read their own document.
+    // All writes are performed server-side via Firebase Admin SDK (bypasses rules).
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if false;
+    }
+
+    // Transactions: any authenticated user can read and write.
+    // Reads are needed for the Reports tab; writes are for logging calculations.
+    match /transactions/{transactionId} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

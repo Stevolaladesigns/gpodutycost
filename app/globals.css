@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gp-blue: #0A1172;
+  --color-gp-orange: #F26522;
+  --color-gp-light: #F8F9FA;
+}
+
+.gp-gradient {
+  background: linear-gradient(135deg, var(--color-gp-blue) 0%, #1a237e 100%);
+}

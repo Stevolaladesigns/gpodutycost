@@ -1,0 +1,7755 @@
+HS CODE	DESCRIPTION  / KEYWORD
+10290	Cricket
+10290	Dolphin
+10290	Hare
+10290	Manatee
+10290	Ostrich
+10290	Parakeet
+10290	Sea lion
+10290	Seal
+10290	Walrus
+10290	Whale
+10599	Fowl
+10599	Poultry
+21099	Beef
+21099	Lamb
+21099	Proceesed
+21099	Sea lion
+21099	Seal
+21099	Sirloin tip
+21099	Spare ribs
+21099	Veal
+21099	Walrus
+30890	Blue whiting
+30890	Cattle fish
+30890	Crustacean
+30890	Fish
+30890	Fish head
+30890	Fish meal
+30890	Fish pellet
+30890	Jellyfish
+30890	Lingcod
+30890	Molluscs
+30890	Perch
+30890	Sea urchin
+30890	Seabream
+30890	Shrimp
+30890	Skipjack
+40310	Buttermilk
+40310	Curdled cream
+40310	Curdled milk
+40310	Kephir
+40410	Cream cheese
+40410	Feta
+40900	Amber honey
+40900	Dark honey
+40900	Light honey
+40900	Natural honey
+40900	Natural honey
+50100	Hooves
+50400	Bladders
+50400	Casings
+60110	Araucarias
+60110	Crown
+60110	Daffodil
+60110	Mushroom spawn
+60110	Palms
+60110	Plant
+60110	Tree
+60110	Tulip
+60290	Cacti
+60290	Palm
+60311	Roses
+60314	Chrysanthemums
+60390	Lilly
+60420	Christmas tree
+60420	Keaf
+60420	Leaves
+70310	Bamboo shoots
+70310	Bamboo shoots
+70310	Brussel sprout
+70310	Brussel sprout
+70310	Cactus leaves
+70310	Cactus leaves
+70310	Caper
+70310	Catjang pea
+70310	Cilantro
+70310	Kale
+70310	Leaf chervil
+70310	Mushroom
+70310	Okra
+70310	Salad beetroot
+70310	Tomatillo
+70310	Topedos
+70410	Broccoli
+70890	Chickpeas
+71029	Dahl
+71029	Peas
+71080	Artichokes
+71080	Broccoli
+71080	Cardoons
+71080	Jicama
+71080	Tarragons
+71080	Tree tomatoes
+71080	Yen Sai
+71290	Savory
+80119	Almond
+80119	Areca
+80119	Brazil nut
+80119	Grape
+80119	Grapefruit
+80119	Kiwi
+80119	Mangosteen
+80119	Melon
+80119	Nuts
+80119	Papayas
+80119	Raspberries
+80119	Tangerines
+90111	Decaffeinated coffee
+90411	Chili peppers
+90411	Cinnamon tree flower
+90411	Cloves
+90411	Curry
+90411	Juniper berries
+90411	Nutmeg
+90411	Pepper
+90411	Thyme
+90412	Anise
+90412	Bay leaves
+90412	Coriander
+90412	Juniper berries
+90412	Turmeric
+100290	Buckwheat
+100290	Canary seed
+100290	Durum wheat
+100290	Fonio
+100290	Maize
+100290	Meslin
+110419	Barley
+110419	Maize
+110520	Potato
+120190	Castor oil seeds
+120190	Colza seed
+120190	Linseed
+120190	Poppy seed
+120190	Safflower seed
+120190	Seed
+120190	Soya bean
+120190	Soya bean
+130190	Agar agar
+130190	Pectic substances
+130190	Pectinates
+130190	Vegetable saps
+140190	Broom corn
+140190	Cereal straw
+140190	Eel grass
+140190	Lime bark
+140190	Raffia
+150190	Beeswax
+150190	Cooking oil
+150190	Cooking oil
+150190	Fish liver oils
+150190	Insect waxes
+150190	Insect waxes
+150300	Oleo oil
+150300	Oleo stearin
+150890	Corn oil
+151550	Sesame oil
+151610	Coconut oil
+151610	Coconut oil
+151610	Vegetable fat
+151710	Margarine OAC
+151710	Margarine WAC
+151710	Margarine WAC
+160100	Frankfurter
+10290	Animal
+10290	Bee
+10290	Rabbit
+10290	Sea lion
+10290	Sheep
+10290	Snake
+10599	Geese
+10599	Turkey
+20311	Swine
+20443	Mutton
+20500	Asses
+21099	Bison
+21099	Brisket
+21099	Chuck
+21099	Dolphin
+21099	Duck
+21099	Flank
+21099	Fowl
+21099	Hare
+21099	Inside round
+21099	Manatee
+21099	Outside round
+21099	Porpoises
+21099	Spare ribs
+30290	Roes
+30890	Carp
+30890	Cobia
+30890	Cod
+30890	Eel
+30890	Fish brine
+30890	Fish brine
+30890	Fish maw
+30890	Fish pellet
+30890	Fish tail
+30890	Fish tail
+30890	Monkfish
+30890	Octopus
+30890	Pollack
+30890	Salted fish
+30890	Sardine
+30890	Sea cucumber
+30890	Seabass
+30890	Seafood
+30890	Smoked fish
+30890	Trout
+30890	Tuna
+40110	Dairy spread
+40410	Blue cheese
+40410	Cheddar
+40410	Cheese
+40410	Cream cheese
+40410	Emmental
+40410	Gouda
+40410	Jarlberg
+40410	Parmesan
+40410	Powdered whey
+40410	Processed cheese
+40410	Provolone
+40410	Swiss cheese
+40410	Whey protein
+40900	Amber honey
+40900	Dark honey
+50100	Bovine semen
+50100	Semen
+50590	Feathers
+60110	Bulb
+60110	Bush
+60110	Cacti
+60110	Corm
+60110	Fruit tree
+60110	Hyacinth
+60110	Laurels
+60110	Nut tree
+60110	Teasels
+60110	Tuber
+60110	Vine
+60290	Maple
+60290	Oak
+60290	Strawberry
+60314	Gypsophila
+60319	Bouquet
+60420	Branch
+60420	Christmas tree
+60420	Tree
+70310	Asparagus
+70310	Cabbage
+70310	Cardoon
+70310	Catjang pea
+70310	Celeriac
+70310	Celery
+70310	Garlic
+70310	Gourd
+70310	Lettuce
+70310	Olive
+70310	Rhubarb
+70310	Salad beetroot
+70310	Tamarillo
+70310	Tomato
+70310	Turnip
+70310	Vegetable
+70310	Verdolagas
+70310	Yam
+70490	Chinese lettuce
+70890	Lupini
+71029	Congo
+71080	Cactus leaves
+71080	Cilantro
+71080	Mexican parsley
+71080	Okra
+71080	Tomatillos
+71080	Topedos
+71080	Truffles
+71490	Artichokes
+80119	Avocado
+80119	Banana
+80119	Coconut
+80119	Cranberries
+80119	Dates
+80119	Fruit
+80119	Hazelnut
+80119	Lime
+80119	Nectarines
+80119	Pear
+80119	Pineapples
+80119	Satsumas
+80119	Sloes
+90111	Coffee substitutes
+90411	Badian
+90411	Caraway
+90411	Curcuma
+90411	Fennel
+90412	Bay leaves
+90412	Chili peppers
+90412	Cinnamon
+90412	Cinnamon tree flower
+90412	Cinnamon tree flower
+90412	Cinnamon tree flower
+90412	Cloves
+90412	Cumin
+90412	Dill
+90412	Ginger
+90412	Juniper berries
+90412	Paprika
+90412	Spice
+90520	Vanilla
+100290	Corn
+100290	Millet
+100290	Triticale
+120190	Castor oil seeds
+120190	Coca leaf
+120190	Grass
+120190	Melon seed
+120190	Melon seed
+120190	Mustard seeds
+120190	Palm nuts
+120190	Rape seed
+130190	Guar gum
+130190	Gum resins
+130190	Pectates
+130190	Vegetable extracts
+130190	Vegetable saps
+10290	Bird
+10290	Camel
+10290	Cockatoo
+10290	Dog
+10290	Goat
+10290	Insect
+10290	Ostriches
+10290	Porpoise
+10290	Reptile
+10290	Turtle
+20120	Fresh beef
+20312	Ham
+20312	Pigs
+20322	Ham
+20329	Ribs
+20500	Hinnies
+20500	Horse
+20500	Mules
+21099	Back ribs
+21099	Carcasses
+21099	Chicken
+21099	Eye of round
+21099	Geese
+21099	Guinea fowl
+21099	Guinea fowl
+21099	Loin
+21099	Outside round
+21099	Poultry
+21099	Rabbit
+21099	Reptile
+21099	Sea lion
+21099	Sheep
+21099	Sirloin tip
+21099	Turkey
+21099	Whale
+30290	Livers
+30621	Lobster
+30741	Cuttle fish
+30741	Cuttle fish
+30741	Squid
+30890	Abalone
+30890	Anchovy
+30890	Bonito
+30890	Catfish
+30890	Cattle fish
+30890	Clam
+30890	Crab
+30890	Dried fish
+30890	Dried fish
+30890	Fish fillets
+30890	Fish fillets
+30890	Fish flour
+30890	Fish head
+30890	Mackarel
+30890	Prawn
+30890	Salted fish
+30890	Scallop
+30890	Sea urchin
+30890	Smoked fish
+30890	Sole
+30890	Tilapia
+30890	Toothfish
+40110	Butter
+40310	Curdled milk
+40310	Fermented milk
+40410	Brie
+40410	Camembert
+40410	Curd
+40410	Edam
+40410	Havarti
+40410	Mozzarella
+40410	Muenster
+40410	Powdered whey
+40410	Romano
+40410	Whey protein
+40711	Eggs
+40900	Light honey
+50100	Whalebone
+50400	Guts
+51000	Glands
+60110	Dormant
+60110	Lilacs
+60110	Mushroom spawn
+60110	Rhizomes
+60312	Carnations
+60312	Orchids
+60390	Flower
+60420	Foliage
+60420	Moss
+70310	Aubergine
+70310	Bean
+70310	Capsicum
+70310	Kohlrabi
+70310	Leaf chervil
+70310	Leek
+70310	Legume
+70310	Onion
+70310	Parsley
+70310	Potato
+70310	Pumpkin
+70310	Shallots
+70310	Squash
+70310	Truffle
+70490	Chinese lettuce
+70690	Salsify
+70700	Cucumbers
+70700	Gherkins
+71029	Lupini
+71029	Pigeon pea
+71029	Toor
+71080	Cactus leaves
+71080	Leaf chevrils
+71080	Malanga
+71080	Tamarillos
+71080	Verdolagas
+71080	Yen Sai
+71290	Tarragon
+80119	Apple
+80119	Apricot
+80119	Bilberries
+80119	Brazil nut
+80119	Clementine
+80119	Currants
+80119	Durians
+80119	fig
+80119	Loganberries
+80119	Macadamia
+80119	Mulberries
+80119	Papaws
+80119	Pistachio
+80119	Plum
+80119	Strawberry
+80119	Walnut
+80119	Watermelon
+80119	Wilking
+90111	Coffee
+90111	Decaffeinated coffee
+90111	Mat 
+90411	Anise
+90411	Bay leaves
+90411	Cardamom
+90411	Chili peppers
+90411	Coriander
+90411	Ginger
+90411	Saffron
+90412	Curry
+90412	Nutmeg
+90412	Pepper
+90412	Thyme
+100290	Canary seed
+100290	Durum wheat
+100290	Grain sorghum
+100290	Quinoa
+110419	Oats
+120190	Colza seed
+120190	Cotton seed
+120190	Ginseng roots
+120190	Kernels
+120190	Mustard seeds
+120190	Palm nuts
+120190	Poppy seed
+120190	Poppy straw
+120190	Rape seed
+120190	Safflower seed
+120190	Sesame seeds
+130190	Balsams
+10290	Bovine
+10290	Buffalo
+10290	Cat
+10290	Cattle
+10290	Cockatoos
+10290	Dugong
+10290	Horse
+10290	Macaw
+10290	Macaws
+10290	Parrot
+10290	Parrots
+10599	Duck
+20120	Fresh beef
+21011	Ham
+21099	Back ribs
+21099	Bovine
+21099	Dugong
+21099	Eye of round
+21099	Goat
+21099	Hip
+21099	Inside round
+21099	Liver
+21099	Ribs
+21099	Tongue
+30890	Blue whiting
+30890	Coalfish
+30890	Dogfish
+30890	Fish flour
+30890	Fish maw
+30890	Fish meal
+30890	Haddock
+30890	Hake
+30890	Halibut
+30890	Herring
+30890	Lobster
+30890	Mussel
+30890	Plaice
+30890	Salmon
+30890	Sea cucumber
+30890	Shark
+30890	Snail
+30890	Swordfish
+30890	Turbot
+40110	Dairy spread
+40110	Fresh cream
+40110	Fresh cream
+40110	Milk
+40310	Curdled cream
+40310	Fermented milk
+40310	Yogourt
+40310	Yogurt
+40390	Buttermilk
+40390	Kephir
+40410	Blue cheese
+40410	Gruyere
+40410	Processed cheese
+40410	Swiss cheese
+40410	Whey
+50100	Beak
+50100	Bovine semen
+50400	Casing
+50400	Stomachs
+50590	Skin
+51000	Bile
+60110	Ferns
+60110	Fruit tree
+60110	Grapevine
+60110	Nut tree
+60110	Root
+60110	Shrub
+60110	Tuberous root
+60110	Tuberous root
+60290	Ash
+60290	Poplar
+60313	Cymbidium
+60319	Flower
+60390	Lilies
+60420	Grass
+70310	Carrot
+70310	Cauliflower
+70310	Corn
+70310	Green onions
+70310	Green onions
+70310	Jicama
+70310	Lentil
+70310	Manioc
+70310	Radish
+70310	Rapini
+70310	Spinach
+70310	Witloof chicory
+70310	Witloof chicory
+71029	Angola
+71029	Pigeon pea
+71080	Leaf chevrils
+71080	Mexican parsley
+71080	Tree tomatoes
+80119	Cashew
+80119	Cherries
+80119	Cherry
+80119	Chestnut
+80119	Citrus
+80119	Gooseberries
+80119	Guava
+80119	Lemon
+80119	Mandarin
+80119	Mango
+80119	Peach
+80119	Pecan
+80119	Persimmons
+80119	Plantain
+80119	Prune
+80119	Quinces
+90111	Coffee bean
+90111	Coffee bean
+90111	Coffee substitutes
+90111	Roasted coffee
+90111	Roasted coffee
+90111	Tea
+90411	Bay leaves
+90411	Cinnamon
+90411	Cinnamon tree flower
+90411	Cinnamon tree flower
+90411	Cumin
+90411	Dill
+90411	Juniper berries
+90411	Paprika
+90411	Spice
+90411	Turmeric
+90412	Badian
+90412	Caraway
+90412	Cardamom
+90412	Chili peppers
+90412	Curcuma
+90412	Fennel
+90412	Saffron
+100290	Barley
+100290	Grain sorghum
+100290	Oat
+100290	Rice
+100290	Rye
+100290	Starch
+100290	Wheat
+110419	Wheat
+110510	Potato
+120190	Castor oil seeds
+120190	Coca leaf
+120190	Copra
+120190	Cotton seed
+120190	Ginseng roots
+120190	Poppy straw
+120190	Sesame seeds
+130190	Guar gum
+130190	Lac
+130190	Natural gum
+130190	Pectic substances
+140190	Bamboos
+140190	Cereal straw
+140190	Cotton linters
+140190	Couch grass
+140190	Couch grass
+140190	Eel grass
+140190	Istle
+140190	Kapok
+140190	Piassava
+140190	Tampico fibre
+140190	Vegetable hair
+150190	Glycerol
+150190	Olive oil
+130190	Carrageenan
+130190	Gum Arabic
+130190	Gum Arabic
+130190	Gum resins
+130190	Mucilages
+130190	Natural gum
+130190	Oleoresins
+130190	Vegetable extracts
+140190	Broom corn
+140190	Cotton linters
+140190	Rattans
+140190	Reeds
+150190	Animal oil
+150190	Animal oil
+150190	Fish liver oils
+150190	Food oil
+150190	Poultry fat
+150190	Spermaceti
+150190	Vegetable wax
+150300	Lard oil
+150300	Lard stearin
+150300	Oleo oil
+150300	Tallow oil
+150890	Cotton seed oil
+150890	Nut oil
+150890	Sunflower seed oil
+150890	Sunflower seed oil
+151550	Sesame oil
+151610	Animal fat
+151610	Canola oil
+151610	Shortening
+160100	Luncheon meat
+160100	Prepared meat
+160100	Sausage
+160220	P t s
+160239	Ham
+160239	Luncheon meat
+160239	Mackerel
+160416	Lobster
+170220	Glucose
+170220	Molasses
+170220	Sucrose
+170410	Candy
+170410	Chewing gum
+170410	Liquorice candy
+180400	Cocoa paste
+180500	Cocoa powder
+190110	Infant formula
+190110	Isomil formula
+190110	Similac
+190211	Cannelloni
+190211	Couscous
+190211	Gnocchi
+190211	Noodles
+190220	Cannelloni
+190220	Couscous
+190220	Gnocchi
+190220	Macaroni
+190531	Bread
+190531	Cakes
+190531	Pretzels
+190531	Rusks
+190531	Sweet biscuits
+190531	Taco
+190531	Toasted bread
+190531	Waffles
+200110	Gherkin
+200110	Potato
+200190	Cardoons
+200190	Chinese parsley
+200190	Jicama
+200190	Okra
+200190	Tarragons
+200190	Topedos
+200310	Cauliflowers
+200490	Brussel sprout
+200490	Carrot
+200520	Potato chips
+200599	Vegetables
+200710	Fruit paste
+200710	Fruit pur e
+200710	Marmalade
+200819	Cashew butter
+200819	Peanut butter
+200819	Peanut butter
+200819	Walnut butter
+200870	Fruit
+210111	Coffee concentrates
+210111	Coffee essence
+210230	Yeast
+210310	Chili sauce
+210310	Condiment
+210310	Mayonnaise
+210310	Pizza sauce
+210310	Pizza sauce
+210310	Sauce
+210310	Seasoning
+210310	Tomato sauces
+210610	Protein concentrates
+210610	Protein powder
+210690	Flavoring
+210690	Groceries
+220110	Aerated water
+220210	Artificial water
+220210	Chocolate milk
+220210	Juice
+220210	Soft drinks
+220290	Non alcoholic beer
+220290	Non alcoholic wine
+220410	Champagne
+220410	Sparkling wine
+220429	Wine
+220510	Vermouth
+220600	Sake
+230800	Fish food
+230990	Dog chews
+230990	Dog treat
+240210	Cheroots
+240210	Cigarillos
+240210	Cigars
+240319	Shisha tobacco
+240319	Water pipe tobacco
+240391	Homogenized tobacco
+240391	Reconstituted tobacco
+240399	Chewing tobacco
+240399	Chewing tobacco
+250100	Aluminous cement
+250100	Andalusite
+250100	Animal litter
+250100	Asbestos
+250100	Bentonite
+250100	Broken stone
+250100	Cat litter
+250100	Chamotte earth
+250100	Chamotte earth
+250100	Crocidolite
+250100	Deadburned magnesia
+250100	Diatomaceous earth
+250100	Epsomite
+250100	Fused magnesia
+250100	Gypsum
+250100	Hydraulic cements
+250100	Kieselguhr
+250100	kyanite
+250100	Macadam of slag
+250100	Natural abrasives
+250100	Natural corundum
+250100	Natural graphite
+250100	Natural steatite
+250100	Nepheline
+250100	Pebbles
+250100	Pumice stone
+140190	Broomcorn
+140190	Lime bark
+140190	Osier
+140190	Rushes
+140190	Tampico fibre
+140190	Vegetable hair
+150190	Fish liver oils
+150190	Food oil
+150190	Lard
+150190	Pig fat
+150190	Pig fat
+150190	Poultry fat
+150190	Vegetable wax
+150300	Lard oil
+150300	Tallow oil
+150890	Cotton seed oil
+150890	Cotton seed oil
+150890	Crude oil
+150890	Ground nut oil
+150890	Ground nut oil
+150890	Maize oil
+150890	Maize oil
+150890	Nut oil
+150890	Safflower oil
+150890	Sunflower seed oil
+151610	Vegetable fat
+151610	Vegetable oil
+151710	Margarine OAC
+160100	Preserved meat
+160239	Geese
+160300	Salmon
+160416	Shrimp
+170220	Lactose
+170220	Maple syrup
+170220	Sugar
+170410	Almond paste
+170410	Almond paste
+170410	Bubble gum
+170410	Candies
+170410	Chewing gum
+180400	Cocoa butter
+180400	Cocoa fat
+180400	Cocoa fat
+180400	Cocoa oil
+180500	Hot chocolate
+190110	Baby formula
+190110	Baby formula
+190110	Isomil formula
+190211	Lasagna
+190211	Macaroni
+190220	Lasagna
+190410	Bulgur wheat
+190410	Bulgur wheat
+190410	Cereal
+190531	Baked goods
+190531	Baked goods
+190531	Corn chips
+190531	Crisp bread
+190531	Crisp bread
+190531	Pudding
+190531	Sweet biscuits
+190531	Toasted bread
+200110	Onion
+200110	Tomato
+200190	Chinese parsley
+200190	Fruit
+200190	Garbanzos
+200190	Leaf chervils
+200190	Leaf chervils
+200190	Spinach
+200190	Truffle
+200190	Ve
+200290	Tomato
+200310	Mushroom
+200490	Brussel sprout
+200520	Potato chips
+200710	Fruit jelly
+200710	Fruit paste
+200710	Jam
+200819	Cashew butter
+200819	Macadamia butter
+200819	Walnut butter
+200891	Palm heart
+200891	Palm heart
+200899	Ginseng
+200899	Raisins
+200989	Juice
+210111	Aromatic essence
+210111	Aromatic essence
+210111	Coffee concentrates
+210230	Active yeast
+210230	Active yeast
+210230	Baking powder
+210230	Inactive yeast
+210310	Tomato ketchup
+210310	Tomato sauces
+210610	Protein powder
+210610	Textured protein
+210610	Textured protein
+210690	Flavor concentrate
+210690	Flavor syrup
+210690	Fondue cheese
+210690	Food concentrate
+210690	Liquid flavor
+210690	Nicotine gum
+210690	Pop corn
+220110	Artificial water
+220110	Artificial water
+220110	Natural water
+220110	Water
+220210	Aerated water
+220210	Aerated water
+220210	Mineral water
+220210	Soft drinks
+220290	Non alcoholic wine
+220429	Ice wine
+220600	Rice wine
+220900	Vinegar
+230990	Animal feed
+230990	Animal feeding
+230990	Animal feeding
+230990	Animal food
+230990	Animal food
+230990	Cat food
+230990	Dog biscuits
+230990	Dog food
+230990	Dog treat
+240210	Tobacco
+240311	Pipe tobacco
+240319	Water pipe tobacco
+240319	Water pipe tobacco
+240391	Homogenized tobacco
+240391	Reconstituted tobacco
+240399	Snuff
+240399	Tobacco snuff
+240399	Tobacco snuff
+250100	Barium carbonate
+250100	Barium sulphate
+250100	Barytes
+250100	Broken stone
+250100	Clay
+250100	Diatomaceous earth
+250100	Emery
+250100	Hydraulic cements
+250100	Limestone granules
+250100	Macadam of slag
+250100	Mica
+250100	Mullite
+250100	Natural graphite
+250100	Natural magnesium carbonat
+250100	Natural magnesium sulphates
+250100	Natural steatite
+250100	Nepheline syenite
+250100	Nepheline syenite
+250100	Phosphatic chalk
+250100	Portland cement
+150190	Olive oil
+150300	Lard stearin
+150300	Oleo stearin
+150890	Corn oil
+150890	Crude oil
+150890	Ground nut oil
+150890	Safflower oil
+151610	Animal fat
+151610	Canola oil
+151610	Vegetable oil
+160100	Cold cuts
+160100	Cold cuts
+160100	Hot dog
+160100	Preserved meat
+160239	Duck
+160239	Guinea fowl
+160239	Guinea fowl
+160239	Luncheon meat
+160300	Caviar
+160300	Clam
+160300	Fish eggs
+160300	Oysters
+160300	Sardine
+160416	Anchovies
+160416	Prawn
+170220	Maltose
+170220	Maple syrup
+170410	Almond butter
+170410	Gum
+170410	Liquorice candy
+170410	Marshmallow
+170410	Toffee
+180400	Cocoa paste
+180500	Chocolate
+180500	Chocolate coated nuts
+180500	Hot chocolate
+190110	Infant formula
+190211	Pasta
+190220	Noodles
+190220	Pasta
+190410	Breakfast cereal
+190410	Breakfast cereal
+190531	Biscuits
+190531	Croutons
+190531	Pizza
+190531	Quiche
+190531	Tortilla
+200190	Bamboo shoots
+200190	Bamboo shoots
+200190	Cactus leaves
+200190	Cactus leaves
+200190	Chickpeas
+200190	Cilantro
+200190	Nut
+200190	Peas
+200190	Relish
+200190	Tamarillos
+200190	Tomatillos
+200310	Broccoli
+200710	Fruit jellies
+200710	Fruit jelly
+200819	Ground nut
+200819	Ground seed
+200819	Macadamia butter
+200819	Pignolia nuts butter
+210111	Roasted chicory
+210230	Baking powder
+210230	Inactive yeast
+210310	Catsup
+210310	Chili sauce
+210310	Salad dressing
+210310	Soya sauce
+210310	Soya sauce
+210410	Soup
+210500	Ice cream
+210500	Ice cream
+210610	Protein
+210610	Protein shake
+210610	Protein shake
+210690	Flavor concentrate
+210690	Flavor syrup
+210690	Fondue cheese
+210690	Food concentrate
+210690	Fruit syrups
+210690	Fruit syrups
+210690	Grocery
+210690	Liquid flavor
+210690	Nicotine gum
+210690	Popcorn
+220110	Mineral water
+220110	Natural water
+220210	Chocolate milk
+220210	Cola
+220210	Mineral water
+220210	Pop
+220210	Soy beverage
+220290	Non alcoholic wine
+220300	Beer
+220410	Sparkling wine
+220429	Port
+230990	Cat treat
+230990	Cat treat
+230990	Dog biscuits
+230990	Dog chews
+240319	Shish tob
+240319	Shisha
+240319	Shisha tobacco
+240391	Leaf tobacco
+250100	Aluminum calcium phosphates
+250100	Anhydrite
+250100	Animal litter
+250100	Barium carbonate
+250100	Crushed stone
+250100	Diatomite
+250100	Dinas earth
+250100	Dolomite
+250100	Feldspar
+250100	Fire clay
+250100	Hydraulic lime
+250100	Hydraulic lime
+250100	Kaolinic clays
+250100	Limestone granules
+250100	Magnesite
+250100	Natural abrasives
+250100	Natural garnet
+250100	Natural garnet
+250100	Natural magnesium sulphates
+250100	Perlite
+250100	Phosphatic chalk
+250100	Pumice stone
+250100	Quartz sands
+250100	Salt
+250100	Silica sand
+250100	Siliceous fossil meals
+250100	Sintered magnesia
+250100	Slag cement
+250100	Slaked lime
+250100	Unroasted iron pyrites
+250100	Witherite
+260111	Manganese
+260111	Tin
+260111	Titanium
+261800	Dross
+261800	Granulated slag
+261800	Granulated slag
+261800	Slag sand
+270900	Diesel oil
+270900	Diesel oil
+270900	Paraffin wax
+270900	Petroleum oil
+270900	Petroleum oil
+271112	Propane
+271210	Petroleum jelly
+280300	Alkaline earth metals
+280300	Arsenic
+280300	Boric acids
+160100	Hot dog
+160100	Luncheon meat
+160100	Prepared meat
+160300	Fish eggs
+170220	Fructose
+170410	Almond butter
+170410	Bubble gum
+170410	Caramel
+180400	Cocoa butter
+180400	Cocoa oil
+180500	Chocolate coated nuts
+180500	Chocolate coated nuts
+180500	Cocoa
+180500	Cocoa powder
+180500	Confectionery
+190211	Ravioli
+190211	Spaghetti
+190220	Ravioli
+190220	Spaghetti
+190300	Tapioca
+190531	Corn chips
+190531	Pastry
+190531	Pies
+190531	Wafers
+200110	Cucumber
+200190	Artichoke
+200190	Malanga
+200190	Nopales
+200190	Olive
+200190	Vegetable
+200490	Asparagus
+200710	Fruit jellies
+200710	Fruit pur e
+200819	Ground nut
+200819	Ground seed
+200819	Pecan butter
+200819	Pecan butter
+200819	Pignolia nuts butter
+200819	Pignolia nuts butter
+210111	Coffee essence
+210111	Coffee extract
+210111	Coffee extract
+210111	Roasted chicory
+210310	Ketchup
+210310	Mustard
+210310	Salad dressing
+210310	Tomato ketchup
+210410	Broth
+210610	Protein concentrates
+210610	TVP
+210690	Flavor
+210690	Pop corn
+210690	Popping corn
+210690	Popping corn
+220110	Aerated water
+220110	Mineral water
+220210	Artificial water
+220210	Nectar
+220210	Soy beverage
+220210	Water
+220290	Non alcoholic beer
+220290	Non alcoholic beer
+220429	Ice wine
+220600	Rice wine
+230800	Fish food
+230990	Animal feed
+230990	Cat food
+230990	Dog food
+230990	Kibble
+240220	Cigarette
+240311	Pipe tobacco
+240319	Shish tob
+240391	Leaf tobacco
+250100	Aluminous cement
+250100	Aluminum calcium phosphates
+250100	Aluminum calcium phosphates
+250100	Barium sulphate
+250100	Calcium phosphates
+250100	Calcium phosphates
+250100	Cat litter
+250100	Chlorite
+250100	Crushed stone
+250100	Deadburned magnesia
+250100	Dinas earth
+250100	Ecaussine
+250100	Fire clay
+250100	Fluorspar
+250100	Fused magnesia
+250100	Gravel
+250100	Kaolin
+250100	Kaolinic clays
+250100	Kieserite
+250100	Leucite
+250100	Limestone
+250100	Natural corundum
+250100	Natural magnesium carbonat
+250100	Natural magnesium carbonat
+250100	Natural magnesium sulphates
+250100	Quicklime
+250100	Sandstone
+250100	Sea water
+250100	Silica sand
+250100	Siliceous fossil meals
+250100	Siliceous fossil meals
+250100	Slag cement
+250100	Sulphur
+250100	Supersulphate cement
+250100	Tarred macadam
+260111	Ferruginous manganese
+260111	Ferruginous manganese
+260111	Niobium
+260111	Tantalum
+260111	Thorium
+260111	Zinc
+260111	Zirconium
+261800	Slag sand
+270900	Mineral wax
+270900	Mineral wax
+271114	Ethylene
+271114	Propylene
+271210	Peat wax
+271210	Petroleum jelly
+271210	Slack wax
+280300	Chlorine
+280300	Chlorosulphuric acid
+280300	Diphosphorus pentaoxide
+280300	Diphosphorus pentaoxide
+280300	Dry ice
+280300	Dry ice
+280300	Fluorine
+280300	Hydrated silica
+280300	Hydrofluoric acid
+280300	Hydrofluoric acid
+280300	Hydrogen fluoride
+280300	Nitric acid
+280300	Sulphuric acid
+281290	Phosphorus trisulphide
+282590	Aluminum
+282590	Iodide
+282590	Sodium
+282590	Zinc
+282619	Calcium hypochlorite
+282619	Calcium hypochlorite
+282619	Chlorides
+282619	Fluorine salts
+282619	Hypobromite
+282619	Sodium hexafluoroaluminate
+282739	Ammonium
+282739	Calcium
+282739	Copper
+282739	Manganous
+282739	Stannic
+250100	Quartz sands
+250100	Sintered magnesia
+250100	Slaked lime
+250100	Sodium chloride
+250100	Supersulphate cement
+250100	Tarred macadam
+250100	Vermiculite
+260111	Antimony
+260111	Copper
+260111	Iron
+260111	Lead
+260111	Molybdenum
+260111	Nickel
+260111	Silver
+260111	Tungsten
+260111	Vanadium
+261800	Ash
+261800	Slag
+270900	Lignite wax
+270900	Lignite wax
+270900	Petroleum bitumen
+271114	Butylene
+271210	Petroleum wax
+280300	Alkaline earth metals
+280300	Boric acids
+280300	Boron
+280300	Carbon
+280300	Hydrogen
+280300	Hydrogen chloride
+280300	Mercury
+280300	Nitrogen
+280300	Oleum
+280300	Phosphoric acid
+280300	Phosphorus
+280300	Polyphosphoric acids
+280300	Selenium
+280300	Silica gel
+280300	Sulphonitric acids
+280300	Sulphonitric acids
+280300	Tellurium
+280300	Yttrium
+281290	Artificial corundum
+281290	Artificial corundum
+281290	Carbon disulphide
+281290	Carbon disulphide
+281290	Caustic soda
+281290	Caustic soda
+281290	Halides
+282590	Barium
+282590	Carbon
+282590	Potassium
+282619	Sodium bromide
+282619	Sodium hexafluoroaluminate
+282739	Aluminum
+282739	Barium chloride
+282739	Magnesium
+282990	Periodates
+282990	Peroxosulphates
+282990	Polysulphides
+282990	Sulphites
+282990	Sulphoxylates
+282990	Thiosulphates
+283699	Ammonium carbonate
+283699	Ammonium carbonate
+283699	Calcium hydrogenorthophosphate
+283699	Manganites
+283699	Molybdates
+283699	Permanganates
+283699	Silicate
+283699	Sodium dichromate
+283699	Sodium dichromate
+283699	Sodium hydrogencarbonate
+283699	Sodium triphosphate
+283699	Sodium triphosphate
+284390	Borides
+284390	Carbides
+284390	Colloidal precious metal
+284390	Compressed air
+284390	Gold compound
+284390	Hydrides
+284390	Silver compound
+284390	Silver nitrate
+284440	Spent Heavy water
+290129	Buta
+290129	Carbon tetrachloride
+290129	Chlorobenzene
+290129	Cumene
+290129	dibromotetrafluoroethane
+290129	Dichlorofluoroethanes
+290129	Ethane
+290129	Ethyl chloride
+290129	Methyl chloride
+290129	Methyl chloride
+290129	Methylene chloride
+290129	Methylene chloride
+292429	Counter medication
+292429	Non prescription medication
+292429	Tylenol
+293690	Adrenal
+293690	Aloe gold
+293690	Apidexin
+293690	Barley tablet
+293690	Body care products
+293690	Capsules
+293690	Cold medicine
+293690	Cold preparations
+293690	Cough preperations
+293690	Curcumasorb
+293690	Decaslim
+293690	Detox
+293690	Dietary powder
+293690	Dietary supplement
+293690	Dietary supplement tea
+293690	Dpatone
+293690	Electrolyte
+293690	Endothelial defense
+293690	Essence
+293690	Flora prime
+293690	Food additive
+293690	Green coffee bean
+293690	Green Naturalaser
+293690	Health products
+293690	Health products
+293690	Herbal product
+293690	Herbal tablets
+293690	Homeopathic
+293690	Insulin
+293690	Kaprex
+293690	Magnesium
+293690	Meal replacement
+293690	Mineral supplement
+293690	Mint matrix
+293690	Natural supplement
+293690	Neutralizer
+293690	Non prescription medication
+293690	Nutritopn spply
+293690	Omegakrill
+293690	Prednisone
+293690	Remedies
+293690	Remedy
+293690	Supplement
+293690	Vitamins
+293690	Wound Salve topical
+293690	Wound Salve topical
+293690	Wound Salve topical
+294110	Penicillin
+300220	Antisera
+300220	Heparin
+300220	Immunological products
+300220	Ricin
+282990	Iodates
+282990	Perbromates
+283699	Carbonate
+283699	Disodium tetraborate
+283699	Manganate
+283699	Metasilicate
+283699	Peroxoborates
+283699	Phosphinate
+283699	Polyphosphate
+283699	Sodium tripolyphosphate
+283699	Tungstates
+283699	Wolframate
+284390	Amalgams
+284390	Liquid air
+284440	Plutonium
+284440	Spent Heavy water
+284700	Hydrogen peroxide
+290129	Butanol
+290129	Chlordane
+290129	Chloroethane
+290129	Cycloterpene
+290129	Dichloromethane
+290129	Ethylbenzene
+290129	Ethylene dibromide
+290129	Heptachlor
+290129	Hexane
+290129	Isobutene
+290129	Methanol
+290129	Propene
+290129	Styrene
+293690	Acidol digestol
+293690	Acidol digestol
+293690	Adreset
+293690	Aleve
+293690	Algae powder
+293690	Alpha lipoic acid
+293690	Alpha lipoic acid
+293690	Anabol
+293690	Barley tablet
+293690	Body care products
+293690	Bone healer
+293690	Bone healer
+293690	Caffeine
+293690	Calmax
+293690	Citrical calcium
+293690	Citrus Silk
+293690	Cold medicine
+293690	Cortisone
+293690	Dehydrocortisone
+293690	Dietary pills
+293690	Dietary supplement tea
+293690	Dietary supplement tincture
+293690	Dietary supplement tincture
+293690	Extract
+293690	Extract supplement
+293690	Fish oil
+293690	Fish oil
+293690	Flora prime
+293690	Food additive
+293690	Food liquid
+293690	Food supplement
+293690	Glucosamine
+293690	Glutatione
+293690	Green coffee bean
+293690	Green Naturalaser
+293690	Health powder
+293690	Immune support
+293690	Immune support
+293690	Krill oil
+293690	Lipozene
+293690	Lypospheric
+293690	Meal replacement
+293690	Natural supplement
+293690	Non prescription medication
+293690	Nutritional supplement
+293690	Over the counter medicine
+293690	Over the counter medicine
+293690	Prednisolone
+293690	Sport nutrition
+293690	Stevia
+293690	Sweetner
+293690	Thromboxanes
+293690	Thyroxal
+293690	Ubiquinol
+294110	Medication
+300220	Animal blood
+300220	Animal blood
+300220	Bacterial lysates
+300220	Blood plasma
+300220	Gland
+300220	Human blood
+300220	Human tissue
+300220	Microorganisms cultures
+300220	Microorganisms cultures
+300220	Toxins
+300220	Toxoids
+300220	Vaccines
+300230	Animal vaccine
+300230	Pet medication
+300230	Veterinary medicine
+300490	Amino Acids
+300490	Cephalosporins
+300490	Cold preparation
+300490	Cough preparation
+300490	Diuretics
+300490	Haematological agents
+300490	Laxatives
+300490	Macrolides
+300490	Morphine
+300490	Pediatric drops
+300490	Tranquilizers
+300640	Dental cements
+300640	Dental fillings
+300660	Contraceptive
+310229	Ammonium nitrate
+310229	Calcium nitrate
+310229	Calcium nitrate
+310229	Magnesium potassium sulphate
+310229	Superphosphates
+310229	Urea
+320290	Colour lakes
+320290	Colouring matter
+320290	Direct dyes
+320290	Disperse dyes
+320290	Fluorescent brightening agents
+320290	Prepared colours
+320290	Prepared pigments
+320290	Stamping foils
+320290	Tanning cream
+320290	Tanning preparations
+320290	Tannins
+320290	Vat dyes
+320300	Food coloring
+320300	Food coloring
+320300	Food decorating color
+320417	Quinacridone preparations
+321390	Art color supplies
+321390	Modifying tints
+321390	Paint bottle
+321390	Paint jars
+321390	Paint tablets
+321390	Paint tablets
+321390	Paint tubes
+321390	Pigment
+321390	Prepared driers
+321390	Sealer
+321390	Student colours
+321390	Student colours
+321390	Vinyl polymer
+321410	Caulking
+321410	Grafting putty
+321410	Mastics
+321410	Non refractory surfacing preparations
+321519	Flexographic
+321519	Lithographic
+321590	Pen ink
+330119	Oil
+330119	Perume oil
+330119	Scented oil
+330210	Odoriferous substances
+330300	Eau de toilette
+330300	Perfume
+330300	Toilet waters
+330520	Hair
+330590	Curl control
+330590	Curl control
+330610	Teeth whitening
+330610	Teeth whitening
+330610	Tooth whitening
+330690	Dental floss
+330690	Dental floss
+330690	Dental hygiene
+330690	Denture cleaner
+330690	Denture fixative paste
+330690	Mouth wash
+330690	Mouth wash
+330690	Oral rinse
+330720	Antiperspirant
+330720	Deoderent
+330749	Agarbatti
+330749	Air diffuser
+330749	Air diffuser
+330749	Air freshener
+330749	Aromatherapy
+330749	Insence
+330749	Room deodorizer
+330790	Bath oil
+330790	Contact lens solution
+330790	Cosmetic preparation
+330790	Cosmetic preparation
+330790	Saline solution
+330790	Shaver
+330790	Shaving preparation
+340111	Castile soap
+340111	Castile soap
+340290	Antioxidants
+340290	Hardeners
+340311	Bolt release preparations
+340311	cutting oil preparations
+340311	Lubricating oil preparations
+340311	Lubricating oil preparations
+340311	Mould release preparations
+340311	Petroleum based lubricants
+340420	Artificial
+340420	Floor
+340420	Furniture
+340420	Polyethylene glycol
+340420	Prepared
+340420	Scouring
+340600	Candlestick
+340600	Partylite
+350190	Acrylic polymers
+350190	Casein
+350190	Casein glues
+350190	Dextrin
+350190	Epoxide resins
+350190	Pregelatinized starch
+350190	Pregelatinized starch
+350190	Proteases
+350610	Bovi Bond
+350610	Urethane adhesive
+360200	Combustible material
+360200	Combustible material
+360200	Detonating caps
+360200	Detonating caps
+360200	Electric detonators
+360200	Lighter fuel
+360200	Lighters gas
+360200	Liquefied gas
+360200	Liquefied gas
+360200	Nitroglycerin
+360200	Percussion caps
+360200	Propellent powders
+360200	Propellent powders
+360200	Pyrophoric alloys
+360200	Pyrotechnic articles
+360200	Rain rockets
+360200	Resin torches
+370110	Cinematographic film
+370110	Media film
+370110	Media film
+370110	Photographic film
+370110	Photographic transmission machine paper
+370110	X ray film
+370110	X ray film
+370110	X ray plates
+370110	X ray plates
+370120	Microfilm
+370120	Photographic film in rolls
+370120	Photographic film in rolls
+370120	Photographic film in rolls
+380190	Activated carbon
+380190	Activated clay
+380190	Activated diatomite
+380190	Activated perlite
+380190	Artificial graphite
+380190	Residual lyes
+380190	Resin acids
+380190	Resin acids
+380190	Salt of resin acids
+380190	Salts of rosin
+380190	Semi colloidal graphite
+380190	Wood creosote
+380190	Wood tar
+380190	Wood tar
+380190	Wood tar oils
+380190	Wood tar oils
+380190	Wood turpentine oil
+380850	Anti sprouting products
+380850	Disinfectant products
+380850	Insect repellent
+380850	Skeetervac
+381590	Anti knock preparations
+381590	Anti oxidizing preparations
+381590	Brazing powder
+381590	Compound plasticizers for plastics
+381590	Fire extinguishers preparations
+381590	Fire extinguishers preparations
+381590	Gum inhibitors
+381590	Gum inhibitors
+381590	Mixed alkylbenzenes
+381590	Oxidation inhibitors
+381590	Prepared rubber accelerators
+381590	Refractory mortars
+381590	Soldering paste
+381590	Welding powder
+381900	Anti freezing preparations
+381900	Clinical waste
+381900	Hydraulic brake fluid
+381900	Hydraulic transmission fluid
+381900	Industrial monocarboxylic fatty acids
+381900	Municipal waste
+381900	Prepared de icing fluid
+382550	Antifreeze fluids
+382550	Hydraulic fluids
+382550	Hydraulic fluids
+382600	Biodiesel fuel
+390110	Acrylonitrile butadiene styrene copolymers
+390110	Acrylonitrile butadiene styrene copolymers
+390110	Ethylene vinyl acetate copolymers
+390110	Polyethylene
+390110	Polymers of vinyl chloride
+390110	Polymers of vinyl chloride
+390110	Polypropylene
+392049	Screen protector
+392049	Screen protector
+392210	Plastic
+392210	Vinyl
+392590	Balcony
+392590	Barriers
+392590	Bobbin
+392590	Cupholder
+392590	Filter
+392590	Flutings
+392590	Food saver
+392590	Garbage can
+392590	Handles
+392590	Mattress covers
+392590	Pail
+392590	Partitions
+392590	Picnic coolers
+392590	Reservoir
+392590	Roof
+392590	Shelf
+392590	Sign
+392590	Spool
+392590	Toilet seat
+392590	Towel rail
+392590	Towel rail
+392590	Vat
+392590	Window
+392690	Crutch grip
+392690	Nursing cushion
+392690	Pessaries
+392690	Syringe bulb
+392690	Syringe bulb
+400110	Carboxylated styrene butadiene
+400110	Compounded rubber
+400110	Styrene butadiene rubber
+400110	Transmission belt
+400690	Tube
+401110	Pneumatic tires
+401110	Tire
+401410	Boat fender
+401410	Bottle stoppers
+401410	Dock fenders
+401511	Mitten
+401519	Garment
+401691	Padded mat
+401691	Padded mat
+401691	Rubber mat
+401691	Rubber mat
+401693	Seals
+401693	Washers
+410120	Raw hide
+410120	Raw Skin
+410120	Whole skin
+410120	Whole skin
+411410	Chamois leather
+411410	Metallized leather
+420211	Harley
+420211	Harley touring
+420211	Musical instrument bag
+420211	Musical instrument bag
+420211	Musical instrument case
+420211	Musical instrument case
+420211	Touring pack
+420211	Travel bag
+420219	Back pack
+420219	Backpack
+420219	Book bag
+420219	Gucci bag
+420219	Instrument case
+420219	Musical instrument bag
+420219	Musical instrument case
+420219	Pouch
+420219	Stirrups
+420219	Strap
+420219	Suitcase
+420219	Travel bag
+420219	Trunk
+420221	Epi Lussac
+420221	Hand bag
+420229	Purse
+420229	Soho Optic Linen Hobo
+420231	Pipe case
+420231	Tobacco pouch
+420231	Tobacco pouch
+420231	Wallet
+420239	Billfold
+420239	Cigarette case
+420239	Pipe case
+420239	Pocket book
+420291	Haversacks
+420291	Jewelery box
+420291	Jewellery box
+420291	Razor strop
+420291	Shoulder tote
+420291	Tool bag
+420291	Tote bag
+420291	Watch box
+420291	Watch box
+420292	Haversacks
+420292	Knapsacks
+420292	Maxpedition Mongo
+420292	Messenger bag
+420292	Messenger bag
+420292	Packsacks
+420292	Tactical soms
+420299	Case
+430180	Raw fur skin
+430400	Fur skin
+430400	Fur skin
+430400	Lambskin
+440110	Box pallets
+440110	Casks
+440110	Dowelling
+440110	Fence
+440110	Maple wood
+440110	Maple wood
+440110	Pellet
+440110	Pole
+440929	Oak flooring
+441210	Laminated wood
+441210	Parquet
+441400	Photo frame
+441400	Photo frame
+441400	Picture frame
+441400	Window frame
+441510	Case
+441860	Beams
+441860	Posts
+441900	Bird feeder
+441900	Clothes hanger
+441900	Cutlery case
+441900	Mallet
+441900	Pepper shaker
+441900	Salt saker
+441900	Softwood
+441900	Toothpick
+442090	Coat rack
+442190	Countertop
+460211	Wickerwork
+480100	Wrapping paper
+480630	Embossed
+480630	Parchment
+481390	Paper
+481490	Wall covering
+481490	Wall paper
+481720	Cardboard
+481720	Composite
+481720	Filter paper
+481720	Napkin
+481720	Paper dish
+481720	Paper plate
+481720	Paper sheet
+481720	Photo sensitive paper
+481720	Photo sensitive paper
+481720	Sanitary napkin
+481720	Serviette
+481890	Tablecloths
+481890	Tissues
+481890	Towels
+482040	Manifold
+490700	Banknote
+490700	Cheque forms
+490700	Stock
+491191	Baseball cards
+491191	Sportscards
+510119	Fabric
+510119	Thread
+520299	Cloth
+540120	Sewing thread
+540120	Sewing thread
+550190	Synthetic filament tow
+550190	Synthetic staple fibres
+560121	Cordage twine
+560121	Gimped yarn
+560121	Knotted netting of twine
+560121	Metallized yarn
+560121	Textile fibres
+560121	Twine
+570210	Rug
+570500	Textile floor covering
+580190	Needle worked tapestries
+580190	Needle worked tapestries
+580190	Quilted textile
+580190	Ribbon
+580190	Tulles
+590190	Canvas
+590190	Linoleum
+590190	Painting canvas
+600110	Yarn
+610190	Anorak
+610190	Cape
+610190	Cloak
+610190	Rain coat
+610310	Breeches
+610310	Pants
+610310	Skirt
+610310	Trouser
+610711	Underware
+610729	Blouse
+610729	Boxers
+610729	Pajamas
+610729	Pyjamas
+610729	Robe
+610729	Seamless
+610729	Underwear
+610990	Long sleeve
+610990	Tank top
+610990	Tee shirt
+611011	Cardigan
+611011	Clothes
+611011	Turtle neck
+611011	Waistcoat
+611219	Active wear
+611219	Athletic clothing
+611219	Body suit
+611219	Hip hugger
+611219	Motorcycle wear
+611219	Snow suit
+611219	Snow suit
+611219	Snowsuit
+611219	Swim shorts
+611219	Swim wear
+611219	Tutu
+611490	Unitard
+611510	Socks
+611699	Mittens
+611699	Mitts
+611790	Cycling short insert
+620111	Jacket
+620111	Poncho
+620112	Coat
+620112	Parka
+620112	Raincoat
+620112	Wind cheater
+620112	Wind cheater
+620113	Jacket
+620113	Poncho
+620192	Ski jacket
+620192	Ski jacket
+620311	Breeches
+620311	Ensemble
+620311	Skirt
+620311	Trouser
+620343	Ensemble
+620343	Skirt
+620343	Suit
+620343	Trouser
+620349	Denim
+620349	Flare leg
+620349	High rise
+620349	High rise
+620349	Jeans
+620462	Boot cut
+620462	Boot cut
+620462	Flare leg
+620462	High rise
+620462	Jeans
+620520	T shirt
+620520	Tank top
+620520	Tee shirt
+620520	Tshirt
+620590	Off shoulder
+620590	Short sleeve
+620590	Sleeveless
+620590	Tank
+620590	Tank top
+620590	Tee
+620590	Top
+620610	Blouson
+620620	Blouse
+620630	Bath robe
+620630	Blouson
+620630	Boxers
+620630	Briefs
+620630	G string
+620630	Intimates
+620630	Lingerie
+620630	Neglige
+620630	Nightshirt
+620630	Polo
+620630	Seamless
+620630	Singlet
+620630	Sleep wear
+620630	Sleepwear
+620630	Underwear
+620920	Softbums
+620990	Brace
+620990	Breeches
+620990	Clothes
+620990	Hosiery
+620990	Leggings
+620990	Onesies
+620990	Overall
+620990	Pants
+620990	Shirt
+621112	Apparel
+621112	Apron
+621112	Athletic wear
+621112	Banadanas
+621112	Bathing suit
+621112	Bathing suit
+621112	Motorcycle ware
+621112	Motorcycle ware
+621112	Motorcycle wear
+621112	Ski pants
+621112	Ski suit
+621112	Ski wear
+621112	Snow pants
+621112	Speedo
+621112	Sport clothing
+621112	Sport clothing
+621112	Swim wear
+621112	Swimwear
+621112	Track suit
+621112	Tracksuit
+621120	Suit
+621210	Corsets
+621210	Girdle
+621290	Handkerchief
+621410	Mufflers
+621420	Ear muffs
+621510	Tie
+621590	Bow tie
+630190	Bed linen
+630190	Bedding
+630190	Blind
+630190	Crib sheet
+630190	Hammock
+630190	Life jacket
+630190	Life jacket
+630190	Sail
+630190	Sheet
+630190	Sheet set
+630190	Towel
+630190	Travelling rug
+630190	Valance
+630190	Window curtain
+630492	Seat cover
+630619	Camping goods
+630619	Sailboard sail
+630790	Climbing harness
+630790	Mask
+630790	Wire edged ribbon
+630900	Textile material
+631090	Scrap twine
+640110	Sneakers
+640219	Slippers
+640219	Sneakers
+640359	Cleats
+640359	Flipflops
+640359	Loaffer
+640610	Heel cushion
+640610	Heel cushion
+640610	Rubber heel
+650610	Chinstrap
+650699	Visor
+660199	Riding crop
+660199	Riding crop
+660199	Seat stick
+660199	Umbrella
+660199	Walking stick
+670419	Wig
+670420	Hair
+680291	Travertine
+680410	Grindstones
+681140	Asbestos cement
+681140	Cellulose fibre cement
+681140	Cellulose fibre cement
+690490	Porcelain
+690590	Architectural ornament
+690590	Architectural ornament
+690590	Ceramic constructional good
+690590	Chimney pots
+690590	Cowls
+690600	Guttering
+690890	Mosaic cubes
+691090	Sanitary fixture
+691090	Sink
+691090	Toilet tank
+691090	Wash basin pedestal
+691090	Wash basin pedestal
+691090	Washroom fixture
+691090	Water closet pan
+691200	Chinaware
+691200	Household articles
+691200	Plate
+691200	Tea pot
+691200	Toilet articles
+691490	Ceramic
+700910	Mirror
+700910	Side view mirror
+700910	Side view mirror
+700910	Sideview mirror
+701399	Beer glass
+701399	Beer glass
+701399	Bowl
+701399	Crystal
+701399	Glass
+701399	Swarovski
+701399	Tankards
+701510	Corrective glasses
+701690	Glass form
+701690	Glass plate
+701690	Glass shell
+701810	Imitation pearl
+701810	Imitation precious stone
+701810	Rosaries
+710110	Emerald
+710110	Rubies
+711311	Jewelery
+711311	Jewlry
+711711	Cuff link
+711719	Tie clip
+730830	Iron post
+730830	Pillars
+730830	Steel floor
+730830	Steel post
+730830	Steel roof
+730830	Steel window
+730900	Hot water tank
+730900	Steel cask
+730900	Steel cask
+731290	Plaited band
+731290	Rope
+731419	Bee trap
+731419	Insect trap
+731419	Insect trap
+731700	Coach screws
+731700	Iron nail
+731700	Screws
+731700	Shank
+731700	Steel washers
+731700	Thumbtack
+731940	Crochet hooks
+731940	Knitting needles
+731940	Sewing needle
+731990	Embroidery needle
+732111	Appliance
+732111	Domestic appliance
+732111	Gas rings
+732111	Range
+732119	Cook ware
+732119	Cooking
+732119	Vaporizer
+732219	Air heaters
+732219	Air heaters
+732219	Hot air distributors
+732310	Iron wool
+732310	Pot scourer
+732310	Pot scourer
+732310	Steel wool
+732310	Steel wool
+732393	Iron cookware
+732393	Iron utensil
+732393	Steel cooking utensil
+732620	Cage
+732620	Paint roller frames
+732620	Paint roller frames
+732620	Stamping tool
+732620	Steel belt
+732620	Steel bins
+732620	Steel container
+732620	Steel pallet
+732620	Tool box
+740100	Bolts
+740100	Copper alloys
+740100	Copper foil
+740100	Copper tubes
+740100	Copper zinc base alloys
+740100	Copper zinc base alloys
+740100	Plaited bands
+740100	Plaited bands
+740100	Spring washers
+740100	Wire bar
+740721	Welding
+741810	Copper
+761090	Aluminum
+761100	Aluminum
+761610	Aluminum
+780199	Lead
+780199	Lead powders
+780199	Lead strip
+790390	Zinc
+790700	Building components
+790700	Roof capping
+790700	Roof capping
+790700	Zinc pipe fitting
+790700	Zinc pipe fitting
+790700	Zinc tubes
+790700	Zinc tubes
+800700	Tin
+811299	Antimony
+811299	Copper
+811299	Indium
+811299	Iron
+811299	Lead
+811299	Manganese
+811299	Molybdenum
+811299	Tungsten
+811299	Vanadium
+820130	Livestock branding iron
+820130	Sledge hammer
+820150	Carbide inserts and bits
+820150	Forged forks
+820150	Hedge shears
+820150	Portable butane hair curler
+820150	Post hole digger
+820150	Poultry shears
+820150	Poultry shears
+820150	Pruning shears
+820150	Secateurs
+820190	Bill hook
+820190	Blow lamp
+820190	Garden tool
+820190	Hand tool
+820190	Hatchet
+820190	Hewing tool
+820190	Horticulture tool
+820190	Razor
+820210	Hammer
+820210	Hand operated spanners
+820210	Hand saw
+820210	Sledge
+820210	Sledge hammer
+820210	Torque meter wrench
+820210	Torque meter wrench
+820220	Chain
+820220	Slotting
+820320	Butcher cleaver
+820320	Clippers
+820320	Hole punch
+820320	Kitchen Cleavers
+820320	Loading tool
+820320	Metal cutting shears
+820320	Nail cutter
+820320	Nail files
+820320	Palette knives
+820320	Paper knives
+820320	Paper knives
+820320	Pipe cutters
+820320	Pipe cutters
+820320	Plier
+820320	Tweezer
+820320	Wood working auger
+820320	Wood working tool
+820510	Carving knives
+820510	Chisel
+820510	Cutting plane
+820510	Cutting plane
+820510	Die set
+820510	Portable forges
+820510	Wood working cutting tool
+820559	Camping tool
+820559	Hammer tacker
+820559	Hammer tacker
+820559	Repair kit
+820559	Snap on tool set
+820559	Tacking
+820570	Anaesthesia
+820570	Clamp
+820570	Surgical suction
+820790	Bushing bits
+820790	Clay spades
+820790	Drivers
+820790	Pipe
+820790	Vacuum cleaners nozzle
+820890	Agricultural
+820890	Agricultural machinery
+820890	Horticultural machinery
+820890	Machines
+820890	Metal working
+820890	Metal working
+821000	Blender
+821000	Cutting tool
+821000	Mince
+821000	Vita mix blender
+821110	Cake servers
+821110	Cooking utensil
+821110	Cooking utensil
+821110	Fish knives
+821110	Fork
+821110	Kitchen tool
+821110	Kitchen ware
+821110	Knife
+821110	Steak flatware
+821110	Steak knives
+821110	Utensil
+821110	Utility blade
+821300	Hair cut tools
+830110	Clasps
+830110	Combination lock
+830110	Dead bolt lock
+830110	Dead bolt lock
+830110	Padlock
+830210	Fittings
+830210	Marine hardware
+830241	Door closers
+830241	Door opener
+830241	Drapery poles
+830241	Window screen
+830241	Window screen
+830250	Automatic door closers
+830250	Automatic door closers
+830250	Brackets
+830300	Card index cabinets
+830300	Desk supplies
+830300	Indexing tags
+830300	Letter clips
+830300	Loose leaf binders
+830300	Office equipment
+830300	Office stamp stands
+830300	Pen trays
+830300	Staple
+830300	Strong box
+830300	Strong door
+830610	Gongs
+830610	Wind chimes
+830890	Crown corks
+830890	Metal screw caps
+830890	Spangle
+840140	Gas generators
+840140	Nuclear reactors
+840140	Propeller
+840140	Soot removers
+840140	Super heaters
+840690	Regulators
+840690	Spindle discs
+840690	Spindle shafts
+840999	Air conditioner
+840999	Air filter
+840999	Refrigerating unit
+841451	Ceiling fan
+841460	Hood fan
+841460	Water heater
+842121	Water conditioner
+842290	Dishwasher
+842959	Levellers
+842959	Tamping machines
+843020	Forestry machinery
+843020	Forestry machinery
+843020	Horticultural machinery
+843020	Snow blowers
+843020	Snow ploughs
+843510	Machinery
+843510	Water distribution housing
+844319	Copying machine
+844319	Flexographic machine
+844319	Letterpress machine
+844319	Printer parts
+844790	Knitting machine
+844790	Sewing machine
+845019	Washing machine
+845150	Hose reel
+846722	Chain saws
+847149	Computer server
+847149	Control server
+847170	Computer keyboard
+847170	Computer memory
+847170	Flash drive
+847170	Floppy disk
+847330	Mousepad
+848180	Ballcock
+848350	Flywheel
+850110	Electric motor
+850440	Ballasts
+850440	Inverter
+850610	Lithium
+850610	Mercuric oxide
+850610	Nickel cadmium
+850610	Silver oxide
+850819	Vacuum cleaner
+850940	Food mixer
+850940	Ice cream maker
+850940	Ice cream maker
+850940	Juice extractor
+850940	Juice extractor
+850980	Personal hygiene device
+850980	Ultrasonic vaporizers
+851020	Hair
+851110	Dynamos
+851110	Electrical ignition
+851110	Ignition coil
+851110	Ignition magnetos
+851110	Ignition pack
+851110	Spark ignition
+851110	Spark ignition
+851110	Sparking plugs
+851110	Starter motors
+851110	Starting equipment
+851650	Indoor smokeless barbecue
+851650	Indoor smokeless barbecue
+851660	Cooking range
+851660	Cooking stove
+851671	Coffee machine
+851671	Soy machine
+851679	Facial steamer
+851712	Cell phone
+851712	Fax machine
+851712	Galaxy
+851712	I phone
+851712	Pager
+851712	Smart phone
+851712	Smart phone
+851712	Telephone headset
+851761	ipod
+851761	Kindle
+851810	Microphone
+851810	Telephone handsets
+851810	Telephone handsets
+851821	Loud speakers
+851821	Speaker parts
+851821	Speakers
+851981	Laser video disc players
+852329	CD
+852329	Magnetic disc
+852329	Magnetic disc
+852329	Magnetic tape
+852329	Software
+852580	Camera
+852580	Digital cameras
+852580	Radio
+852580	Video camera
+852580	Video recorder
+852871	Television receiver
+853110	Fire alarm
+853939	Fluorescent lamp
+853990	Electronic board
+853990	Electronic component
+854239	Integrated circuit
+854239	Integrated circuit
+854442	Power cord
+860900	Railway
+870810	Barrier fluid
+870810	Cooling kit
+870810	Day lights
+870810	Day lights
+870810	EZ
+870810	Face bar
+870810	Truck cap
+870810	Wing
+870829	Floor mat
+870840	Gauge
+870840	Pitman Arm
+870840	Quickshifter
+870870	Ball bearing
+870870	Ball bearing
+870870	Locking ring
+870880	Shock absorber
+870880	Shock assembly
+870880	Spring shock
+870894	Proforged Idler
+870894	Proforged Idler
+870894	Steering column
+870894	Steering wheel
+870895	Air bag
+870899	BMW
+870899	GMC
+870899	Honda
+870899	Lincoln
+870899	Mazda
+870899	Mercedes
+870899	Scion
+871410	Axle
+871410	Barrier fluid
+871410	Bearing
+871410	Brake booster hose
+871410	Cooling kit
+871410	Day lights
+871495	Handle bar
+871495	Handle bar
+871499	Wheel
+890399	Jet ski
+890399	Jet ski parts
+890399	Jet wave runner parts
+890399	Jet wave runner parts
+890399	Jet wave runner parts
+890399	Kayak parts
+890399	Personal watercraft
+890399	Sea doo
+890399	Sea doo parts
+890399	Sea doo parts
+890399	Seadoo
+900130	Camera lense
+900130	Microscope
+900130	Optical elements
+900130	Optical elements
+900130	Photographic reducer
+900319	Eyeglasses frame
+900319	Glasses frame
+900319	Optical frame
+900319	Reading glasses
+900319	Reading glasses
+900319	Seeing glasses
+900319	Spectacle Frame
+900319	Spectacle mounting
+900580	Binoculars
+900580	Telescope
+900691	Camera attachments
+901060	Projection screen
+901410	Direction finding compass
+901410	Geographical positioning system
+901410	Navigational instruments
+901410	Navigational instruments
+901540	Hydrographic
+901540	Meteorological
+901540	Photogrammetrical surveying
+901730	Gauges
+901730	Micrometers
+901780	Tape measure
+901811	Dental
+901890	Defibrillator
+901890	Enema board
+902190	Aerosol therapy
+902190	Artificial limb
+902190	Artificial respiration
+902190	Artificial teeth
+902190	Catheter
+902190	Dental fitting
+902190	Electro cardiograph
+902190	Fracture applianc
+902511	Hygrometer
+902511	Liquid thermometer
+902511	pedometers
+902511	Pressure measuring instrument
+902511	Spectrophotometer
+903020	Multimeter
+903020	Spectrum analyzer
+910119	Watches
+910119	Wrist watch
+910511	Cuckoo clock
+911310	Watch band
+911310	Watch bracelet
+911310	Watch strap
+920290	Banjo
+920590	Accordion
+920590	Bagpipe
+920590	Bassoon
+920590	Concert chimes
+920590	Harp
+920590	Harpsichord
+920590	Keyboard stringed instrument
+920590	Mouth organ
+920590	Musical accessories
+920590	Musical strings
+920590	Oboe
+920590	Saxophone
+920590	Sousaphone
+920590	Trombone
+920590	Tuba
+920590	Vibraharp
+920590	Violin
+920710	Concert bells
+920710	Concert bells
+920710	Electric organ
+920710	Orchestral chimes
+920710	Portable keyboard
+920710	Vibraphones
+920810	Duck call
+920810	Loon call
+920810	Mechanical singing bird
+920810	Signalling instrument
+920810	Signalling instrument
+920991	Agraffe
+920991	Back check wire
+920991	Brass flange plate
+920991	Bridge pin
+920991	Bridge pin
+920991	Bridle strap
+920991	Bridle wire
+920991	Damper wire
+920991	Felt punching
+920991	Felt punching
+920991	Hammer head
+920991	Key bottom
+920991	Key pin
+920991	Spruce sounding board
+920999	Tuning fork
+930110	Flame throwers
+930110	Grenade launchers
+930110	Shotgun
+930110	Weapon projectors
+930200	Blank ammunition
+930200	Blank ammunition
+930200	Captive bolt humane killer
+930200	Line throwing gun
+930200	Line throwing gun
+930200	Muzzle loading firearm
+930200	Muzzle loading firearm
+930200	Slide action shotgun
+930200	Sporting shotgun
+930200	Target shooting shotgun
+930330	Bolt action
+930330	Semi automatic
+930330	Sporting rifle
+930330	Target shooting rifle
+930390	Bolt action
+930390	Semi automatic calibre rim fire
+930390	Semi automatic calibre rim fire
+930400	Truncheons
+930510	Revolvers
+930591	Bolts
+930591	Firearm magazines
+930591	Firing mechanisms
+930591	Gas buffers
+930591	Pistons locking lugs
+930591	Sound moderators
+930621	Firearm
+930621	Gun
+930690	Bombs
+930690	Guided missiles
+930690	Missiles
+930700	Bayonets
+930700	Cutlasses
+930700	Lances
+940120	Carseat
+940151	Desk
+940151	High chair
+940210	Desk
+940210	Seats
+940510	Ceiling lighting fixture
+940510	Illuminated sign
+940510	Lamp
+940510	Lighting fitting
+940510	Nightlight
+940510	Spot light
+940510	Wall lamp
+940550	Lantern
+940550	Oil lantern
+950300	Action figure
+950300	Action figure
+950300	Arcade game
+950300	Baby
+950300	Bead bracelets
+950300	Beads
+950300	Craft
+950300	Craft supplies
+950300	Die cast
+950300	Doll accessories
+950300	Doll dress
+950300	Engine
+950300	Felting kit
+950300	Games
+950300	Glow plug
+950300	Helicopter
+950300	Kit
+950300	Kite
+950300	Lego
+950300	Marlin item
+950300	Play
+950300	Play balls
+950300	Poly glitter
+950300	Poly glitter
+950300	Puppet sock
+950300	Push pull
+950300	Puzzles
+950300	Set
+950300	Skipping rope
+950300	Sloter
+950300	Stuffed toys
+950300	Train
+950300	Train accessories
+950300	Train set
+950300	Train signals
+950300	Train tracks
+950300	Tricycle
+950300	Wheeled toy
+950300	Wooden
+950420	Supply
+950450	Video game machine
+950450	Video game machine
+950490	Bingo equipment
+950490	Hand held game
+950629	Diving gear
+950629	Scuba accessories
+950629	Scuba gear
+950629	Water sport equipment
+950629	Water sport equipment
+950639	Club
+950639	Grip
+950639	Head
+950659	Racket
+950659	Racketball
+950659	Squash
+950659	Table tennis
+950659	Tennis
+950662	Cricket ball
+950662	Dodge ball
+950662	Squash ball
+950662	Tennis ball
+950662	Volleyball
+950670	Figure skates
+950670	Ice skates
+950670	In line skates
+950691	Exercise machine
+950691	Exercise machine
+950691	Hand grips
+950691	Hand grips
+950691	Stationary bicycle
+950691	Stationary bike
+950691	Stationary bike
+950699	Automated batting cage
+950699	Baseball equipment
+950699	Baseball equipment
+950699	Bat
+950699	Clay target thrower
+950699	Cricket bats
+950699	Elbow guard
+950699	Football shoulder pads
+950699	Frisbee
+950699	Hockey gear
+950699	Hockey puck
+950699	Juggling equipment
+950699	Knee guard
+950699	Outdoor game
+950699	Paddling pool
+950699	Pitching machine
+950699	Playground equipment
+950699	Protective equipment
+950699	Protective pad
+950699	Shin pad
+950699	Skate board
+950699	Split rings
+950699	Sport game
+950699	Swimming pool
+950699	Target
+950699	Thigh guard
+950699	Thigh pad
+950699	Toboggan
+950699	Waist guard
+950699	Waist pad
+950710	Fish bait
+950710	Fish lure
+950710	Fish lure
+950710	Fish reel
+950710	Fishing line
+950710	Fishing reel
+950710	Fishing tackle
+950890	Amusement ride accessories
+950890	Amusement ride device
+950890	Shooting galleries
+950890	Travelling circus
+950890	Travelling theatre
+950890	Travelling theatre
+960110	Honeycomb
+960110	Worked Ivory
+960190	Animal moulding
+960190	Antler
+960190	Wax
+960190	Worked bone
+960200	Gum
+960200	Resins
+960200	Tortoise shell
+960310	Cosmetic brush
+960310	Mop
+960310	Paint brush
+960310	Paint brush
+960310	Toilet brush
+960310	Varnish brush
+960400	Travel kit
+960400	Travel kit
+960400	Travel set
+960621	Button blanks
+960621	Button press
+960621	Button press
+960621	Press fasteners
+960810	Ball point pens
+960810	Felt tipped pen
+960810	Felt tipped pen
+960810	Fountain pens
+960810	Pencil leads
+960810	Propelling pencils
+960810	Propelling pencils
+960810	School material
+961000	Drawing surfaces
+961000	Writing slates
+961000	Writing slates
+961100	Date stamp
+961100	Embossing stamp
+961100	Printing stamp
+961100	Sealing stamp
+961310	Lighters
+961400	Cigarette holders
+961400	Cigarette holders
+961511	Elastic bands
+961511	Hair bow
+961610	Cosmetic pads
+961610	Powder puff
+970110	Art print
+970110	Decorative plaque
+970110	Postage stamp
+970110	Postal stationery
+970110	Revenue stamp
+970110	Stamped paper
+970500	Historical
+970500	Paleontological
+970500	Science
+970600	Centennial coin
+970600	WWII
+981700	Trophy
+981800	University
+989800	Ammunition magazine
+989800	Automatic firearm
+989800	Automatic handgun
+989800	Automatic rifle
+989800	Baton
+989800	Belt buckle knife
+989800	Belt buckle knife
+989800	Belt buckle knife
+989800	Butterfly knife
+989800	Centrifugal knife
+989800	Centrifugal knife
+989800	Cross bow
+989800	Cross bow
+989800	Ee Cheol Bong
+989800	Firearm magazine
+989800	Firearm magazine
+989800	Gravity knife
+989800	Gravity knife
+989800	Knife comb
+989800	Mace
+989800	Military rifle
+989800	Paint ball markers
+989800	Pepper spray
+989800	Push dagger
+989800	Push dagger
+989800	Shaken
+989800	Short barrelled gun
+989800	Spring assisted knife
+989800	Spring assisted knife
+989800	Spring baton
+989800	Steel cobra
+989800	Switch blade
+989800	Sword cane
+989800	Tazer
+989800	Throwing stars
+989800	Torsion bar assisted knife
+989800	Toy guns
+989800	Umbrella daggers
+300220	Saxitoxin
+300220	Secretion
+300230	Pet medication
+300230	Pet supplies
+300230	Pet supplies
+300490	Alkaloids
+300490	Amino Acids
+300490	Analgesics
+300490	Antidepressants
+300490	Antihistaminic agents
+300490	Antihistaminic agents
+300490	Antihypertensive agents
+300490	Cold preparation
+300490	Corticosteroid
+300490	Dextrose
+300490	Epinephrine
+300490	Levulose
+300640	Bone reconstruction cement
+300640	Dental fillings
+300660	Ostomy appliance
+310229	Diammonium hydrogenorthophosphate
+310229	Diammonium phosphate
+310229	Fertilizer
+310229	Magnesium potassium sulphate
+310229	Potassium chloride
+310229	Potassium sulphate
+310229	Sodium nitrate
+310229	Sodium nitrate
+320290	Acid dyes
+320290	Direct dyes
+320290	Ferrocyanides
+320290	Fluorescent brightening agents
+320290	Hexacyanoferrates
+320290	Liquid lustres
+320290	Lithopone
+320290	Luminophores
+320290	Prepared colours
+320290	Ultramarine preparations
+320290	Wattle extract
+320300	Food decorating color
+321390	Amusement colours
+321390	Artist colours
+321390	Enamel
+321390	Paint
+321390	Paint pans
+321390	Varnish
+321410	Caulking compounds
+321410	Glazier putty
+321410	Non refractory surfacing preparations
+321410	Painter fillings
+321590	Fountain pen ink
+321590	Fountain pen ink
+330119	Body oil
+330119	Essential oils
+330119	Massage oil
+330119	Massage oil
+330119	Pot pourri
+330190	Oleoresin paprika
+330210	Odoriferous mixtures
+330210	Odoriferous substances
+330300	Eau de toilette
+330300	Toilet waters
+330590	Frizz control
+330610	Tooth whitener
+330690	Dentifrice
+330690	Denture fixative paste
+330690	Denture fixative powder
+330690	Oral rinse
+330690	Toothpaste
+330720	Deodarent
+330720	Deodorizers
+330749	Balsam Sticks
+330749	Diffuser
+330790	After shave preparations
+330790	After shave preparations
+330790	Bath gel
+330790	Bath preparations
+330790	Bath preparations
+330790	Bath salt
+330790	Contact lens solution
+330790	Depilatories
+330790	Shave preparation
+330790	Shaving gel
+330790	Shaving gel
+330790	Shaving set
+330790	Toilet preparations
+330790	Toilet preparations
+340120	Linen soap
+340120	Linen soap
+340290	Stabilizers
+340311	Anti corrosion preparations
+340311	Anti corrosion preparations
+340311	Anti rust preparations
+340311	Anti rust preparations
+340311	Bolt release preparations
+340311	Bolt release preparations
+340311	cutting oil preparations
+340311	Mould release preparations
+340311	Petroleum based lubricants
+340420	Footwear
+340420	Polyethylene glycol
+340600	Tealight
+350190	Rubber cement
+360200	Ferro cerium
+360200	Ferro cerium
+360200	Fireworks
+360200	Lighter fuel
+360200	Lighters gas
+360200	Liquid gas
+360200	Liquid gas
+360200	Prepared explosives
+360200	Resin torches
+360200	Sgnalling flares
+360200	Sgnalling flares
+370110	Dental x ray
+370110	Photographic plates
+370110	Photographic plates
+370110	Photographic transmission machine paper
+370120	Colour photography film
+370120	Colour photography plates
+370120	Film
+370120	Instant print film
+370120	Photographic paper
+370120	photographic sensitizing emulsions
+370120	Polychrome
+380190	Activated clay
+380190	Colloidal graphite
+380190	Furnace lining paste
+380190	Furnace lining paste
+380190	Gum turpentine oil
+380190	Gum turpentine oil
+380190	Lignin pitch
+380190	Powdered lignin sulphonates
+380190	Rosin acid
+380190	Sulphate turpentine oil
+380190	Sulphite lye
+380190	Sulphite lye
+380190	Tall oil
+380190	Vegetable pitch
+380190	Wood naphtha
+380190	Wood turpentine oil
+380850	Anti sprouting products
+380850	Anti sprouting products
+380850	Bug repellant
+380850	Fungicides
+380850	Insect Bait
+380850	Insect lure
+380850	Insect repellent
+380850	Plant growth regulators
+380850	Repellant
+380850	Rodenticides
+381590	Anti corrosive preparations
+381590	Brazing paste
+381590	Brazing paste
+381590	Catalytic preparations
+381590	Catalytic preparations
+381590	Compound plasticizers for plastics
+381590	Dye carriers
+381590	Dye carriers
+381590	Finishing agents
+381590	Fire extinguisher charges
+381590	Fire extinguishers preparations
+381590	Fire extinguishing grenades
+381590	Mixed alkylbenzenes
+381590	Organic composite solvents
+381590	Prepared rubber accelerators
+381590	Reaction accelerators
+381590	Reaction initiators
+381590	Rust preventative preparation
+381590	Soldering powder
+381590	Viscosity improvers
+381590	Welding paste
+381590	Welding powder
+381900	Anti freezing preparations
+381900	Clinical waste
+381900	Hydraulic brake fluid
+381900	Hydraulic brake fluid
+381900	Hydraulic transmission fluid
+381900	Municipal waste
+381900	Prepared de icing fluid
+381900	Sewage sludge
+381900	Windshield fluid
+382600	Biodiesel fuel
+390110	Acrylonitrile butadiene styrene copolymers
+390110	Ethylene vinyl acetate copolymers
+390110	Polymers of ethylene
+390110	Polymers of ethylene
+390110	Polymers of styrene
+390230	Propylene copolymers
+391710	Vinyl
+392049	Screen saver
+392590	Balconies
+392590	Balustrade
+392590	Bathroom accessories
+392590	Bathroom accessories
+392590	Bathroom set
+392590	Carrier
+392590	Container
+392590	Cup holder
+392590	Cupolas
+392590	Disposable container
+392590	Disposable container
+392590	Door
+392590	Dovecotes
+392590	Dresser covers
+392590	Flask
+392590	Food saver
+392590	Jar
+392590	Ornamental articles
+392590	Picnic coolers
+392590	Rainwear
+392590	Shelving
+392590	Shutters
+392590	Spa
+392590	Tag
+392590	Toilet seat
+392590	Wrap
+392690	Douche bag
+392690	Dress shield
+392690	Dress shield
+392690	Hot water bottle
+392690	Hot water bottle
+392690	Hypodermic syringes
+392690	Ice bags
+392690	Nursing cushion
+392690	Nursing nipple
+392690	Pacifiers
+392690	Plastic
+392690	Prophylactics
+392690	Sanitary belt
+392690	Sanitary belt
+392690	Vinyl
+400110	Camel back strips
+400110	Carboxylated styrene butadiene
+400110	Chicle
+400110	Compounded rubber
+400110	Styrene butadiene rubber
+401110	Pneumatic tires
+401140	Tire
+401410	Boat fender
+401410	Bottle stoppers
+401410	Condoms
+401410	Rubber bands
+401410	Sheath contraceptives
+401519	Mittens
+401519	Mitts
+401691	Floor mat
+401691	Padded flooring
+401693	Motorcyccle upper bridge
+401693	Motorcyccle upper bridge
+401695	Air mattresses
+410120	Hide
+410120	Skin
+410120	Tanned hides
+410120	Whole hide
+411410	Chamois leather
+411410	Composition leather
+411410	Patent laminated leather
+411410	Patent leather
+420211	Beverage bags
+420211	Book bag
+420211	Luggage
+420211	Musical instrument case
+420211	Novelty
+420211	Pack
+420211	Satchel
+420211	Stampede
+420211	Touring pack
+420219	Book bag
+420219	Briefcases
+420219	Gucci bag
+420219	Musical instrument case
+420219	Musical instrument case
+420221	Epi Lussac
+420229	Hand bag
+420231	Pipe case
+420231	Pocket book
+420231	Pocketbook
+420239	Cigar case
+420239	Pipe case
+420239	Tobacco pouch
+420239	Wallet
+420291	Jewelery box
+420291	Rucksack
+420291	Shoulder tote
+420291	Tote bag
+420292	Jewellery box
+420292	Maxpedition Mongo
+420292	Shoulder tote
+420292	Tactical soms
+420292	Watch box
+420299	Bag
+420330	Bandolier
+430180	Fur
+430180	Raw fur skin
+430180	Raw fur skin
+430310	Fur skin
+430310	Fur skin
+440110	Cooper
+440110	Densified
+440110	Fire logs
+440110	Fire logs
+440110	Firewood
+440110	Load boards
+440110	Log
+440110	Saddle trees
+440110	Saddle trees
+440110	Stave
+440110	Wafer board
+440110	Wood Chips
+440110	Wood tub
+440910	Flooring
+440929	Oak floor
+440929	Oak floor
+441210	Laminated wood
+441294	Laminboard
+441400	Frame
+441400	Painting frame
+441400	Painting frame
+441400	Photograph frame
+441400	Wood frame
+441510	Crate
+441820	Door frame
+441900	Bird feeder
+441900	Bookend
+441900	Rolling pin
+441900	Spice rack
+441900	Tool handle
+442090	Bookends
+442090	Hat rack
+450490	Cork
+450490	Cork stoppers
+450490	Cork tile
+480100	Newspaper
+480100	Paper
+480100	Paperboard
+480100	Tissue
+480630	Glassine
+480630	Kraft
+480630	Perforated
+480920	Copy
+481720	Felt paper
+481720	Felt paper
+481720	Fluting paper
+481720	Paper cup
+481720	Paper sheet
+481720	Paper tray
+481720	Printing paper
+481720	Stationary
+481890	Serviettes
+490700	Share
+490700	Stamp paper
+491191	Baseball cards
+491191	Football cards
+491191	Hockey cards
+491191	Sports cards
+491191	Trading cards
+491191	Trading cards
+510119	Yarn
+530129	Knitting item
+530129	Knitting supplies
+540120	Linen fabric
+550190	Synthetic filament tow
+550190	Synthetic staple fibres
+560121	Binder twine
+560121	Binder twine
+560121	Cord thread
+560121	Cordage
+560121	Handknitting yarn
+560121	Knotted netting of twine
+560121	Rope
+560121	Rope twine
+560121	Textile fibres
+560121	Textile flock
+560121	Textile materials
+560811	Slackline kit
+570500	Textile floor covering
+580190	Corduroy
+580190	Hand woven tapestries
+580190	Insignia
+580190	Quilted textile
+580190	Terry cloth
+580190	Terry towelling
+580190	Textile label
+580190	Weft pile fabrics
+580190	Weft pile fabrics
+580890	Pom pom
+610190	Wind cheater
+610310	Blazer
+610310	Bloomer
+610310	Dress
+610310	Overall
+610310	Tuxedo
+610310	Uniform
+610711	Underwear
+610729	Bath robe
+610729	Bathrobe
+610729	Briefs
+610729	Gown
+610729	Romper
+610729	Shirt
+610729	Singlet
+610729	Sleep wear
+610729	Slip
+610729	Underpants
+610990	Off the shoulder
+610990	Short sleeve
+610990	T shirt
+610990	Tank
+610990	Tricot
+611011	Pullover
+611011	Sweatshirt
+611219	Apron
+611219	Athletic wear
+611219	Banadanas
+611219	Bathing suit
+611219	Body suit
+611219	Hoodie
+611219	Motorcycle ware
+611219	Motorcycle wear
+611219	Ski suit
+611219	Snow pants
+611219	Sport clothing
+611219	Sport clothing
+611219	Swimwear
+611219	Track suit
+611490	Leotard
+611510	Leggings
+611510	Tights
+611699	Gloves
+611780	Badge
+611790	Cycling short insert
+611790	Protective suit
+620111	Raincoat
+620112	Anorak
+620112	Cape
+620112	Rain coat
+620112	Smock
+620113	Overcoat
+620311	Dress
+620311	Overall
+620311	Tuxedo
+620311	Uniform
+620343	Dress
+620343	Overall
+620343	Pettiskirt
+620349	Low rise
+620520	Off the shoulder
+620520	Short sleeve
+620520	Sleeveless
+620520	Tank top
+620520	Tee
+620520	Top
+620590	T shirt
+620590	Tank top
+620590	Tee shirt
+620590	Tshirt
+620610	Blouse
+620630	Bath robe
+620630	Flannelette
+620630	Gown
+620630	Nightdress
+620630	Petticoat
+620630	Robe
+620630	Shirt
+620630	Sleep wear
+620630	Undershirt
+620630	Undies
+620920	Cloth diapers
+620990	Accessories
+620990	Bib
+620990	Garment
+620990	Outfit
+620990	Pyjamas
+620990	Trouser
+621112	Active wear
+621112	Camis
+621112	Camisole
+621112	Capri
+621112	Nylon
+621112	Snow suit
+621112	Swim wear
+621133	Garment
+621210	Braces
+621410	Mantillas
+621420	Ear muffs
+621420	Shawl
+621420	Veils
+621510	Bow
+621510	Bow tie
+621510	Bowtie
+621590	Cravat
+621600	Gloves
+630190	Awning
+630190	Bed sheets
+630190	Bed skirt
+630190	Blanket
+630190	Cover
+630190	Curtain
+630190	Cushion cover
+630190	Dish cloths
+630190	Dish cloths
+630190	Fitted sheet
+630190	Floor cloth
+630190	Linen
+630190	Pillow sham
+630190	Pneumatic mattress
+630190	Sheet set
+630190	Travelling rug
+630492	Seat cover
+630539	Bag
+630619	Canopy
+630619	Landcraft sail
+630619	Sail
+630619	Sail bag
+630619	Sail bag
+630619	Sailboard sail
+630619	Sunblind
+630790	Burial shroud
+630790	Burial shroud
+630790	Evacuation chute
+630790	Evacuation chute
+630790	Evacuation system
+630790	Face mask
+630790	Furniture moving pads
+630790	Furniture moving pads
+630790	Respirator
+630790	Tubular webbing
+630900	Cloth
+630900	Clothing
+631090	Scrap twine
+640110	Booties
+640110	Boots
+640110	Espadrille
+640110	Flipflop
+640110	Sandal
+640110	Shoes
+640219	Booties
+640219	Flipflop
+640219	Sandal
+640359	Footwear
+640359	Shoes
+640590	Ballet flats
+640590	Calk
+640590	Orthopedic
+640590	Orthotics
+650610	Hat
+650610	Helmet
+660199	Cane
+660199	Seat stick
+660199	Walking stick
+660199	Whip
+670100	Down
+670210	Down
+670419	Eyebrows
+670419	Eyelashes
+670419	Weave
+670490	Hair
+680210	Roofing granules
+680710	Casts
+680911	Gypsum wallboard
+681011	Building block
+681011	Building block
+681140	Cellulose fibre cement
+681140	Magnesium carbonate
+681140	Magnesium carbonate
+681320	Brake pads
+681520	Peat
+690590	Ceramic constructional good
+690590	Chimney pots
+690600	Gutter
+690890	Ceramic cubes
+690890	Hearth tile
+690890	Paving tile
+690890	Paving tile
+690890	Wall tiles
+691090	Bath
+691090	Flushing cistern
+691090	Toilet tank
+691090	Wash basin
+691090	Water closet pan
+691090	Water closet pan
+691200	Ashtray
+691200	Corningware
+691200	Earthenware
+691200	Flower pot
+691200	Urne
+691310	D cor articles
+691310	Decoration
+691310	Ornament
+691310	Porcelain figurine
+691310	Statuettes
+691490	China Porcelain
+691490	Pottery
+691490	Stone ware
+691490	Tile
+700239	Glass items
+700910	Rear view mirror
+700910	Rearview mirror
+701399	Decanter
+701399	Drinking glasses
+701399	Fish bowl
+701399	Glass ornament
+701399	Glass vase
+701399	Glass ware
+701510	Corrective glasses
+701690	Glass panel
+701810	Glass statuettes
+701810	Glass statuettes
+701810	Imitation pearl
+701810	Imitation precious stone
+710110	Cultured pearl
+710110	Diamond
+710110	Precious stone
+710110	Semi precious stone
+710110	Semi precious stone
+711411	Silver
+711711	Studs
+711719	Imitation jewellery
+711810	Coin
+730719	Tube fitting
+730830	Columns
+730830	Deck
+730830	Iron grill
+730830	Ramp
+730830	Rod
+730830	Staircase
+730830	Steel ceiling
+730830	Steel frame
+730830	Steel grill
+730830	Steel roof
+730840	Theatre props
+730840	Theatre props
+730900	Septic tank
+730900	Steel box
+730900	Steel box
+730900	Steel drum
+730900	Steel reservoirs
+730900	Steel reservoirs
+730900	Steel tank
+730900	Vacuum tank
+731290	Wire cloth
+731290	Wire sling
+731419	Chain link
+731419	Insect screening
+731419	Insect screening
+731700	Corrugated nail
+731700	Screw hook
+731700	Spike
+731700	Steel nail
+731700	Steel rivet
+731940	Bodkins
+731940	Needlepoint
+731940	Sewing
+731940	Tapestry kit
+731990	Needles
+732111	Boiler
+732111	Brazier
+732111	Burner
+732111	Cooking chamber
+732111	Grille
+732111	Plate warmers
+732111	Rotisserie
+732111	Top surface panel
+732111	Top surface panel
+732119	Cook ware
+732119	Cookware
+732119	Pots
+732310	Scouring gloves
+732393	Bread box
+732393	Iron cookware
+732393	Iron pan
+732393	Iron utensil
+732393	Le creuset
+732393	Mixing bowls
+732393	Mixing bowls
+732393	Pans
+732393	Stainless cookware
+732393	Steel box
+732393	Steel box
+732393	Steel cookware
+732393	Steel tray
+732490	Stainless steel bottle
+732620	Ladder
+732620	Material handling equipment
+732620	Material handling equipment
+732620	Racks
+732620	Steel container
+732620	Steel hanger
+732620	Steel pallet
+732620	Tinplate
+740100	Copper tubes
+740100	Ingot bars
+740100	Ingot bars
+740100	Nickel
+740100	Stranded wire
+741510	Copper
+761510	Aluminum
+761691	Aluminum
+780199	Lead plates
+780199	Lead sheets
+790700	Skylight frames
+790700	Zinc discs
+790700	Zinc gutters
+790700	Zinc pipes
+790700	Zinc sleeves
+790700	Zinc tube
+800300	Pewter
+800300	Tin
+800300	Tin bars
+800300	Tin foil
+800300	Tin profiles
+800300	Tin wire
+811299	Beryllium
+811299	Cadmium
+811299	Columbium
+811299	Hafnium
+811299	Niobium
+811299	Rhenium
+811299	Zirconium
+820130	Bill hook
+820130	Hammer
+820130	Hewing tool
+820130	Livestock branding iron
+820150	Portable butane hair curler
+820150	Post hole digger
+820150	Pruning hook
+820190	Axes
+820190	Beach roller
+820190	Beach roller
+820190	Blow lamp
+820190	Forestry tool
+820190	Grape crusher
+820190	Pick
+820210	Hand operated wrenches
+820210	Hand saw
+820220	Straight
+820320	Butcher cleaver
+820320	Choppers knives
+820320	Cutting blade
+820320	Cutting blade
+820320	Letter openers
+820320	Palette Knife
+820320	Pedicure sets
+820320	Pencil sharpeners
+820320	Perforating punches
+820320	Perforating punches
+820320	Pincers
+820320	Puller
+820320	Rasp
+820510	Die set
+820510	Die stocks
+820510	Die stocks
+820510	Drilling tool
+820510	Fixed blade knives
+820510	Tapping tool
+820510	Tapping tool
+820510	Threading tool
+820510	Threading tool
+820510	Vice
+820510	Wood working cutting tool
+820510	Wood working cutting tool
+820559	Camping tool
+820559	Machine
+820559	Piano repair kit
+820559	Powertool
+820559	Snap on tool set
+820559	Spray
+820559	Stapling
+820570	Cobalt therapy units
+820570	Cobalt therapy units
+820570	Oxygen administering apparatus
+820570	Sterilizers
+820570	Surgical suction
+820790	Bushing bits
+820790	Front spades
+820790	Pins
+820790	Star drills
+820790	Vacuum cleaners nozzle
+820890	Horticultural machinery
+820890	Lawn mowers
+820890	Mechanical appliances
+820890	Parks mower
+820890	Sports grounds mower
+820890	Sports grounds mower
+821000	Cutting tool
+821000	Food processor
+821000	Food shred
+821000	Wine opener
+821110	Blades
+821110	Henckel
+821110	Steak knives
+821110	Table knives
+821193	Pocket survival kit
+821193	Pocket survival kit
+821193	Swiss army knife
+821193	Swiss army knife
+821300	Hair cut equipment
+821300	Hair cut equipment
+821300	Hair cut tools
+830110	Lockset
+830210	Boat parts
+830210	Marine equipment
+830210	Marine parts
+830210	Marine products
+830210	Skeg guard
+830210	Skeggard
+830241	Door closers
+830241	Door hardware
+830241	Drapery accessories
+830241	Drapery accessories
+830241	Drapery rods
+830250	Automatic door closers
+830300	Armoured safe
+830300	Card index cabinets
+830300	Filing cabinets
+830300	Letter corners
+830300	Lockers
+830300	Loose leaf binders
+830300	Office supplies
+830300	Office supplies
+830300	Paper clips
+830300	Paper clips
+830300	Paper rests
+830300	Paper trays
+830300	Pen trays
+830300	Safe deposit
+830610	Wind chime
+830890	Hooks
+830890	Metal screw caps
+831000	Metal sign
+831000	Name plates
+831000	Sign plates
+840140	Gas recoverers
+840140	Nuclear reactors
+840140	Purifiers
+840140	Super heaters
+840690	Blade diaphragms
+840690	Spindle shafts
+840999	Furnace burner
+841381	Pool pump
+841381	Spa pump
+841451	Ceiling fan
+841451	Convection blower
+841451	Fan
+841451	Table fan
+841451	Table fan
+842121	Filtering machine
+842121	Purifying machinery
+842121	Purifying machinery
+842121	Water conditioner
+842121	Water filtration
+842121	Water purifier
+842310	Fire extinguishers
+842310	Hoists
+842310	Household scale
+842310	Personal weighing machines
+842310	Scale
+842959	Angledozers
+842959	Graders
+842959	Road rollers
+842959	Tamping machines
+843020	Planters
+843020	Snow blowers
+843020	Snow ploughs
+843510	Water distribution housing
+843510	Water distribution housing
+844319	Copying machine
+844319	Gravure machine
+844319	Letterpress machine
+844319	Printer parts
+844790	Sewing machine
+845019	Laundry dryer
+845150	Hose reel
+846722	Jig saw
+846722	Reciprocating saw
+847149	Computer server
+847149	Server
+847170	Computer memory
+847170	Disc drive
+847170	Hard disk
+847170	Joysyick
+847170	Laptop
+847170	Magnetic drive
+847170	Magnetic tape drive
+847170	Portable computer
+847170	Thumb drive
+848180	Control valve
+848180	Control valve
+848180	Faucet
+848180	Solenoid valve
+848180	Solenoid valve
+848180	Valve
+850110	Motor
+850110	Vacuum motor
+850440	Adapter
+850440	Phone charger
+850440	Power supply
+850519	Magnet
+850610	Electric accumulators
+850610	Silver oxide
+850940	Food mixer
+850980	Microderm equipment
+851110	Compression ignition
+851110	Glow plug
+851110	Ignition coil
+851110	Ignition pack
+851110	Magneto-dynamos
+851110	Starter motors
+851390	Flashlight holder
+851629	Electric space heater
+851650	Cooking plate
+851650	Cooking plate
+851650	Griller
+851650	Indoor smokeless barbecue
+851650	Rice cooker
+851671	Coffee maker
+851671	Tea maker
+851672	Fabric steamer
+851672	Fabric steamer
+851712	Amplifier
+851712	Answering machine
+851712	Bluetooth
+851712	Cellular phone
+851712	Head phones
+851712	Modulator
+851712	Motorolla
+851761	i pod
+851761	Tablet
+851810	Earphone
+851810	Headphone
+851810	Microphone stand
+851821	Loud speakers
+851981	Cassette player
+851981	CD player
+851981	Compact disc players
+851981	Panasonic
+851981	Tapedeck
+852329	Musical recording
+852329	Video recording
+852329	Video tape
+852329	Vinyl record
+852580	Digital cameras
+852580	Kodak
+852580	Radio navigational aid
+852580	Radio parts
+852580	TV lamp
+852580	TV parts
+852692	Remote control
+852871	Satellite receiver
+852872	Television
+853110	Burglar alarm
+853110	Smoke detectors
+853110	Smoke detectors
+853939	Fluorescent lamp
+853990	Cathode
+853990	Electrode
+853990	Electronic board
+853990	Electronic component
+853990	Electronic device
+854442	Power bar
+860900	Train
+870810	Ball joint
+870810	Bellhousing
+870810	Belly pan
+870810	Bumper
+870810	Chassis
+870810	Chassis frame
+870810	Coding plug
+870810	Cooling kit
+870810	Cooloing system
+870810	Deflector
+870810	Door edge guard
+870810	Dual gauge
+870810	Edge guard
+870810	Edge guard
+870810	Stampings
+870840	Clutch
+870840	Drive axle
+870840	Non driving axles
+870840	Parking brake cable
+870840	Steering column
+870870	Wheel
+870880	Spring shock
+870880	Suspension system
+870892	Exhaust
+870892	Exhaust pipe
+870892	Silencer
+870894	Idler arm
+870894	Tie rod assembly
+870895	Air bag
+870899	Chevrolet
+870899	Nissan
+870899	Wolkswagen
+871410	Ball joint
+871410	Bellhousing
+871410	Belly pan
+871410	Belly pan
+871410	Bumper
+871410	Carburater
+871410	Chassis frame
+871410	Coding plug
+871410	Coding plug
+871410	Cooling kit
+871410	Deflector
+871410	Door edge guard
+871495	Car saddle
+890399	Jet ski
+890399	Jet wave blaster parts
+890399	Jet wave blaster parts
+890399	Jet wave blaster parts
+890399	Jet wave blaster parts
+890399	Jet wave runner parts
+890399	Jetski parts
+890399	Kayak parts
+890399	Personal watercraft parts
+890399	Personal watercraft parts
+890710	Inflatable raft
+900130	Contact lenses
+900130	Lenses
+900130	Optical cable
+900130	Photographic reducer
+900130	polarizing material
+900130	Spectacle lenses
+900130	Spectacle lenses
+900319	Eye wear
+900319	Eyeglasses frame
+900319	Eyewear
+900319	Glasses frame
+900319	Seeing glasses
+900319	Spectacle Frame
+900410	Sunglasses
+900580	Monoculars
+900580	Scope
+900630	Flash
+900630	Light flash
+900691	Camera part
+900691	Camera shutters
+900691	Tripod top
+901410	Direction finding compass
+901410	GPS
+901410	Navigation system
+901540	Oceanographic
+901540	Photogrammetrical surveying
+901540	Surveying
+901780	Measuring rule
+901780	Measuring tape
+901811	Health
+901811	Medical
+901890	Enema board
+901890	Massager
+901890	Nasal aspirator
+901890	Nasal aspirator
+902190	Aerosol therapy
+902190	Defibrillator
+902190	Dental fitting
+902190	Electro cardiograph
+902511	Manometer
+902511	Manostat
+902511	Pressure measuring instrument
+902511	Psychrometer
+902511	Stroboscope
+902511	Thermometer
+903020	Precision instrument
+903020	Spectrum instrument
+910119	Electronic clock
+910119	Pocket watch
+910119	Wrist watch
+910119	Wristwatch
+910390	Clock
+910390	Desk clock
+910690	Parking meter
+920110	Piano
+920590	Baritone
+920590	Castanet
+920590	Concert chimes
+920590	Cornet
+920590	Drum sets
+920590	Euphonium
+920590	Keyboard pipe organ
+920590	Musical instrument part
+920590	Musical parts
+920590	Musical strings
+920590	Viol
+920710	Accordions
+920710	Concert chimes
+920710	Electric piano
+920710	Keyboard
+920710	Marimbas
+920710	Portable keyboard
+920710	Regal
+920810	Animal call
+920810	Decoy
+920810	Fairground organ
+920810	Loon call
+920810	Mechanical singing bird
+920810	Music box
+920991	Back check wire
+920991	Back check wire
+920991	Brass flange plate
+920991	Bridle leather
+920991	Bridle strap
+920991	Centre brass pin
+920991	Damper rod
+920991	Damper rod
+920991	Damper socket
+920991	Damper wire
+920991	Hammer wire
+920991	Hitch pin
+920991	Key bottom
+920991	Pressure bar
+920991	Rail hook
+920991	Rail hook
+920991	Spruce sounding board
+920999	Pitch pipe
+930110	Torpedo tubes
+930200	Gun
+930200	Hunting shotgun
+930200	Line throwing gun
+930200	Pump shotgun
+930200	Shotgun
+930200	Slide action shotgun
+930200	Target shooting shotgun
+930330	Bolt action rifle
+930330	Rifle
+930330	Rim fire
+930390	Bolt action
+930400	Pistols
+930400	Rifle
+930591	Bolt carriers
+930591	Bolt carriers
+930591	Flash eliminators
+930591	Gunlocks
+930591	Pistons locking lugs
+930591	Pistons locking lugs
+930690	Grenades
+930690	Munitions
+930690	Torpedoes
+940120	Car seat
+940120	Stroller carseat
+940151	Bed
+940151	Cabinet
+940151	Seat
+940210	Cabinet
+940210	Furniture
+940430	Sleeka lite
+940490	Pillow
+940510	Ceiling lighting fixture
+940510	Chandelier lamp
+940510	Lighting fitting
+940510	Wall lighting fixture
+940530	Christmas lights
+950300	Accessories
+950300	Aircraft
+950300	Animals
+950300	Art supplies
+950300	Board game
+950300	Boardgame
+950300	Car
+950300	Car kit
+950300	Car kit
+950300	Construction
+950300	Construction sets
+950300	Craft embellishments
+950300	Craft supplies
+950300	Die cast kit
+950300	Doll carriage
+950300	Doll dress
+950300	Drums
+950300	Felting animal
+950300	Felting kit
+950300	Jigsaw puzzle
+950300	Jigsaw puzzle
+950300	Musical
+950300	Plush animals
+950300	Railroad
+950300	Reduced size
+950300	Scooter
+950300	Slotcar
+950300	Stuffed animals
+950300	Stuffed toys
+950300	Toy
+950300	Train accessories
+950300	Train tracks
+950300	Wheeled toy
+950420	Article
+950440	Playing cards
+950450	Game console
+950450	Playstation
+950450	Xbox
+950490	Bowling equipment
+950490	Bowling equipment
+950490	Hand held game
+950490	Paintball
+950629	Scuba equipment
+950629	Scuba equipment
+950629	Scuba gear
+950629	Surf boards
+950629	Surfboard
+950629	Surfboard fins
+950629	Surfboard fins
+950629	Water fins
+950629	Water skis
+950659	Badminton
+950662	Bowling ball
+950662	Foot ball
+950662	Inflatable ball
+950662	Inflatable ball
+950670	Figure skates
+950670	Skate
+950691	Elliptical
+950691	Exercise
+950691	Exercise bicycle
+950691	Exercise bike
+950691	Stair climbing
+950691	Stair climbing
+950691	Stationary bicycle
+950691	Treadmill
+950699	Arrow
+950699	Arrowhead
+950699	Badminton set
+950699	Clay target thrower
+950699	Curling stone
+950699	Curling stone
+950699	Elbow guard
+950699	Elbow pad
+950699	Face mask
+950699	Football masks
+950699	Football shoulder pads
+950699	Football shoulder pads
+950699	Goalie equipment
+950699	Hip pad
+950699	Hockey gear
+950699	Hockey puck
+950699	Huntung target
+950699	Juggling club
+950699	Juggling club
+950699	Paddle
+950699	Paddling pool
+950699	Pitching machine
+950699	Playground equipment
+950699	Protective gear
+950699	Protective guard
+950699	Protective guard
+950699	Shoulder guard
+950699	Shuttle cocks
+950699	Split rings
+950699	Sport game
+950699	Swimming pool
+950699	Thigh guard
+950699	Throwing machine
+950699	Trapshooting
+950699	Wading pool
+950699	Waist guard
+950710	Fish bait
+950710	Fish hook
+950710	Fish jiggers
+950710	Fish net
+950710	Fishing accessories
+950710	Fishing line
+950710	Fishing rods
+950710	Fishing sinkers
+950710	Fishing supplies
+950890	Amusement ride device
+950890	Amusement ride part
+950890	Fairground amusement
+950890	Roundabout
+960110	ivory carving
+960110	Ivory moulding
+960190	Animal carving material
+960190	Animal moulding
+960190	Horn
+960190	Tortoise shell
+960190	Tortoise shell
+960190	Worked bone
+960200	Animal carving material
+960200	Gelatin
+960200	Stearin
+960310	Air brush
+960310	Brushes
+960310	Floor sweepers
+960310	Hair brush
+960310	Shaving brush
+960310	Varnish brush
+960400	Hand riddles
+960621	Press fasteners
+960621	Press studs
+960621	Snap fasteners
+960621	Snap fasteners
+960810	Ball point pens
+960810	Fountain pens
+960810	Pastels
+960810	School supplies
+960810	School supplies
+960810	Stylograph pens
+960810	Stylos
+961000	Drawing board
+961000	Writing surface
+961400	Pipe bowls
+961511	Curling grips
+961511	Curling pins
+961511	Hair accessories
+961511	Hair bow
+961511	Hair clip
+961511	Hairpins
+961511	Head band
+961610	Cosmetics applicator
+961610	Cosmetics applicator
+961610	Scent sprays
+961610	Toilet sprays
+961800	Tailor dummies
+961900	Diapers
+970110	Art print
+970110	Drawing
+970110	Plaque
+970110	Postal stationery
+970110	Print
+970110	Stamped paper
+970500	Ethnographic
+970500	Mineralogical
+970600	Centennial coin
+989800	Airsoft guns
+989800	Ammunition
+989800	Automatic handgun
+989800	Automatic knife
+989800	Automatic knife
+989800	Balisong knife
+989800	Bladed finger
+989800	Bladed finger
+989800	Brass knuckles
+989800	Brass knuckles
+989800	Butterfly knife
+989800	Ee Cheol Bong
+989800	Kit Rae Fang Baelin
+989800	Kiyoga Baton
+989800	Knife comb
+989800	Manrikigusari
+989800	Military firearm
+989800	Military firearm
+989800	Military handgun
+989800	Morning star
+989800	Nunchaku sticks
+989800	Paint ball markers
+989800	Pepper spray
+989800	Short barrelled firearm
+989800	Short barrelled handgun
+989800	Short barrelled handgun
+989800	Short barrelled rifle
+989800	Speed safe knife
+989800	Spiked wristband
+989800	Spring baton
+989800	Starter pistols
+989800	Sword cane
+989800	Three section staff
+989800	Three section staff
+989800	Umbrella daggers
+989800	Weapons
+250100	Portland cement
+250100	Quartzite
+250100	Sea water
+250100	Sillimanite
+250100	Sodium chloride
+250100	Table salt
+250100	Table salt
+250100	Tripolite
+250100	Unroasted iron pyrites
+250100	Unroasted iron pyrites
+260111	Chromium
+260111	Cobalt
+260111	Uranium
+261800	Residues
+261800	Scalings
+270900	Alkylenes
+270900	Paraffin wax
+270900	Petroleum bitumen
+271114	Butadiene
+271210	Ozokerite
+271210	Peat wax
+271210	Petroleum wax
+271210	Slack wax
+280300	Alkali
+280300	Alkaline earth metals
+280300	Argon
+280300	Chlorosulphuric acid
+280300	Phosphoric acid
+280300	Silica gel
+280300	Sodium
+280300	Sulphuric acid
+282590	Bromide
+282590	Chromium
+282590	Cyanide
+282590	Halide
+282590	Magnesium
+282619	Aluminum fluoride
+282619	Fluorides
+282619	Fluorine salts
+282619	Potassium bromide
+282739	Titanium tetrachloride
+282990	Bromates
+282990	Chlorates
+282990	Nitrites
+282990	Sulphide
+283699	Aluminosilicate
+283699	Anhydrous
+283699	Calcium hydrogenorthophosphate
+283699	Cyanide
+283699	Dicalcium phosphate
+283699	Dicalcium phosphate
+283699	Disodium tetraborate
+283699	Percarbonate
+283699	Peroxometallic acids
+283699	Sodium bicarbonate
+283699	Sodium bicarbonate
+283699	Sodium hydrogencarbonate
+283699	Sodium tripolyphosphate
+284390	Cerium
+284390	Colloidal precious metal
+284390	Compressed air
+284390	Gold compound
+284390	Silver compound
+284390	Silver nitrate
+284440	Deuterium oxide
+284440	Spent Heavy water
+284440	Thorium
+290129	Aldrin
+290129	Benzene
+290129	bromotrifluoromethane
+290129	Butane
+290129	Butene
+290129	Chlorodifluoroethanes
+290129	Chlorodifluoromethane
+290129	Chloroform
+290129	Chloromethane
+290129	Cyclene
+290129	Ethyl chloride
+290129	Ethylene dibromide
+290129	Hexachlorocyclohexane
+290129	Hydrocarbo
+290129	Isoprene
+290129	Octanol
+290129	Pentane
+290129	Toluene
+293690	Advil
+293690	Aloe gold
+293690	Bilemin
+293690	Bioslim
+293690	Buprenorphine
+293690	Cacao
+293690	Cleanse
+293690	Cough medicine
+293690	Dermawhey
+293690	Diet supplement
+293690	Dietary pills
+293690	Dietary supplement tea
+293690	Enula defense
+293690	Ephedrine
+293690	Folic acid
+293690	Food liquid
+293690	Glycoside
+293690	Green coffee bean
+293690	Health powder
+293690	Health supplement
+293690	Herbal tablets
+293690	Hydrocortisone
+293690	Krill oil
+293690	Maca powder
+293690	Mint matrix
+293690	Motrin
+293690	Mucuna
+293690	Multivitamins
+293690	Neuroreplete
+293690	Non prescription medication
+293690	Nutritional supplement
+293690	Oestrogens
+293690	Ointment
+293690	Protandim
+293690	Sport nutrition
+293690	Xylitol
+294110	Prescription
+300220	Animal tissue
+300220	Bacteriophage
+300220	Blood plasma
+300220	Human tissue
+300220	Immunological products
+300220	Serum globulin
+300220	Serum globulin
+300490	Antacids
+300490	Dermatological agents
+300490	Estrogen
+300490	Ivermectin
+300490	Local anaesthetics
+300490	Local anaesthetics
+300490	Pediatric drops
+300490	Streptomycins
+300640	Dental cements
+300660	Waste pharmaceuticals
+310229	Ammonium dihydrogenorthophosphate
+310229	Ammonium sulphate
+310229	Diammonium hydrogenorthophosphate
+310229	Magnesium potassium sulphate
+310229	Monoammonium phosphate
+310229	Potassium chloride
+320290	Acid dyes
+320290	Azoic dyes
+320290	Colour lakes
+320290	Enzymatic preparations
+320290	Fluorescent brightening agents
+320290	Glass frit
+320290	Glass frit
+320290	Mordant dyes
+320290	Prepared opacifiers
+320290	Quebracho extract
+320290	Quebracho extract
+320290	Reactive dyes
+320290	Tanning cream
+320290	Tanning extracts
+320290	Tanning preparations
+320290	Tanning solution
+320290	Tanning solution
+320290	Ultramarine preparations
+320290	Vat dyes
+320290	Vitrifiable enamels
+320290	Vitrifiable glazes
+320290	Vitrifiable glazes
+320300	Food decorating color
+320300	Food dye
+320417	Quinacridone pigments
+321390	Art color supplies
+321390	Art color supplies
+321390	Colours in sets
+321390	Colours in sets
+321390	Lacquer
+321390	Paint bottle
+321390	Paint jars
+321390	Signboard painter colours
+321390	Signboard painter colours
+321410	Caulking compounds
+321410	Grafting putty
+321410	Non refractory surfacing preparations
+321410	Resin cements
+321590	Fountain pen ink
+321590	Ink
+321590	Pen ink
+330119	Body oil
+330119	Herbal oil
+330119	Herbal oil
+330119	Perume oil
+330190	Resinoids
+330590	Frizz control
+330610	Teeth whitener
+330610	Tooth whitener
+330690	Denture fixative paste
+330690	Denture fixative powder
+330720	Deodorants
+330749	Air freshener
+330749	Balsam Sticks
+330749	Incense
+330749	Room perfume
+330790	Bath oil
+330790	Shave preparation
+330790	Shaving cream
+330790	Shaving cream
+330790	Shaving preparation
+330790	Shaving set
+340120	Laundry soap
+340290	Restrainers
+340311	Anti corrosion preparations
+340311	Anti rust preparations
+340311	Lubricants
+340311	Lubricating oil preparations
+340311	Modelling pastes
+340311	Mould release preparations
+340311	Petroleum based lubricants
+340420	Coachwork
+340420	Dental
+340600	Candle
+340600	Taper
+350190	Acrylic polymers
+350190	Albumin
+350190	Amylases
+350190	Caseinates
+350190	Polymers of vinyl acetate
+350190	Rubber cement
+360200	Detonating fuses
+360200	Firelighter
+360200	Fuels
+360200	Matches
+360200	Percussion caps
+360200	Prepared explosives
+360200	Pyrophoric alloys
+360200	Pyrotechnic articles
+360200	Safety fuses
+370110	Dental x ray
+370110	Dental x ray
+370110	Medical x ray
+370110	Photographic transmission machine paper
+370120	Colour photography film
+370120	Colour photography film
+370120	Colour photography plates
+370120	Instant print film
+370120	Instant print film
+370120	Photographic paper
+370120	photographic sensitizing emulsions
+370120	Photography equipment
+370120	Photography equipment
+370120	Polaroid film
+370120	Print film
+370120	Print film
+370120	Sheet film
+380190	Activated perlite
+380190	Artificial graphite
+380190	Carbonaceous paste
+380190	Colloidal graphite
+380190	Ester gums
+380190	Furnace lining paste
+380190	Gum turpentine oil
+380190	Residual lyes
+380190	Sulphate turpentine oil
+380190	Sulphate turpentine oil
+380190	Tall oil
+380190	Wood creosote
+380190	Wood naphtha
+380190	Wood tar oils
+380190	Wood turpentine oil
+380850	Borate powder
+380850	Disinfectant products
+380850	Herbicides
+380850	Insect Bait
+380850	Insecticides
+380850	Plant growth regulators
+381590	Anti corrosive preparations
+381590	Anti knock preparations
+381590	Compound plasticizers for rubber
+381590	Compound plasticizers for rubber
+381590	Finishing agents
+381590	Fire extinguisher charges
+381590	Fire extinguisher charges
+381590	Fire extinguishing grenades
+381590	Fire extinguishing grenades
+381590	Mixed alkylnaphthalenes
+381590	Organic composite thinners
+381590	Reaction accelerators
+381590	Refractory cements
+381590	Refractory concretes
+381590	Refractory concretes
+381590	Refractory mortars
+381590	Soldering powder
+381590	Varnish removers
+381590	Viscosity improvers
+381590	Welding paste
+381900	Hydraulic transmission fluid
+381900	Industrial monocarboxylic fatty acids
+381900	Industrial monocarboxylic fatty acids
+381900	Windshield fluid
+390110	Polyisobutylene
+390110	Polymers of propylene
+390110	Polymers of propylene
+391733	Garden hose
+391733	Hose
+392590	Bathroom set
+392590	Bottle
+392590	Cookware
+392590	Cops
+392590	Disposable gloves
+392590	Door knob
+392590	Foodsaver
+392590	Lavatory cover
+392590	Lavatory seat
+392590	Lids
+392590	Mattress covers
+392590	Place mat
+392590	Protective plate
+392590	Shower
+392590	Switch plate
+392590	Venetian
+392690	Crutch tip
+392690	Hot water bottle
+400110	Camel back strips
+400110	Camel back strips
+400110	Conveyor belt
+400110	Factice
+400110	Guayule
+400110	Gutta percha
+400110	Natural rubber latex
+400110	Styrene butadiene rubber
+401110	Inner tubes
+401410	Dock fenders
+401410	Erasers
+401410	Roller
+401410	Rubber bands
+401410	Sheath contraceptives
+401511	Gloves
+401519	Clothing Gloves
+401691	Padded flooring
+401691	Rubber floor covering
+401693	Bushings
+401693	Gaskets
+410120	Crust hides
+410120	Leather
+410120	Raw Skin
+410120	Tanned hides
+410120	Whole hide
+411410	Chamois
+411410	Patent laminated leather
+420211	Backpack
+420211	Beverage bags
+420211	Briefcase
+420211	Harley touring
+420211	Holster
+420211	Pouch
+420211	School satchel
+420211	Sleeve
+420211	Stirrups
+420211	Strap
+420211	Travel bag
+420211	Trunk
+420219	Bookbag
+420219	Holsters
+420219	Instrument case
+420219	Leash
+420219	Luggage
+420219	Musical instrument bag
+420219	Pack
+420219	Satchel
+420219	Stampede
+420219	Travel bag
+420221	Purse
+420229	Hand bag
+420229	Handbag
+420229	Soho Optic Linen Hobo
+420231	Billfold
+420231	Cigar case
+420239	Cigar case
+420239	Cigarette case
+420239	Pocket book
+420239	Pocketbook
+420239	Tobacco pouch
+420291	Knapsacks
+420291	Messenger bag
+420291	Packsacks
+420291	Razor strop
+420291	Tactical soms
+420291	Tool bag
+420292	Rucksack
+420292	Tool bag
+420292	Tool bag
+420292	Tote bag
+420292	Watch box
+420310	Leather
+430310	Fur
+440110	Barrel
+440110	Box pallets
+440110	Briquettes
+440110	Coniferous
+440110	Faggot
+440110	Lumber
+440110	Particle board
+440110	Particle board
+440110	Sawdust
+440110	Twigs
+440110	Wafer board
+440110	Wood Chips
+441210	Veneer
+441294	Battenboard
+441400	Photograph frame
+441400	Wooden frame
+441510	Boxes
+441510	Cable drum
+441890	Cornice
+441900	Cheeseboard
+441900	Cutlery case
+441900	Hanger
+441900	Ladder
+441900	Pepper grinder
+441900	Pepper shaker
+441900	Rolling pin
+441900	Tool handle
+442010	Statuette
+442090	Box
+442190	Casket
+442190	Wood carving
+480100	Newsprint
+480100	Wood pulp
+480100	Wood pulp
+480630	Corrugated
+480630	Crinkled
+480630	Greasproof
+481490	Wall paper
+481490	Wallpaper
+481720	Card
+481720	Filter paper
+481720	Fluting paper
+481720	Paper cup
+481720	Paper dish
+481720	Paper plate
+481720	Paper tray
+481720	Postcard
+481720	Sanitary napkin
+481890	Facial
+481890	Sanitary
+482010	Form
+490700	Bond certificates
+490700	Postage
+490700	Stamp paper
+491191	Football cards
+491191	Hockey cards
+491199	Tickets
+500790	Yarn
+520299	Yarn
+530129	Knitting item
+530129	Knitting supplies
+530129	Knitting tool
+530129	Knitting tool
+540120	Woven fabrics
+560121	Baler twine
+560121	Cord thread
+560121	Cordage twine
+560121	Felt
+560121	Gimped yarn
+560121	Knitting yarn
+560121	Rubber thread
+560121	Rubber thread
+560121	Tassel
+560121	Textile flock
+560811	Slackline
+560811	Slackline kit
+570232	Rug
+570500	Carpet
+580190	Aubusson
+580190	Flanders
+580190	Hand woven tapestries
+580190	Hand woven tapestries
+580190	Needle worked tapestries
+580190	Terry cloth
+580190	Terry towelling
+580190	Weft pile fabrics
+610190	Overcoat
+610310	Ensemble
+610310	Pettiskirt
+610310	Shorts
+610310	Strapless
+610729	G string
+610729	Intimates
+610729	Lingerie
+610729	Neglige
+610729	Nightshirt
+610729	Polo
+610729	Sleepwear
+610729	Under garment
+610990	Long sleeve
+610990	Short sleeve
+610990	T shirt
+610990	Tank top
+610990	Tee shirt
+610990	Tshirt
+611011	Clothing
+611011	Turtle neck
+611011	V neck
+611011	V neck
+611219	Athletic wear
+611219	Bathing suit
+611219	Bikini
+611219	Hip hugger
+611219	Hoody
+611219	Motorcycle ware
+611219	Ski pants
+611219	Speedo
+611219	Swim shorts
+611219	Tracksuit
+611510	Panty hose
+611510	Panty hose
+611510	Pantyhose
+611510	Stockings
+611780	Belt
+611790	Cycling short insert
+611790	Protective suit
+620111	Anorak
+620111	Cape
+620111	Cloak
+620111	Overcoat
+620111	Rain coat
+620112	Jacket
+620112	Poncho
+620112	Rain coat
+620113	Anorak
+620113	Cape
+620113	Cloak
+620113	Rain coat
+620113	Smock
+620311	Bloomer
+620311	Pants
+620311	Pettiskirt
+620311	Shorts
+620311	Strapless
+620343	Bloomer
+620343	Breeches
+620343	Pants
+620343	Shorts
+620343	Strapless
+620349	Boot cut
+620349	Flare leg
+620462	Flare leg
+620462	High rise
+620520	Long sleeve
+620520	Off the shoulder
+620520	T shirt
+620520	Tank
+620520	Tee shirt
+620520	Tricot
+620590	Long sleeve
+620590	Off shoulder
+620590	Short sleeve
+620610	Shirt
+620620	Blouson
+620630	Bathrobe
+620630	G string
+620630	Panties
+620630	Romper
+620630	Slip
+620630	Thong
+620630	Underpants
+620630	Vest
+620920	Echo shells
+620990	Cloth
+620990	Clothing
+620990	Tshirt
+620990	Underwear
+621112	Active wear
+621112	Athletic clothing
+621112	Athletic clothing
+621112	Bandeau
+621112	Body suit
+621112	Hip hugger
+621112	Hoodie
+621112	Jumpsuit
+621112	Motorcycle wear
+621112	Ski pants
+621112	Ski suit
+621112	Ski wear
+621112	Snow pants
+621112	Snow suit
+621112	Swim shorts
+621112	Track suit
+621133	Clothing
+621133	Vestment
+621143	Saris
+621210	Bra
+621210	Garters
+621210	Suspenders
+621290	Armband
+621410	Scarves
+621420	Mantillas
+621590	Bow
+621590	Bow tie
+621590	Bowtie
+630190	Cotton sheet
+630190	Cotton sheet
+630190	Crib sheet
+630190	Drapes
+630190	Electric blanket
+630190	Electric blanket
+630190	Floor cloth
+630190	Pillow case
+630190	Pillow sham
+630190	Pneumatic mattress
+630190	Tablecloths
+630190	Window curtain
+630619	Camping goods
+630619	Landcraft sail
+630619	Tarpaulin
+630619	Tent
+630790	Climbing harness
+630790	Evacuation system
+630790	Face mask
+630790	Mountain harness
+630790	Mountain harness
+630790	Moving straps
+630790	Rag
+630900	Cables
+630900	Rope
+631090	Rags
+640110	Cleats
+640110	Flipflops
+640110	Loaffer
+640110	Slippers
+640219	Boots
+640219	Cleats
+640219	Espadrille
+640219	Flipflops
+640219	Loaffer
+640219	Shoes
+640359	Booties
+640359	Boots
+640359	Espadrille
+640359	Flipflop
+640359	Sandal
+640590	Mocassins
+640610	Sole
+650610	Headgear
+670210	Foliage
+670210	Fruit
+680210	Roofing granules
+680291	Marble
+680293	Granite
+680300	Roofing slate
+680911	Plaster
+681019	Artificial stone
+681291	Asbestos cement
+681291	Asbestos cement
+681291	Cellulose fibre cement
+681291	Cellulose fibre cement
+681291	Cellulose fibre cement
+681320	Brake lining
+681320	Brake lining
+681320	Brake pads
+681591	Chromite
+690490	Ceramic
+690490	China
+690510	Roofing tile
+690510	Roofing tile
+690590	Chimney ornaments
+690600	Conduit
+690600	Pipe fitting
+690890	Glazed flags
+691090	Bathroom fixture
+691090	Bathroom fixture
+691090	Ceramic sink
+691090	Ceramic sink
+691090	Sanitary fixture
+691090	Toilet bowl
+691090	Urinal
+691090	Wash basin
+691200	Cup
+691200	Decorative planters
+691200	Kitchenware
+691200	Mug
+691200	Teapot
+691200	Toilet articles
+691310	D cor articles
+691310	Figuren
+691310	Figurine
+691310	Porcelain figurine
+691490	China Porcelain
+691490	Stone ware
+700239	Glass items
+700910	Rear view mirror
+700910	Rear view mirror
+700910	Rearview mirror
+700910	Side view mirror
+700910	Sideview mirror
+701399	Boot
+701399	Decorative hardware
+701399	Decorative ware
+701399	Drinking glasses
+701399	Glass decoration
+701399	Glass ornament
+701399	Glass vase
+701399	Glass ware
+701399	Glassware
+701510	Seeing glasses
+701690	Glass form
+701690	Glass panel
+701690	Glass plate
+701690	Window panel
+701810	Rosary
+710110	Precious stone
+710110	Quartz
+710110	Ruby
+710110	Sapphire
+711311	Jewellery
+711311	Jewlery
+711411	Silver ware
+711411	Sterling
+711711	Cuff link
+711711	Cufflink
+711711	Wrist cuff
+711719	Money clip
+730719	Coupling
+730719	Tube fitting
+730830	Girders
+730830	Iron post
+730830	Railing
+730830	Steel ceiling
+730830	Steel post
+730830	Steel siding
+730900	Hot water tank
+730900	Hot water tank
+730900	Steel drum
+730900	Steel tank
+730900	Steel vat
+730900	Vacuum tank
+731100	Compressed gas
+731290	Fencing
+731290	Wire
+731290	Wire cloth
+731419	Anchor
+731419	Bee trap
+731419	Chain link
+731700	Coach screws
+731700	Drawing pin
+731700	Drawing pin
+731700	Steel nail
+731700	Steel washers
+731940	Crochet hooks
+731940	Knitting needles
+731940	Springs
+731940	Tapestry kit
+732111	BBQ
+732111	Domestic appliance
+732111	Gas rings
+732111	Grill
+732111	Top surface panel
+732119	Appliances
+732119	Flame Tamer
+732219	Hot air distributors
+732219	Hot air distributors
+732219	Radiator
+732310	Polishing pad
+732310	Scouring
+732310	Scouring gloves
+732310	Scouring pads
+732310	Scouring pads
+732393	Basket
+732393	Bread box
+732393	Caniste
+732393	Cookie jar
+732393	Iron box
+732393	Iron pan
+732393	Iron pot
+732393	Iron pot
+732393	Pots
+732393	Samovar
+732393	Stainless cookware
+732393	Steel cooking utensil
+732393	Steel tray
+732490	Stainless steel bottle
+732490	Stainless steel bottle
+732620	Firefighting equipment
+732620	Hopper
+732620	Lunch box
+732620	Material handling equipment
+732620	Stamping parts
+732620	Steel belt
+732620	Steel hanger
+732620	Tool box
+740100	Brass
+740100	Copper foil
+740100	Copper pipes
+740100	Copper wire
+740100	Copper wire
+740100	Copper zinc base alloys
+740100	Copper zinc base alloys
+740100	Slabs
+741910	Copper
+780199	Lead flakes
+780199	Lead foil
+780199	Lead foil
+780199	Lead sheets
+790700	Building components
+790700	Zinc discs
+790700	Zinc gutters
+790700	Zinc pipe fitting
+800300	Tin bars
+800300	Tin profiles
+800300	Tin rods
+800300	Tin rods
+800300	Tin wire
+811299	Alloy steel
+811299	Alloy steel
+811299	Bismuth
+811299	Gallium
+811299	Tantalum
+811299	Titanium
+811299	Zinc
+820110	Spade
+820130	Axes
+820130	Bill hook
+820130	Hewing tool
+820130	Livestock branding iron
+820130	Pick
+820130	Sledge hammer
+820150	Carbide inserts and bits
+820150	Forged forks
+820150	Hedge shears
+820150	One handed pruners
+820150	Portable butane hair curler
+820150	Portable butane hair curler
+820150	Post hole digger
+820150	Pruning hook
+820190	Forestry tool
+820190	Grape crusher
+820190	Hoe
+820190	Mattock
+820190	Razor blade
+820210	Hand operated spanners
+820210	Hand operated spanners
+820210	Pipe wrench
+820210	Wrench
+820220	Slitting
+820320	Bolt Croppers
+820320	Bolt Croppers
+820320	Choppers
+820320	Cutting plier
+820320	Erasing knives
+820320	Erasing knives
+820320	File
+820320	Household tool
+820320	Household tool
+820320	Interchangeable spanner sockets
+820320	Interchangeable spanner sockets
+820320	Kitchen Cleavers
+820320	Manicure set
+820320	Mincing knives
+820320	Nail cutter
+820320	Nail files
+820320	Pedicure instruments
+820320	Pedicure sets
+820320	Track tool
+820320	Wood working auger
+820510	Anvils
+820510	Carving knives
+820510	Drilling tool
+820510	Fixed blade knives
+820510	Fixed blade knives
+820510	Frinding wheels
+820510	Gouges
+820510	Planes
+820510	Portable forges
+820510	Wood working cutting tool
+820559	Piano repair kit
+820559	Piano repair kit
+820570	Cobalt therapy units
+820570	Oxygen administering apparatus
+820570	Oxygen administering apparatus
+820790	Carbide tipped
+820790	Clay spades
+820790	Portable power tools
+820790	Portable power tools
+820790	Star drills
+820790	Vacuum cleaners nozzle
+820890	Agricultural machinery
+820890	Food industry machine
+820890	Forestry machine
+820890	Kitchen appliances
+820890	Lawn mowers
+820890	Mechanical appliances
+820890	Parks mower
+820890	Sports grounds mower
+820890	Wood working
+820890	Wood working
+821000	Slice
+821000	Vita mix blender
+821000	Vitamix
+821000	Wine opener
+821110	Cake servers
+821110	Kitchen tool
+821110	Santoku
+821110	Steak flatware
+821110	Sugar tongs
+821110	Table cutlery
+821110	Table cutlery
+821110	Tableware
+821110	Utility blade
+821193	Pocket survival kit
+821193	Swiss army knife
+821300	Scissors
+830110	Keys
+830110	Lock
+830210	Boat parts
+830210	Knob
+830210	Marine equipment
+830210	Mountings
+830210	Skeg guard
+830241	Drapery poles
+830241	Drapery rods
+830241	Drapery track
+830241	Window hardware
+830250	Hat pegs
+830250	Hat pegs
+830300	Armoured safe
+830300	Filing cabinets
+830300	Indexing tags
+830300	Letter corners
+830300	Loose leaf binders
+830300	Office equipment
+830300	Office stamp stands
+830300	Paper trays
+830300	Reinforced safe
+830300	Reinforced safe
+830300	Safe deposit
+830300	Strong box
+830300	Strong rooms
+830610	Wind chimes
+830890	Buckles
+830890	Crown corks
+830890	Metal beads
+830890	Metal screw caps
+830890	Rivets
+831000	Address plates
+831000	Address plates
+840140	Condensers
+840140	Gas generators
+840140	Gas recoverers
+840690	Blade diaphragms
+840690	Spindle discs
+840999	Air conditioning machines
+840999	Air conditioning machines
+840999	Furnace burner
+840999	Pump
+840999	Refrigerating unit
+841381	Turbine pump
+841381	Water pump
+841381	Water system pump
+841451	Floor fan
+841451	Personal fan
+841460	Hood fan
+841460	Water heater
+841810	Freezer
+841810	Refrigerator
+842121	Water purifier
+842310	Baby scale
+842310	Fire extinguishers
+842310	Household scale
+842310	Jacks
+842310	Personal weighing machines
+842310	Weighing machines
+842959	Mechanical shovels
+842959	Scrapers
+842959	Shovel loaders
+842959	Shovel loaders
+843020	Mower
+843020	Seeders
+843020	Transplanters
+844319	Flexographic machine
+844319	Gravure machine
+844319	Lexmark
+844319	Printer accessories
+844319	Printing machinery
+844790	Knitting machine
+845019	Laundry machine
+845019	Laundry machine
+845019	Washing machine
+846620	Magnetic chuck
+846722	Chain saws
+846722	Circular saws
+846722	Circular saws
+846722	Jig saw
+846722	Saber saw
+846722	Saber saw
+847149	Control server
+847149	Controller
+847170	Cable
+847170	Computer
+847170	Computer parts
+847170	Computer tuner
+847170	Hard disk
+847170	Magnetic tape drive
+847170	Portable computer
+847330	Mouse pad
+850110	Electric generator
+850110	Vacuum motor
+850440	Battery charger
+850440	Charger
+850610	Air zinc
+850610	Air zinc
+850610	Electric accumulators
+850819	Vacuum
+850940	Food grinders
+850940	Ice cream maker
+850940	Kitchen appliance
+850940	Small appliance
+850940	Small appliance
+850980	Clarisonic
+850980	Cleansing system
+850980	Cleansing system
+850980	Microderm system
+850980	Microderm system
+851110	Alternators
+851110	Electrical ignition
+851110	Glow plug
+851110	Sparking plugs
+851110	Transverter
+851310	Flashlight
+851310	Safety lamp
+851629	Electric space heater
+851629	Electric space heater
+851629	Heater
+851650	Bread makers
+851650	Bread makers
+851650	Microwave oven
+851650	Roaster
+851660	Cooking range
+851660	Stove
+851671	Coffee maker
+851671	Keurig
+851671	Soy machine
+851671	Tassimo
+851671	Tea maker
+851672	Toaster
+851679	Hair steamer
+851679	Hair steamer
+851712	Answering machine
+851712	Facsimile
+851712	Fax machine
+851712	Modems
+851712	Telephone headset
+851761	i pad
+851761	i pod
+851821	Speaker parts
+851981	CD player
+851981	Compact disc players
+851981	Compact disc players
+851981	DVD player
+851981	DVD player
+851981	Laser video disc players
+852329	Discs
+852329	DVD
+852329	Magnetic tape
+852329	Microsoft
+852329	Video recording
+852329	Video tape
+852329	Vinyl record
+852352	Smart card
+852580	Camcorder
+852580	Radio navigational aid
+852580	Radio navigational aid
+852580	Radio parts
+852580	Stereo
+852580	Stereo tuner
+852580	Television cameras
+852580	Television cameras
+852580	TV lamp
+852580	TV parts
+852580	Video camera
+852692	Clicker
+852692	Remote control
+852871	Television receiver
+852872	TV
+853110	Burglar alarm
+853110	Fire alarm
+853939	Fluorescent light
+853990	Filament
+854442	Power bar
+854442	Power cord
+860900	Rail locomotive
+860900	Tramway
+870810	Barrier fluid
+870810	Belly pan
+870810	Carburater
+870810	Coding plug
+870810	Cooloing system
+870810	Door blade
+870810	Door edge guard
+870810	Dual gauge
+870810	Spoiler
+870829	Floor mat
+870840	Axle
+870840	Engine
+870840	Gear
+870840	Gear box
+870840	Gear box
+870840	Non driving axles
+870840	Parking brake cable
+870840	Pitman Arm
+870840	Steering box
+870840	Steering box
+870840	Steering column
+870840	Transmission
+870870	Hub cap
+870870	Locking ring
+870870	Wheel hub
+870880	McPherson strut
+870880	Shock absorber
+870880	Suspension system
+870892	Exhaust pipe
+870892	Radiator
+870894	Steering box
+870894	Steering box
+870894	Steering column
+870894	Tie rod assembly
+870894	Tie rod assembly
+870895	Airbag
+870895	Inflator system
+870899	Cadillac
+870899	Chrysler
+870899	Dodge
+870899	Ford
+870899	Jeep
+870899	Toyota
+870899	VW
+871200	Bicycle
+871200	Bike
+871410	Barrier fluid
+871410	Brake booster hose
+871410	Brake booster hose
+871410	Clutch
+871410	Day lights
+871410	Door edge guard
+871410	Drive
+871495	Car saddle
+871495	Handlebar
+871500	Buggy
+871500	Stroller
+880400	Rotochutes
+890399	Jet ski parts
+890399	Jet wave blaster
+890399	Jet wave runner
+890399	Jetski
+890399	Jetski parts
+890399	Kayak
+890399	Personal watercraft
+890399	Personal watercraft parts
+900130	Camera lense
+900130	Lens
+900130	Optical device
+900130	Optical device
+900130	Optical fibre
+900130	Photographic enlarger
+900130	polarizing material
+900130	Prescription lense
+900130	Prescription lense
+900319	Eye wear
+900319	Glasses
+900319	Goggles
+900319	Spectacle mounting
+900319	Vision glasses
+900319	Vision glasses
+900630	Camcorder
+900630	Canon
+900691	Camera attachments
+900691	Camera part
+900691	Camera shutters
+900691	Stand
+900691	Tripod
+901060	Laser
+901060	Projection screen
+901410	Geographical positioning system
+901410	Geographical positioning system
+901410	Navigational appliance
+901540	Geophysical
+901720	Sliding tool
+901730	Caliper
+901730	Callipers
+901780	Tape measure
+902190	Artificial respiration
+902190	Breathing apparatus
+902190	Breathing apparatus
+902190	Crutches
+902190	Dental
+902511	Barometer
+902511	Measurement device
+902511	Pressure measuring instrument
+902511	Pyrometer
+903020	Oscilloscopes
+903020	Spectrum instrument
+910119	Electronic clock
+910119	Stop watch
+910119	Watch
+910390	Table clock
+910511	Alarm clock
+910511	Alarm clock
+910511	Wall clock
+911310	Watch band
+911310	Watch strap
+920290	Mandolin
+920290	Ukulele
+920590	Clarinet
+920590	Clavichord
+920590	Cymbal
+920590	Drum head
+920590	Drum head
+920590	Drum sets
+920590	English horn
+920590	English horn
+920590	Flute
+920590	Handbell
+920590	Keyboard pipe organ
+920590	Mouth organ
+920590	Musical instrument
+920590	Musical instrument
+920590	Musical instrument part
+920590	Musical parts
+920590	Piccolo
+920590	Recorder
+920590	Trumpet
+920710	Electric guitar
+920710	Electric guitar
+920710	Electric organ
+920710	Orchestral chimes
+920710	Synthesizer
+920710	Xylophones
+920810	Animal call
+920810	Call horn
+920810	Duck call
+920810	Fairground organ
+920810	Musical saw
+920810	Whistles
+920991	Bridle leather
+920991	Bridle wire
+920991	Centre brass pin
+920991	Damper socket
+920991	Dowel wire
+920991	Dowel wire
+920991	Hitch pin
+920991	Key pin
+920991	Lifter wire
+920991	Lifter wire
+920991	Paper punching
+920991	Piano spoons
+920991	Tuning pin
+920999	Metronome
+920999	Pitch pipe
+930110	Flame throwers
+930110	Grenade launchers
+930110	Guns
+930110	Howitzers
+930110	Rifle
+930110	Rocket launchers
+930110	Rocket launchers
+930110	Torpedo tubes
+930110	Weapons
+930200	Pistols
+930200	Slide action shotgun
+930200	Sporting rifle
+930200	Sporting rifle
+930200	Sporting shotgun
+930330	Bolt action
+930330	Bolt action rifle
+930330	Hunting rifle
+930330	Hunting rifle
+930330	Sporting rifle
+930330	Target shooting rifle
+930330	Target shooting rifle
+930390	Semi automatic calibre rim fire
+930591	Breeches
+930591	Rifle barrels
+930629	Firearm
+930629	Gun
+930690	Mines
+930700	Scabbards
+940120	Car seat
+940120	Stroller carseat
+940151	Furniture
+940430	Sleeka lite
+940430	Sleeping kit
+940430	Sleeping kit
+940490	Comforter
+940490	Duvet
+940490	Eiderdown
+940490	Quilt
+940510	Ceiling lighting fixture
+940510	Chandelier
+940510	Chandelier lamp
+940510	Light
+940510	Sconce
+940510	Spot light
+940510	Wall lamp
+940510	Wall lighting fixture
+940530	Christmas lights
+950300	Airplain
+950300	Airplane
+950300	Art supplies
+950300	Auto
+950300	Battery powered
+950300	Bead bracelets
+950300	Board game
+950300	Child
+950300	Craft embellishments
+950300	Craft kit
+950300	Die cast
+950300	Die cast kit
+950300	Doll
+950300	Doll accessories
+950300	Doll clothes
+950300	Doll parts
+950300	Felting animal
+950300	Figurine
+950300	Handcrafted
+950300	Mainblade
+950300	Marlin item
+950300	Muppets
+950300	Part
+950300	Parts
+950300	Pedal car
+950300	Plain
+950300	Plastic
+950300	Plush animals
+950300	Puppet
+950300	Push pull
+950300	RC
+950300	Reduced size
+950300	Scrapbook supplies
+950300	Scrapbooking supplies
+950300	Skipping rope
+950300	Teddy bear
+950300	Teddy bear
+950300	Teddybear
+950300	Train set
+950300	Vehicle
+950300	Vintage
+950300	Wagon
+950440	Card game
+950450	Atari
+950450	Game console
+950450	Nintendo
+950450	PS3
+950450	Wii
+950490	Hand held game
+950629	Diving gear
+950629	Scuba accessories
+950629	Water skis
+950639	Ball
+950639	Part
+950659	Ping pong
+950659	Ping pong
+950662	Badminton ball
+950662	Badminton ball
+950662	Bowling ball
+950662	Croquet ball
+950662	Football
+950662	Racketball
+950662	Tennis ball
+950670	Ice skates
+950670	In line skates
+950670	Skating
+950691	Stairclimber
+950691	Yoga toes
+950691	Yoga toes
+950691	Yogatoes
+950699	Badminton birds
+950699	Badminton birds
+950699	Baseball bat
+950699	Clay pigeon
+950699	Clay target thrower
+950699	Cricket bats
+950699	Cricket leg pads
+950699	Cricket leg pads
+950699	Face mask
+950699	Goalie equipment
+950699	Hip guard
+950699	Hockey equipment
+950699	Hockey equipment
+950699	Hockey stick
+950699	Huntung target
+950699	Knee guard
+950699	Mountaineering
+950699	Outdoor game
+950699	Protective gear
+950699	Shin guard
+950699	Shin guard
+950699	Shin pad
+950699	Shoulder pad
+950699	Softball bat
+950699	Softball bat
+950699	Split swivel
+950699	Sport equipment
+950699	Sporting good
+950699	Wading pool
+950699	Waist pad
+950710	Fish hook
+950710	Fish jiggers
+950710	Fish net
+950710	Fish reel
+950710	Fishing equipment
+950710	Fishing equipment
+950710	Fishing part
+950710	Fishing reel
+950710	Fishing reels
+950710	Fishing sinkers
+950890	Amusement ride device
+950890	Fairground amusement
+950890	Swing
+950890	Travelling circus
+950890	Travelling menageries
+960110	Ivory articles
+960110	ivory carving
+960190	Mother pearl
+960190	Stearin
+960200	Animal carving material
+960200	Animal moulding
+960200	Antler
+960200	Bone
+960200	Coral
+960200	Mother pearl
+960200	Tortoise shell
+960200	Wax
+960310	Air brush
+960310	Artist brush
+960310	Artist brush
+960310	Eyelash brush
+960310	Nail brush
+960310	Nail brush
+960310	Shaving brush
+960310	Squeegees
+960310	Toilet brush
+960310	Toothbrush
+960400	Hand riddles
+960400	Hand sieves
+960400	Hand sieves
+960621	Button blanks
+960621	Button moulds
+960621	Slide fasteners
+960810	Drawing charcoals
+960810	Markers
+960810	Pencil leads
+960810	School material
+960810	Stylograph pens
+960810	Writing
+961000	Drawing board
+961000	Drawing slate
+961000	Drawing slate
+961000	Writing board
+961000	Writing surface
+961100	Embossing stamp
+961100	Label stamp
+961100	Label stamp
+961100	Numbering stamp
+961100	Rubber stamp
+961100	Rubber stamp
+961400	Cigar holder
+961400	Lighters
+961400	Pipe bowls
+961400	Smoking pipes
+961511	Barrette
+961511	Combs
+961511	Curling grips
+961511	Hair accessories
+961511	Hair elastics
+961511	Hair slides
+961511	Head band
+961610	Cosmetic pads
+961610	Powder pads
+961610	Powder puff
+961800	Lay figures
+961800	Window dressing display
+970110	Art
+970110	Artwork
+970110	Collage
+970110	Decorative plaque
+970110	Engraving
+970110	Lithograph
+970110	Pastel art
+970110	Pastel art
+970110	Postage stamp
+970110	Stamp postmark
+970110	Stamp postmark
+970110	Statue
+970500	Botanical
+970500	Numismatic
+970600	Antique
+970600	Vintage
+970600	WWI
+981700	Award
+981700	Medals
+981800	School
+989800	Ammunition magazine
+989800	Automatic firearm
+989800	Automatic gun
+989800	Automatic gun
+989800	Constant companion
+989800	Constant companion
+989800	D guard knives
+989800	Ee Cheol Bong
+989800	Fighting Chain
+989800	Fighting Chain
+989800	Folding knife
+989800	Folding knife
+989800	Gun magazine
+989800	Kit Rae Fang Baelin
+989800	Kiyoga Baton
+989800	Kusari
+989800	Liang Ji Gun
+989800	Liang Ji Gun
+989800	Military gun
+989800	Nunchaku
+989800	Replica firearm
+989800	Sanjiegun
+989800	Short barrelled firearm
+989800	Short barrelled firearm
+989800	Short barrelled gun
+989800	Short barrelled handgun
+989800	Short barrelled rifle
+989800	Shuriken
+989800	Slapjack
+989800	Slappers
+989800	Speed safe knife
+989800	Starter pistols
+989800	Steel cobra
+989800	Tear gas
+989800	Tear gas
+989800	Torsion bar assisted knife
+989800	Torsion bar assisted knife
+989800	Yaqua blowgun
+280300	Bromine
+280300	Helium
+280300	Hydrated silica
+280300	Hydrogen chloride
+280300	Hydrogen fluoride
+280300	Iodine
+280300	Nitric acid
+280300	Oxygen
+280300	Polyphosphoric acids
+280300	Scandium
+280300	Silicon
+281290	Caustic potash
+281290	Caustic potash
+281290	Phosphorus trisulphide
+282590	Chloride
+282590	Iron
+282590	Silicon
+282590	Strontium
+282619	Aluminum fluoride
+282619	Fluoroaluminates
+282619	Fluorosilicates
+282619	Hypochlorite
+282619	Potassium bromide
+282619	Sodium bromide
+282619	Synthetic cryolite
+282619	Synthetic cryolite
+282739	Barium chloride
+282739	Nickel
+282739	Stannous
+282739	Titanium tetrachloride
+282739	Uranium
+282990	Alums
+282990	Dithionites
+282990	Nitrates
+282990	Perchlorates
+283699	Borate
+283699	Borax
+283699	Hypophosphite
+283699	Oxometallic
+283699	Perborates
+283699	Peroxocarbonate
+283699	Peroxometallic acids
+283699	Phosphate
+283699	Phosphite
+283699	Phosphonate
+284390	Azides
+284390	Colloidal precious metal
+284390	Liquid air
+284390	Nitrides
+284390	Phosphides
+284390	Silicides
+284440	Deuterium oxide
+284440	Radioactive
+284440	Uranium
+284700	Hydrogen peroxide
+290129	Bromochlorodifluoromethane
+290129	Carbon tetrachloride
+290129	Cyclane
+290129	Cyclohexane
+290129	Dichlorobenzene
+290129	Dichloropentafluoropropanes
+290129	Dichlorotrifluoroethanes
+290129	Hexachlorobenzene
+290129	Naphthalene
+290129	propyl
+290129	Trichloroethylene
+290129	Trichloromethane
+290129	Xylene
+292429	Acetaminophen
+292429	Counter medication
+292429	Non prescription medication
+292429	Non prescription medication
+293690	Algae powder
+293690	Alpha lipoic acid
+293690	Astragals
+293690	Body care products
+293690	Candida
+293690	Citrical calcium
+293690	Citrus Silk
+293690	Cold preparations
+293690	Cough medicine
+293690	Cough preperations
+293690	Diet supplement
+293690	Dietary powder
+293690	Dietary supplement
+293690	Dietary supplement tincture
+293690	Endothelial defense
+293690	Enula defense
+293690	Extract supplement
+293690	Folic acid
+293690	Food supplement
+293690	Health supplement
+293690	Herbal product
+293690	Leukotrienes
+293690	Maca powder
+293690	Mineral
+293690	Mineral supplement
+293690	Nutritopn spply
+293690	Pills
+293690	Probiotic
+293690	Progestogens
+293690	Prostaglandins
+293690	Support
+294110	Antibiotics
+294110	Medicine
+300220	Animal tissue
+300220	Antitoxins
+300220	Bacterial lysates
+300220	Human blood
+300220	Organ
+300220	Viruses
+300230	Animal vaccination
+300230	Animal vaccination
+300230	Animal vaccine
+300230	Veterinary medicine
+300490	Antihypertensive agents
+300490	Antineoplastic agents
+300490	Antineoplastic agents
+300490	Cough preparation
+300490	Cough suppressant
+300490	Cough suppressant
+300490	Dermatological agents
+300490	Electrolytic
+300490	Erythromycin
+300490	Fat burner
+300490	Fat burner
+300490	Gastrointestinal agents
+300490	Gastrointestinal agents
+300490	Haematological agents
+300490	Hormones
+300490	Theophylline
+300490	Vancomycin
+300640	Bone reconstruction cement
+300640	Bone reconstruction cement
+300660	Ostomy appliance
+300660	Waste pharmaceuticals
+310229	Ammonium dihydrogenorthophosphate
+310229	Ammonium nitrate
+310229	Ammonium sulphate
+310229	Diammonium phosphate
+310229	Monoammonium phosphate
+310229	Potassium sulphate
+320290	Azoic dyes
+320290	Colouring matter
+320290	Disperse dyes
+320290	Engobes
+320290	Enzymatic preparations
+320290	Ferricyanides
+320290	Liquid lustres
+320290	Mordant dyes
+320290	Mordant preparations
+320290	Mordant preparations
+320290	Prepared opacifiers
+320290	Prepared pigments
+320290	Reactive dyes
+320290	Stamping foils
+320290	Tanning extracts
+320290	Tanning substances
+320290	Tanning substances
+320290	Vitrifiable enamels
+320290	Wattle extract
+320300	Food dye
+320417	Quinacridone pigments
+320417	Quinacridone preparations
+321390	Amusement colours
+321390	Artist colours
+321390	Modifying tints
+321390	Paint pans
+321390	Paint tubes
+321390	Prepared driers
+321390	Signboard painter colours
+321390	Vinyl polymer
+321390	Water colours
+321390	Water colours
+321410	Glazier putty
+321410	Non refractory surfacing preparations
+321410	Painter fillings
+321410	Resin cements
+321519	Newspaper
+321519	Printing
+330119	Cosmetic oil
+330119	Cosmetic oil
+330119	Essential oils
+330119	Hair oil
+330119	Hair oil
+330119	Incense
+330119	Pot pourri
+330119	Scented oil
+330190	Oleoresin paprika
+330210	Odoriferous mixtures
+330300	After shave
+330300	Cologne
+330300	Eau de toilette
+330300	Fragrance
+330610	Teeth whitener
+330610	Tooth whitening
+330690	Dental hygiene
+330690	Denture cleaner
+330690	Denture fixative powder
+330690	Denture paste
+330690	Denture paste
+330720	Sweatblock
+330749	Room deodorizer
+330749	Room perfume
+330790	Bath gel
+330790	Bath salt
+330790	Contact lens solution
+330790	Saline solution
+340120	Laundry soap
+340290	Inhibitors
+340290	Sensitizers
+340311	cutting oil preparations
+340311	Modelling pastes
+340420	Cutlery
+340420	Glass
+340420	Metal
+350190	Amylogen
+350190	Casein glues
+350190	Epoxide resins
+350190	formaldehyde
+350190	Gelatin
+350190	Glue
+350190	Peptones
+350190	Polymers of vinyl acetate
+350190	Polymers of vinyl acetate
+350190	Silicone
+350190	Soluble starch
+350190	Soluble starch
+350610	Adhesive
+350610	Bovi Bond
+350610	Glue
+350610	Urethane adhesive
+360200	Detonating fuses
+360200	Electric detonators
+360200	Hexamethylenetetramine
+360200	Igniters
+360200	Metaldehyde
+360200	Rain rockets
+360200	Safety fuses
+370110	Cinematographic film
+370110	Medical x ray
+370110	Medical x ray
+370110	Photographic film
+370110	Photographic transmission machine paper
+370110	X ray film
+370110	X ray plates
+370120	Colour photography plates
+370120	photographic sensitizing emulsions
+370120	Polaroid film
+370120	Sheet film
+380190	Activated carbon
+380190	Activated diatomite
+380190	Brewers pitch
+380190	Brewers pitch
+380190	Carbonaceous paste
+380190	Chemicals
+380190	Ester gums
+380190	Lignin pitch
+380190	Powdered lignin sulphonates
+380190	Powdered lignin sulphonates
+380190	Rosin acid
+380190	Salt of resin acids
+380190	Salt of resin acids
+380190	Salts of rosin
+380190	Semi colloidal graphite
+380190	Semi colloidal graphite
+380190	Vegetable pitch
+380850	Borate powder
+380850	Bug repellant
+380850	Insect lure
+380850	Plant growth regulators
+381590	Anti corrosive preparations
+381590	Anti knock preparations
+381590	Anti oxidizing preparations
+381590	Anti oxidizing preparations
+381590	Brazing powder
+381590	Compound plasticizers for plastics
+381590	Compound plasticizers for rubber
+381590	Mixed alkylnaphthalenes
+381590	Organic composite solvents
+381590	Organic composite solvents
+381590	Organic composite thinners
+381590	Organic composite thinners
+381590	Oxidation inhibitors
+381590	Prepared rubber accelerators
+381590	Reaction initiators
+381590	Refractory cements
+381590	Rust preventative preparation
+381590	Rust preventative preparation
+381590	Soldering paste
+381590	Varnish removers
+381900	Anti freezing preparations
+381900	Industrial monocarboxylic fatty acids
+381900	Prepared de icing fluid
+381900	Prepared de icing fluid
+381900	Sewage sludge
+382550	Antifreeze fluids
+382550	Brake fluid
+382550	Brake fluid
+390110	Acrylonitrile butadiene styrene copolymers
+390110	Ethylene vinyl acetate copolymers
+390110	Ethylene vinyl acetate copolymers
+390110	Polymers of styrene
+390110	Polymers of vinyl chloride
+390110	Polystyrene
+390110	Styrene acrylonitrile copolymers
+390110	Styrene acrylonitrile copolymers
+390110	Styrene acrylonitrile copolymers
+390230	Propylene copolymers
+391710	Plastic
+391733	Garden hose
+392049	Screen saver
+392590	Bucket
+392590	Ceiling
+392590	Cup holder
+392590	Disposable gloves
+392590	Door knob
+392590	Doormat
+392590	Dresser covers
+392590	Feeder
+392590	Gate
+392590	Jacuzzi
+392590	Lavatory cover
+392590	Lavatory seat
+392590	Numerals
+392590	Ornamental articles
+392590	Place mat
+392590	Protective plate
+392590	Siding
+392590	Stopper
+392590	Switch plate
+392590	Tray
+392690	Crutch grip
+392690	Crutch tip
+392690	Douche bag
+392690	Enema bags
+392690	Enema bags
+392690	Finger cots
+392690	Finger cots
+392690	Hypodermic syringes
+392690	Ice bags
+392690	Nursing nipple
+400110	Balata
+400110	Carboxylated styrene butadiene
+400110	Conveyor belt
+400110	Gutta percha
+400110	Latex
+400110	Natural rubber latex
+400110	Natural rubber latex
+400110	Synthetic rubber
+400110	Synthetic rubber
+400110	Transmission belt
+401110	Inner tubes
+401110	Rubber tires
+401110	Rubber tires
+401519	Apparel
+401519	Clothing
+401519	Clothing Gloves
+401691	Floor mat
+401691	Rubber floor covering
+401691	Rubber floor covering
+401693	Motorcyccle upper bridge
+401693	Oil seals
+401693	Oil seals
+401695	Air mattresses
+410120	Crust hides
+410120	Raw hide
+411410	Composition leather
+411410	Metallized leather
+411410	Patent laminated leather
+411410	Patent leather
+411410	Shammy
+420211	Bag
+420211	Book bag
+420211	Bookbag
+420211	Case
+420211	Instrument case
+420211	Instrument case
+420211	Leash
+420211	Musical instrument bag
+420211	Rein
+420211	School satchel
+420211	Suitcase
+420219	Back pack
+420219	Guitar case
+420219	Guitar case
+420219	Musical instrument bag
+420219	Sleeve
+420221	Hand bag
+420221	Handbag
+420229	Soho Optic Linen Hobo
+420229	Soho Optic Linen Hobo
+420231	Cigar case
+420231	Cigarette case
+420231	Cigarette case
+420231	Pocket book
+420291	Bag
+420291	Jewellery box
+420291	Messenger bag
+420291	Tactical soms
+420292	Jewelery box
+420292	Jewelery box
+420292	Jewellery box
+420292	Shoulder tote
+420292	Tote bag
+430400	Fur
+430400	Sheepskin
+440110	Charcoal
+440110	Fibreboard
+440110	Load boards
+440110	Moulding
+440110	Pallet
+440110	Wood tub
+440910	Wood flooring
+440910	Wood flooring
+440929	Oak flooring
+441210	Plywood
+441294	Blockboard
+441400	Mirror frame
+441400	Mirror frame
+441400	Picture frame
+441400	Window frame
+441400	Wood frame
+441400	Wooden frame
+441510	Bin
+441510	Box
+441510	Cable drum
+441510	Hopper
+441820	Door frame
+441900	Clothes hanger
+441900	Pepper grinder
+441900	Salt saker
+441900	Spice rack
+441900	Wood hanger
+441900	Wood hanger
+442010	Animal
+442010	Ornament
+442090	Case
+442090	Coat rack
+442090	Hat rack
+442090	Shelf
+442190	Coffin
+442190	Wood carving
+450490	Cork stoppers
+450490	Cork tile
+460211	Basketwork
+480100	Wrapping paper
+480630	Creped
+480630	Tracing
+480630	Transparent
+480920	Carbon
+481490	Wall covering
+481720	Carbon
+481720	Envelope
+481720	Photo sensitive paper
+481720	Printing paper
+481890	Bed sheets
+481890	Bed sheets
+481890	Cleansing
+481890	Handkerchiefs
+481890	Household
+481890	Toilet
+482010	Book
+482010	Pad
+482040	Memorandum
+482040	Note
+490700	Bond certificates
+490700	Cheque forms
+490700	Stamps
+491191	Sports cards
+500790	Fabric
+500790	Thread
+520299	Fabric
+520299	Thread
+540120	Linen fabric
+540120	Woven fabrics
+550190	Synthetic filament tow
+550190	Synthetic staple fibres
+560121	Baler twine
+560121	Handknitting yarn
+560121	Knitting yarn
+560121	Knotted netting of twine
+560121	Metallized yarn
+560121	Rope twine
+560121	Textile materials
+560811	Slacklining
+570500	Textile floor covering
+580190	Beauvais
+580190	Braid
+580190	Chenille
+580190	Embroidery
+580190	Gobelins
+580190	Textile badge
+580190	Textile badge
+580190	Textile label
+580890	Pompon
+590190	Painting canvas
+600110	Fabric
+600110	Thread
+610190	Coat
+610190	Jacket
+610190	Rain coat
+610190	Raincoat
+610190	Smock
+610190	Wind cheater
+610310	Bib
+610310	Suit
+610711	Briefs
+610711	Pants
+610711	Underpants
+610729	Bath robe
+610729	G string
+610729	Nightdress
+610729	Panties
+610729	Petticoat
+610729	Sleep wear
+610729	Thong
+610729	Undershirt
+610729	Undies
+610729	Vest
+610990	Off the shoulder
+610990	Sleeveless
+610990	Tee
+610990	Top
+611011	Jersey
+611011	Sweater
+611011	Vneck
+611219	Active wear
+611219	Apparel
+611219	Athletic clothing
+611219	Bandeau
+611219	Camis
+611219	Camisole
+611219	Capri
+611219	Jumpsuit
+611219	Nylon
+611219	Ski pants
+611219	Ski suit
+611219	Ski wear
+611219	Ski wear
+611219	Snow pants
+611219	Swim wear
+611219	Track suit
+611300	Suit
+611510	Hosiery
+611780	Accessories
+620111	Parka
+620111	Rain coat
+620111	Wind cheater
+620111	Wind cheater
+620112	Cloak
+620112	Overcoat
+620113	Coat
+620113	Parka
+620113	Rain coat
+620113	Raincoat
+620113	Wind cheater
+620113	Wind cheater
+620311	Bib
+620311	Blazer
+620311	Suit
+620343	Bib
+620343	Blazer
+620343	Tuxedo
+620343	Uniform
+620349	Boot cut
+620349	Low rise
+620462	Denim
+620462	Low rise
+620462	Low rise
+620520	Long sleeve
+620520	Short sleeve
+620590	Long sleeve
+620590	T shirt
+620590	Tee shirt
+620590	Tricot
+620620	Shirt
+620630	Blouse
+620630	Pajamas
+620630	Pyjamas
+620630	Under garment
+620920	Cloth diapers
+620920	Echo shells
+620990	Coat
+620990	Coverall
+620990	Jacket
+620990	Sleepwear
+620990	Snowsuit
+620990	T sirt
+620990	T sirt
+620990	Tee
+620990	Tights
+621112	Athletic wear
+621112	Bikini
+621112	Body suit
+621112	Hip hugger
+621112	Hoody
+621112	Snowsuit
+621112	Swim shorts
+621112	Tutu
+621210	Brassieres
+621320	Handkerchief
+621390	Handkerchief
+621410	Shawl
+621410	Veils
+621420	Mufflers
+621420	Scarves
+621510	Bow tie
+621510	Cravat
+621590	Tie
+621600	Mittens
+621600	Mitts
+621710	Accessories
+630190	Bed linen
+630190	Bed sheets
+630190	Bed skirt
+630190	Bedskirt
+630190	Bedspread
+630190	Cushion cover
+630190	Duster
+630190	Fitted sheet
+630190	Life belt
+630190	Life belt
+630190	Pillow case
+630190	Pillow cover
+630190	Pillow cover
+630190	Sack
+630190	Sailboard
+630492	Seat protector
+630492	Seat protector
+630619	Boat sail
+630619	Boat sail
+630619	Canopies
+630790	Furniture moving pads
+630790	Lift straps
+630790	Lift straps
+630790	Moving straps
+630790	Tubular webbing
+630790	Wire edged ribbon
+630790	Wire edged ribbon
+630900	Articles
+630900	Cordage
+630900	Textile material
+640110	Footwear
+640219	Footwear
+640359	Slippers
+640359	Sneakers
+640590	Ballet flats
+640610	Crampon
+640610	Removable in sole
+640610	Removable in sole
+640610	Rubber heel
+640610	Rubber sole
+640610	Rubber sole
+670100	Feather
+670210	Feather
+670210	Flower
+670419	Beard
+680291	Alabaster
+680300	Roofing slate
+680410	Millstones
+680710	Asphalt
+680911	Drywall
+680911	Gypsum wallboard
+681011	Building brick
+681011	Building brick
+681019	Artificial stone
+681019	Cement
+681019	Concrete
+681140	Asbestos cement
+681291	Asbestos
+681291	Magnesium carbonate
+681291	Magnesium carbonate
+690590	Ceramic constructional good
+690590	Chimney liners
+690590	Chimney liners
+690590	Chimney ornaments
+690600	Pipe fitting
+690890	Ceramic cubes
+690890	Glazed flags
+690890	Hearth tile
+690890	Mosaic cubes
+690890	Wall tiles
+691090	Bidet
+691090	Flushing cistern
+691090	Toilet
+691090	Toilet bowl
+691090	Wash basin pedestal
+691090	Washroom fixture
+691200	Decorative planters
+691200	Dishes
+691200	Flower pot
+691200	Household articles
+691200	Tea pot
+691200	Vase
+691310	Statue
+691490	Platter
+691490	Porcelain
+691490	Stoneare
+701399	Decorative hardware
+701399	Decorative ware
+701399	Fish bowl
+701399	Glass decoration
+701399	Laminated glass
+701399	Laminated glass
+701399	Stemware
+701510	Corrective spectacles
+701510	Corrective spectacles
+701510	Seeing glasses
+701690	Glass shell
+701690	Window panel
+701810	Imitation precious stone
+701810	Prosthetic
+701810	Smallware
+710110	Cultured pearl
+710110	Pearl
+710110	Semi precious stone
+710820	Monetary
+711311	Accessories
+711311	Accessory
+711411	Silver ware
+711411	Silverware
+711711	Wrist cuff
+711719	Imitation jewellery
+711719	Money clip
+711719	Tie clip
+730721	Flange
+730830	Bams
+730830	Iron grill
+730830	Steel door
+730830	Steel door
+730830	Steel floor
+730830	Steel frame
+730830	Steel grill
+730830	Steel siding
+730830	Steel window
+730900	Septic tank
+730900	Steel can
+730900	Steel vat
+731100	Compressed gas
+731100	Scuba tanks
+731100	Scuba tanks
+731290	Netting
+731290	Plaited band
+731290	Wire sling
+731700	Corrugated nail
+731700	Cotterpins
+731700	Cotters
+731700	Iron nail
+731700	Screw hook
+731700	Steel rivet
+731700	Tack
+731940	Embroidery stilettos
+731940	Embroidery stilettos
+731940	Safety pins
+731940	Safety pins
+731940	Sewing needle
+731990	Darning needle
+731990	Darning needle
+731990	Embroidery needle
+732111	Barbecue
+732111	Cooker
+732111	Cooking chamber
+732111	Grate
+732111	Plate warmers
+732119	Flame Tamer
+732119	Pans
+732310	Iron wool
+732310	Polishing pad
+732393	Cookie jar
+732393	Iron box
+732393	Le creuset
+732393	Standard busk
+732393	Standard busk
+732393	Steel can
+732393	Steel cooking utensil
+732393	Steel cookware
+732620	Firefighting equipment
+732620	Lunch box
+732620	Paint roller frames
+732620	Safety equipment
+732620	Safety equipment
+732620	Stamping parts
+732620	Stamping tool
+732620	Steel bins
+732620	Tot
+740100	Billets
+740100	Copper
+740100	Copper alloys
+740100	Copper cables
+740100	Copper cables
+740100	Copper pipes
+740100	Ingots
+740100	Spring washers
+740100	Stranded wire
+740100	Wire bar
+750511	Nickel
+780199	Lead flakes
+780199	Lead plates
+780199	Lead powders
+780199	Lead strip
+790390	Foil
+790700	Skylight frames
+790700	Slugs
+790700	Zinc coupling
+790700	Zinc coupling
+790700	Zinc elbows
+790700	Zinc elbows
+790700	Zinc pipes
+790700	Zinc sleeves
+790700	Zinc tube
+800300	Tin foil
+811299	Chromium
+811299	Cobalt
+811299	Germanium
+811299	Nickel
+811299	Thallium
+820110	Shovel
+820130	Mattock
+820150	Carbide inserts and bits
+820150	One handed pruners
+820150	One handed pruners
+820150	Pruning shears
+820150	Router bits
+820150	Router bits
+820150	Saw blade
+820150	Saw blade
+820190	Agriculture tool
+820190	Agriculture tool
+820190	Bill hook
+820190	Garden tool
+820190	Hand tool
+820190	Hewing tool
+820190	Horticulture tool
+820190	Rake
+820190	Razor blade
+820190	Tools
+820210	Hand operated wrenches
+820210	Hand operated wrenches
+820210	Pipe wrench
+820210	Sledge hammer
+820210	Torque meter wrench
+820220	Band
+820220	Circular
+820220	Hand
+820220	Toothless
+820320	Choppers knives
+820320	Crowbar
+820320	Cutting plier
+820320	Hole punch
+820320	Interchangeable spanner sockets
+820320	Knipex
+820320	Letter openers
+820320	Loading tool
+820320	Manicure instruments
+820320	Manicure instruments
+820320	Manicure set
+820320	Metal cutting shears
+820320	Metal cutting shears
+820320	Mincing knives
+820320	Palette Knife
+820320	Palette knives
+820320	Pedicure instruments
+820320	Pencil sharpeners
+820320	Track tool
+820320	Wood working auger
+820320	Wood working tool
+820320	Wood working tool
+820510	Clamp
+820510	Frinding wheels
+820510	Screwdriver
+820559	Crank set
+820559	Crank set
+820559	Power tool
+820559	Power tool
+820559	Repair kit
+820559	Snap on tool set
+820559	Tongs
+820570	Vice
+820790	Ball points
+820790	Ball points
+820790	Carbide tipped
+820790	Front spades
+820790	Portable power tools
+820790	Spike drill
+820790	Spike drill
+820890	Food industry machine
+820890	Food industry machine
+820890	Forestry machine
+820890	Horticultural
+820890	Kitchen appliances
+821000	Bottle opener
+821000	Bottle opener
+821000	Can opener
+821000	Chop
+821000	Food processor
+821000	Food shred
+821000	Juicer
+821000	Vita mix blender
+821110	Butter knives
+821110	Butter knives
+821110	Cutlery
+821110	Fish knives
+821110	Flatware
+821110	Kitchen ware
+821110	Ladles
+821110	Skimmers
+821110	Spoon
+821110	Sugar tongs
+821110	Table knives
+821110	Tailor shears
+821110	Tailor shears
+821300	Hair cut equipment
+821300	Hair cut tools
+821300	Shears
+830110	Combination lock
+830110	Dead bolt lock
+830130	Lock
+830210	Castors
+830210	Hinges
+830210	Marine hardware
+830210	Marine parts
+830210	Marine products
+830241	Door hardware
+830241	Door opener
+830241	Drapery track
+830241	Window hardware
+830250	Fixtures
+830250	Hat racks
+830250	Hat racks
+830300	Card index cabinets
+830300	Deed box
+830300	Deed box
+830300	Desk equipment
+830300	Desk equipment
+830300	Desk supplies
+830300	Letter clips
+830300	Office stamp stands
+830300	Paper rests
+830300	Strong door
+830300	Strong rooms
+830610	Bells
+830610	Wind chime
+830890	Eyelets
+830890	Metal beads
+831000	Metal sign
+831000	Name plates
+831000	Sign plates
+840140	Economizers
+840140	Soot removers
+840140	Turbine
+840999	Air conditioner
+840999	Air conditioning machines
+840999	Air filter
+840999	Furnace
+840999	Incinerators
+841381	Pool pump
+841381	Spa pump
+841381	Turbine pump
+841381	Water pump
+841381	Water system pump
+841381	Water system pump
+841451	Convection blower
+841451	Floor fan
+841451	Personal fan
+841451	Roof fan
+841451	Roof fan
+842121	Filtering machine
+842121	Water filtration
+842290	Dryer
+842310	Baby scale
+842310	Lawn sprinklers
+842310	Lawn sprinklers
+842310	Personal weighing machines
+842310	Weighing machines
+842959	Bulldozers
+842959	Excavators
+842959	Mechanical shovels
+842959	Road rollers
+843020	Agricultural machinery
+843020	Agricultural machinery
+843020	Horticultural machinery
+843510	Machine part
+843510	Machine part
+844319	Printer
+844319	Printer accessories
+844319	Printing machinery
+845019	Laundry dryer
+846620	Magnetic chuck
+846722	Reciprocating saw
+847010	Calculator
+847170	Apple
+847170	Computer keyboard
+847170	Computer parts
+847170	Computer tuner
+847170	Dell
+847170	Disc drive
+847170	Flash drive
+847170	Floppy disk
+847170	Hard drive
+847170	Hard drive
+847170	Magnetic drive
+847170	Magnetic tape drive
+847170	Thumb drive
+847330	Mouse
+847330	Mouse pad
+848180	Flush valves
+848180	Flush valves
+848350	Pulley
+850110	Electric generator
+850110	Electric motor
+850440	Adaptor
+850440	Battery charger
+850440	Phone charger
+850440	Power supply
+850610	Accumulator
+850610	Batteries
+850610	Mercuric oxide
+850610	Nickel cadmium
+850819	Vacuum cleaner
+850940	Dehydrator
+850940	Food grinders
+850940	Kitchen appliance
+850980	Microderm equipment
+850980	Microdermabrasion
+850980	Personal hygiene device
+850980	Personal hygiene device
+850980	Ultrasonic vaporizers
+851010	Shavers
+851110	Compression ignition
+851110	Generators
+851110	Ignition magnetos
+851110	Starting equipment
+851310	Safety lamp
+851390	Flashlight holder
+851610	Hair
+851610	Iron
+851629	Heating
+851650	Microwave oven
+851650	Rice cooker
+851660	Cooking stove
+851660	Oven
+851671	Coffee machine
+851679	Facial steamer
+851679	Steamer
+851712	Cell phone
+851712	Cellular phone
+851712	Cordless handset
+851712	Cordless handset
+851712	Head phones
+851712	I phone
+851712	iPhone
+851712	Mobile
+851712	Phone
+851712	Smartphone
+851712	Telephone
+851761	i pad
+851761	ipad
+851810	Headset
+851810	Microphone stand
+851981	Cassette player
+851981	Laser video disc players
+851981	Laser video disc players
+851981	Movie
+852329	Magnetic stripe
+852329	Magnetic stripe
+852329	Musical recording
+852329	Records
+852352	Smart card
+852580	Antenna
+852580	Stereo tuner
+852580	Video recorder
+852871	Receiver
+852871	Satellite receiver
+853110	Beacon
+853939	Fluorescent light
+853990	Electronic device
+854239	Converter
+860900	Rail locomotive
+870810	Ball joint
+870810	Bearing
+870810	Carburator
+870810	Carburetor
+870810	Chassis frame
+870810	Differential
+870810	Door blade
+870810	Door edge guard
+870810	Face bar
+870810	Truck cap
+870829	Seat cover
+870829	Seat cover
+870840	Drive axle
+870840	Non driving axles
+870840	Parking brake cable
+870840	Shift knob
+870840	Shift knob
+870840	Steering unit
+870840	Steering unit
+870870	Hub cap
+870870	Rim
+870870	Wheel hub
+870880	McPherson strut
+870880	Shock assembly
+870880	Suspension
+870892	Muffler
+870894	Idler arm
+870894	Steering wheel
+870895	Inflator system
+870899	Audi
+870899	Buick
+870899	Lexus
+871200	Cycle
+871390	Wheel chair
+871390	Wheel chair
+871410	Ball joint
+871410	Brake
+871410	Carburator
+871410	Carburetor
+871410	Chassis
+871410	Chassis frame
+871410	Differential
+871410	Door edge guard
+871500	Carriage
+880400	Parachute
+890399	Jet ski parts
+890399	Jet wave blaster
+890399	Jet wave blaster
+890399	Jet wave runner
+890399	Jet wave runner
+890399	Sea doo
+890399	Sea doo parts
+890399	Seadoo parts
+890399	Seadoo parts
+890710	Inflatable raft
+900130	Contact lenses
+900130	Optical cable
+900130	Optical fibre
+900130	Photographic enlarger
+900130	Prisms
+900319	Eyeglasses
+900319	Optical frame
+900580	Elite Bushnell
+900580	Elite Bushnell
+900630	Flashbulb
+900630	Light flash
+900691	Tripod top
+900691	Vignetters
+900720	Projector
+901410	Direction finding compass
+901410	Navigation system
+901410	Navigational appliance
+901540	Hydrological
+901540	Rangefinders
+901720	Sliding tool
+901780	Measuring rule
+901780	Measuring tape
+901811	Ophthalmic
+901811	Surgical
+901811	Veterinary
+901890	Enema kit
+901890	Enema kit
+902190	Artificial body parts
+902190	Artificial body parts
+902190	Artificial body parts
+902190	Artificial joint
+902190	Artificial joint
+902190	Artificial limb
+902190	Artificial teeth
+902190	Cannulae
+902190	Dentures
+902190	Fracture applianc
+902511	Hydrometer
+902511	Liquid thermometer
+902511	Measurement device
+902511	Meter
+902511	Spectrograph
+902511	Spectrometer
+902511	Tachometer
+903020	Precision instrument
+903020	Spectrum analyzer
+910119	Pocket watch
+910119	Stop watch
+910119	Stopwatch
+910390	Desk clock
+910390	Table clock
+910511	Cuckoo clock
+910511	Wall clock
+910690	Parking meter
+911310	Watch bracelet
+920290	Guitar
+920590	Autoharp
+920590	Chanter
+920590	Concert
+920590	Drum
+920590	Fife
+920590	Flugelhorn
+920590	French horn
+920590	French horn
+920590	Harmonica
+920590	Keyboard pipe organ
+920590	Keyboard stringed instrument
+920590	Keyboard stringed instrument
+920590	Maracas
+920590	Marimba
+920590	Musical accessories
+920590	Musical instrument part
+920590	Orchestral
+920590	Pipe organ
+920590	Pipe organ
+920590	Vibraphone
+920590	Viola
+920590	Violoncello
+920590	Xylophone
+920710	Concert chimes
+920710	Electric piano
+920710	Vibraharps
+920810	Call horn
+920810	Mechanical singing bird
+920810	Music box
+920810	Musical box
+920810	Musical box
+920810	Musical saw
+920991	Bass damper
+920991	Bass damper
+920991	Brass flange plate
+920991	Centre brass pin
+920991	Hammer head
+920991	Hammer wire
+920991	Organ sharps
+920991	Organ sharps
+920991	Paper punching
+920991	Piano spoons
+920991	Pressure bar
+920991	Spruce sounding board
+920991	Tuning pin
+920999	Tuning fork
+930110	Machine gun
+930110	Machine gun
+930110	Mortars
+930110	Weapon projectors
+930200	Captive bolt humane killer
+930200	Captive bolt humane killer
+930200	Captive bolt humane killer
+930200	Firearms
+930200	Hunting shotgun
+930200	Muzzle loading firearm
+930200	Pump shotgun
+930200	Revolvers
+930200	Target shooting shotgun
+930330	Bolt action rifle
+930330	Rim fire
+930330	Semi automatic
+930390	Semi automatic calibre rim fire
+930390	Semi automatic calibre rim fire
+930400	Guns
+930510	Pistol
+930520	Rifle
+930520	Shotgun
+930591	Firearm magazines
+930591	Firing mechanisms
+930591	Flash eliminators
+930591	Frames
+930591	Gas buffers
+930591	Receivers
+930591	Rifle barrels
+930591	Silencers
+930591	Sound moderators
+930690	Guided missiles
+930700	Sheaths
+930700	Swords
+940151	Bench
+940151	Chair
+940151	Cot
+940151	High chair
+940151	Table
+940210	Bed
+940210	Chair
+940210	Table
+940430	Sleeping bag
+940430	Sleeping bag
+940430	Snugpak
+940490	Cushion
+940510	Illuminated sign
+940510	Wall lighting fixture
+940550	Candelabra
+940550	Oil lantern
+950300	Action figurine
+950300	Action figurine
+950300	Arcade game
+950300	Balloons
+950300	Battery powered
+950300	Boat
+950300	Cars
+950300	Construction sets
+950300	Costume
+950300	Craft kit
+950300	Craft ribbons
+950300	Craft ribbons
+950300	Die cast kit
+950300	Doll carriage
+950300	Doll clothes
+950300	Doll parts
+950300	Glow plug
+950300	Glowplug
+950300	Guitar
+950300	Hobby
+950300	Instrument
+950300	Kid
+950300	Model
+950300	Pedal car
+950300	Piano
+950300	Play balls
+950300	Plush
+950300	Puppet sock
+950300	Scrapbook supplies
+950300	Scrapbooking supplies
+950300	Skeleton
+950300	Slap band
+950300	Slap band
+950300	Stuffed animals
+950300	Train signals
+950300	Truck
+950420	Accessory
+950420	Ball
+950420	Cue
+950420	Table
+950440	Card game
+950440	Playing cards
+950450	Game controller
+950450	Game controller
+950450	PSP
+950450	Video game
+950450	Video game
+950450	Video game machine
+950490	Bingo equipment
+950490	Electronic game
+950490	Electronic game
+950629	Surf boards
+950629	Water fins
+950629	Water sport equipment
+950639	Shaft
+950659	Croquet racket
+950659	Croquet racket
+950659	Table tennis
+950662	Ball
+950662	Basketball
+950662	Cricket ball
+950662	Croquet ball
+950662	Dodge ball
+950662	Foot ball
+950662	Soccer ball
+950662	Soccer ball
+950662	Soccerball
+950662	Squash ball
+950670	Roller skates
+950670	Roller skates
+950670	Skates
+950691	Exercise bands
+950691	Exercise bands
+950691	Exercise bicycle
+950691	Exercise bike
+950691	Gymnastic
+950691	Physical
+950691	Trampoline
+950691	Yoga mat
+950691	Yoga mat
+950699	Archery
+950699	Automated batting cage
+950699	Automated batting cage
+950699	Badminton set
+950699	Baseball bat
+950699	Bobsled
+950699	Clay pigeon
+950699	Cricket leg pads
+950699	Elbow pad
+950699	Football masks
+950699	Hip guard
+950699	Hip pad
+950699	Hockey stick
+950699	Juggling equipment
+950699	Line floats
+950699	Line floats
+950699	Protective equipment
+950699	Protective pad
+950699	Shoulder guard
+950699	Shoulder pad
+950699	Shuttle cocks
+950699	Skate board
+950699	Skateboard
+950699	Split swivel
+950699	Sport equipment
+950699	Sporting good
+950699	Thigh pad
+950699	Throwing machine
+950710	Fishing accessories
+950710	Fishing part
+950710	Fishing reels
+950710	Fishing rods
+950710	Fishing supplies
+950710	Fishing tackle
+950890	Amusement ride accessories
+950890	Amusement ride accessories
+950890	Amusement ride part
+950890	Amusement ride part
+950890	Shooting galleries
+950890	Travelling menageries
+960110	Ivory articles
+960110	Ivory moulding
+960110	Worked Ivory
+960190	Animal carving material
+960190	Animal carving material
+960190	Bone
+960190	Coral
+960190	Mother pearl
+960190	Resins
+960200	Animal carving material
+960200	Animal moulding
+960200	Horn
+960200	Mother pearl
+960310	Broom
+960310	Brush
+960310	Cosmetic brush
+960310	Eyelash brush
+960310	Floor sweepers
+960310	Hair brush
+960310	Make up brush
+960400	Travel set
+960621	Button moulds
+960621	Buttons
+960621	Press studs
+960621	Slide fasteners
+960810	Ball point pens
+960810	Crayons
+960810	Drawing charcoals
+960810	Felt tipped pen
+960810	Pen refills
+960810	Pen refills
+960810	Pencil holder
+960810	Pencil holder
+960810	Pencils
+960810	Pens
+960810	Sliding pencils
+960810	Sliding pencils
+961000	Drawing surfaces
+961000	Writing board
+961100	Date stamp
+961100	Numbering stamp
+961100	Printing stamp
+961100	Sealing stamp
+961400	Cigar holder
+961400	Hookah
+961400	Smoking pipes
+961511	Curling pins
+961511	Elastic bands
+961511	Hair clip
+961511	Hair elastics
+961511	Hair slides
+961610	Powder pads
+961610	Scent sprays
+961610	Toilet sprays
+961800	Display
+961800	Display mannequin
+961800	Display mannequin
+961800	Dummy
+961800	Lay figures
+961800	Mannequin
+961800	Tailor dummies
+961800	Window dressing display
+961800	Window dressing display
+970110	Painting
+970110	Pastel
+970110	Revenue stamp
+970110	Sculpture
+970110	Statuary
+970500	Anatomical
+970500	Archaeological
+970500	Zoological
+981700	Trophies
+981800	College
+981800	Library
+981800	Museum
+989800	Airsoft guns
+989800	Automatic rifle
+989800	Balisong knife
+989800	Blowgun
+989800	D guard knives
+989800	D guard knives
+989800	Gun magazine
+989800	Kit Rae Fang Baelin
+989800	Kit Rae Fang Baelin
+989800	Liang Ji Gun
+989800	Military gun
+989800	Military handgun
+989800	Military rifle
+989800	Morning star
+989800	Nisetsuken
+989800	Nunchaku sticks
+989800	Paint ball markers
+989800	Paintball guns
+989800	Paintball guns
+989800	Replica firearm
+989800	Short barrelled gun
+989800	Short barrelled rifle
+989800	Speed safe knife
+989800	Spiked wristband
+989800	Spring assisted knife
+989800	Switch blade
+989800	Switchblade
+989800	Taser
+989800	Three section staff
+989800	Throwing stars
+989800	Torsion bar assisted knife
+989800	Toy guns
+989800	Yaqua blowgun
+711319	Bellychain
+711319	Bracelet
+711319	Broach
+711319	Chain
+711319	Charm
+711319	Cowries
+711319	Crosses
+711319	Crucifix
+711319	Cultured pearl
+711319	Cultured pearl
+711319	Earrings
+711319	Earset
+711319	Fashion jewellery
+711319	Fashion jewellery
+711319	Gold
+711319	Jewelery
+711319	Jewellery
+711319	Jewelry
+711319	Jewlery
+711319	Jewlry
+711319	Key chain
+711319	Key chain
+711319	Key ring
+711319	Key ring
+711319	Keychain
+711319	Medical ID
+711319	Medical ID
+711319	Necklace
+711319	Palladium
+711319	Pendant
+711319	Platinum
+711319	Precious metal
+711319	Precious metal
+711319	Precious stone
+711319	Precious stone
+711319	Ring
+711319	Silver
+711319	Tie pin
+711319	Tie pin
+711319	Wristband
+711319	Wristlet
+330499	Ashes
+330499	Baby powder
+330499	Baby powder
+330499	Beauty cream
+330499	Beauty cream
+330499	Beauty powder
+330499	Beauty powder
+330499	Beauty preparation
+330499	Beauty preparation
+330499	Beauty products
+330499	Beauty products
+330499	Beauty suppl
+330499	Beauty suppl
+330499	Beauty supplies
+330499	Beauty supplies
+330499	Body cream
+330499	Body cream
+330499	Body lotion
+330499	Body lotion
+330499	Body powder
+330499	Body powder
+330499	Brow finishing gel
+330499	Brow finishing gel
+330499	Brow finishing gel
+330499	Clay mask
+330499	Clay mask
+330499	Concealer
+330499	Conditioner
+330499	Cosmetics
+330499	Cotton wool
+330499	Cotton wool
+330499	Cream
+330499	Drug store product
+330499	Drug store product
+330499	Drug store product
+330499	Eye make up
+330499	Eye make up
+330499	Eye make up
+330499	Eye shadow
+330499	Eye shadow
+330499	Face color
+330499	Face color
+330499	Face cream
+330499	Face cream
+330499	Face lotion
+330499	Face lotion
+330499	Face mask
+330499	Face mask
+330499	Face scrub
+330499	Face scrub
+330499	Facial cleanser
+330499	Facial cleanser
+330499	Facial scrub
+330499	Facial scrub
+330499	Facial serum
+330499	Facial serum
+330499	Facial toner
+330499	Facial toner
+330499	Facial wash
+330499	Facial wash
+330499	Foot cream
+330499	Foot cream
+330499	Foundation
+330499	Foundation cream
+330499	Foundation cream
+330499	Hand cream
+330499	Hand cream
+330499	Hand lotion
+330499	Hand lotion
+330499	Healing balm
+330499	Healing balm
+330499	Lip balm
+330499	Lip balm
+330499	Lip make up
+330499	Lip make up
+330499	Lip make up
+330499	Lip stick
+330499	Lip stick
+330499	Lipstick
+330499	Lotion
+330499	Make up powder
+330499	Make up powder
+330499	Make up powder
+330499	Makeup
+330499	Manicure preparation
+330499	Manicure preparation
+330499	Mascara
+330499	Moisturizer
+330499	Moisturizing cream
+330499	Moisturizing cream
+330499	Nail paint
+330499	Nail paint
+330499	Nail polish
+330499	Nail polish
+330499	Pedicure preparation
+330499	Pedicure preparation
+330499	Pharmaceutical product
+330499	Pharmaceutical product
+330499	Powders
+330499	Rejuvenex
+330499	Salon supplies
+330499	Salon supplies
+330499	Sea mud
+330499	Sea mud
+330499	Shampoo
+330499	Skin care
+330499	Skin care
+330499	Skin care products
+330499	Skin care products
+330499	Skin care products
+330499	Skin cleanser
+330499	Skin cleanser
+330499	Skin cream
+330499	Skin cream
+330499	Skin toner
+330499	Skin toner
+330499	Skincare
+330499	Sun tan cream
+330499	Sun tan cream
+330499	Sun tan cream
+330499	Sun tan lotion
+330499	Sun tan lotion
+330499	Sun tan lotion
+330499	Sun tan preparations
+330499	Sun tan preparations
+330499	Sun tan preparations
+330499	Sunscreen
+330499	Toiletries
+330499	Toiletteries
+420100	Breastplates
+420100	Bridles
+420100	Collar
+420100	Dog coats
+420100	Dog coats
+420100	Dog collar
+420100	Dog collar
+420100	Dog leash
+420100	Dog leash
+420100	Dog muzzle
+420100	Dog muzzle
+420100	Dry insect
+420100	Dry insect
+420100	Equestrian good
+420100	Equestrian good
+420100	Equine
+420100	Flank cinch
+420100	Flank cinch
+420100	Girth
+420100	Halters
+420100	Harness
+420100	Horse grooming
+420100	Horse grooming
+420100	Horse saddle
+420100	Horse saddle
+420100	Horse supplies
+420100	Horse supplies
+420100	Horse tack
+420100	Horse tack
+420100	Leather pad
+420100	Leather pad
+420100	Martingales
+420100	Mullen mouth
+420100	Mullen mouth
+420100	Muzzle
+420100	Reins
+420100	Saddle
+420100	Saddle bag
+420100	Saddle bag
+420100	Saddle cloth
+420100	Saddle cloth
+420100	Saddle pad
+420100	Saddle pad
+420100	Saddler
+420100	Saddlery
+100210	Barley
+100210	Buckwheat
+100210	Canary seed
+100210	Canary seed
+100210	Corn Silk
+100210	Corn Silk
+100210	Durum wheat
+100210	Durum wheat
+100210	Flour
+100210	Fonio
+100210	Grain sorghum
+100210	Grain sorghum
+100210	Maize
+100210	Meslin
+100210	Millet
+100210	Oat
+100210	Quinoa
+100210	Rice
+100210	Rye
+100210	Starch
+100210	Triticale
+100210	Wheat
+490199	Advertisement
+490199	Advertising
+490199	Almanac
+490199	Banner
+490199	Bible
+490199	Book
+490199	Booklet
+490199	Brochure
+490199	Calendar
+490199	Catalogue
+490199	Certificate
+490199	Chart
+490199	Commic book
+490199	Commic book
+490199	Curriculum
+490199	Decal
+490199	Design
+490199	Dictionary
+490199	Directory
+490199	Document
+490199	Educational
+490199	Encyclopedia
+490199	Flyer
+490199	Globe
+490199	Graphics
+490199	Guide
+490199	Illustrated pa
+490199	Illustrated pa
+160414	Canned fish
+160414	Canned fish
+160414	Crab
+160414	Crayfish
+160414	Escargot
+160414	Fish sticks
+160414	Fish sticks
+160414	Sardine
+160414	Snail
+160414	Tuna
+300590	Absorbable surgical haemostatic
+300590	Absorbable surgical haemostatic
+300590	Absorbable surgical haemostatic
+300590	Adhesive plasters
+300590	Adhesive plasters
+300590	Bandages
+300590	catgut
+300590	Dental haemostatic
+300590	Dental haemostatic
+300590	First aid box
+300590	First aid box
+300590	First aid box
+300590	First aid kit
+300590	First aid kit
+300590	First aid kit
+300590	Gauze
+300590	Laminaria tents
+300590	Laminaria tents
+300590	materials
+300590	Medical test kit
+300590	Medical test kit
+300590	Medical test kit
+300590	Poultices
+300590	Sterile laminaria
+300590	Sterile laminaria
+300590	Sterile surgical
+300590	Sterile surgical
+300590	Surgical wound closure
+300590	Surgical wound closure
+300590	Surgical wound closure
+300590	Suture
+300590	Tissue adhesives
+300590	Tissue adhesives
+300590	Wadding
+620640	Bath robe
+620640	Bath robe
+620640	Bathrobe
+620640	Blouse
+620640	Boxers
+620640	Briefs
+620640	Flannel
+620640	Fleece
+620640	G string
+620640	G string
+620640	Gown
+620640	Intimates
+620640	Lingerie
+620640	Neglige
+620640	Nightdress
+620640	Nightshirt
+620640	Pajamas
+620640	Panties
+620640	Petticoat
+620640	Polo
+620640	Pyjamas
+620640	Robe
+620640	Romper
+620640	Seamless
+620640	Shirt
+620640	Singlet
+620640	Sleep wear
+620640	Sleep wear
+620640	Sleepwear
+620640	Slip
+620640	Socks
+620640	Thong
+620640	Undergarment
+620640	Underpants
+620640	Undershirt
+620640	Underwear
+620640	Undies
+620640	Vest
+220820	Baileys
+220820	Bourbon
+220820	Brandy
+220820	Gin
+220820	Liquor
+220820	Rum
+220820	Scotch
+220820	Spirits
+220820	Tequila
+220820	Vodka
+220820	Whiskey
+220820	Wine cooler
+220820	Wine cooler
+340119	Anionic
+340119	black soap
+340119	black soap
+340119	Bleach
+340119	Bleaching preparation
+340119	Bleaching preparation
+340119	Bleaching products
+340119	Bleaching products
+340119	Blueing preparation
+340119	Blueing preparation
+340119	Car detailing
+340119	Car detailing
+340119	Car detailing products
+340119	Car detailing products
+340119	Car detailing products
+340119	Cationic
+340119	Cleaner
+340119	Cleaning products
+340119	Cleaning products
+340119	Cleaningpreparations
+340119	Detergent
+340119	Dishwasher detergents
+340119	Dishwasher detergents
+340119	Eye glass cleaner
+340119	Eye glass cleaner
+340119	Eye glass cleaner
+340119	Fabric softener
+340119	Fabric softener
+340119	Glass cleaner
+340119	Glass cleaner
+340119	Household cleaner
+340119	Household cleaner
+340119	Household cleaning products
+340119	Household cleaning products
+340119	Household cleaning products
+340119	Laundry detergent
+340119	Laundry detergent
+340119	Lysol
+340119	Metal cleaning preparations
+340119	Metal cleaning preparations
+340119	Metal cleaning preparations
+340119	Oven cleaner
+340119	Oven cleaner
+340119	Oven cleaning preparations
+340119	Oven cleaning preparations
+340119	Oven cleaning preparations
+340119	Polish
+340119	Soap
+340119	Stove cleaner
+340119	Stove cleaner
+340119	Toilet bowl cleaner
+340119	Toilet bowl cleaner
+340119	Toilet bowl cleaner
+340119	Toilet bowl cleaning preparations
+340119	Toilet bowl cleaning preparations
+340119	Toilet bowl cleaning preparations
+340119	Toilet bowl cleaning preparations
+340119	Washing preparations
+340119	Washing preparations
+340119	Washing products
+340119	Washing products
+340119	Water softener
+340119	Water softener
+340119	Window cleaner
+340119	Window cleaner
+340119	Window cleaning preparations
+340119	Window cleaning preparations
+340119	Window cleaning preparations
+820719	Augers
+820719	Blending
+820719	Boring
+820719	Broaching
+820719	Drilling
+820719	Earth boring
+820719	Earth boring
+820719	Exploration
+820719	Metal drawing die
+820719	Metal drawing die
+820719	Metal drawing die
+820719	Metal extruding die
+820719	Metal extruding die
+820719	Metal extruding die
+820719	Milling
+820719	Milling cutters
+820719	Milling cutters
+820719	Percussion rock drill bits
+820719	Percussion rock drill bits
+820719	Percussion rock drill bits
+820719	Percussion rock drill bits
+820719	Pressing
+820719	Punching
+820719	Rock drilling
+820719	Rock drilling
+820719	Rotary rock drill bits
+820719	Rotary rock drill bits
+820719	Rotary rock drill bits
+820719	Rotary rock drill bits
+820719	Screw driver
+820719	Screw driver
+820719	Stamping
+820719	Tapping
+820719	Threading
+820719	Tungsten carbide tipped
+820719	Tungsten carbide tipped
+820719	Tungsten carbide tipped
+820719	Turning
+650500	Beanie
+650500	Beret
+650500	Bonnet
+650500	Cap
+650500	Fascinator
+650500	Hair net
+650500	Hair net
+650500	Hat
+650500	Head cover
+650500	Head cover
+650500	Hood
+650500	Kepi
+650500	Riding hat
+650500	Riding hat
+650500	Toque
