@@ -78,8 +78,8 @@ const API = {
 // --- Components ---
 
 function Login() {
-  const [email, setEmail] = useState('ITsupport@ghanapost.com.gh');
-  const [password, setPassword] = useState('ITsupport@26');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
