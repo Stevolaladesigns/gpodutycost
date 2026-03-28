@@ -2722,6 +2722,35 @@ export default function App() {
     await signOut(auth);
   };
 
+  useEffect(() => {
+    if (!user) return;
+
+    let idleTimer: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        handleLogout();
+      }, 5 * 60 * 1000); // 5 minutes
+    };
+
+    const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
+
+    events.forEach(event => {
+      window.addEventListener(event, resetTimer);
+    });
+
+    // Start timer initially
+    resetTimer();
+
+    return () => {
+      clearTimeout(idleTimer);
+      events.forEach(event => {
+        window.removeEventListener(event, resetTimer);
+      });
+    };
+  }, [user]);
+
   if (!isReady) return null;
 
   if (!user) return <Login />;
