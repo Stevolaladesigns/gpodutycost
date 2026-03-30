@@ -1564,13 +1564,16 @@ function AdminUsers() {
 
     try {
       const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      // Before sending, append the domain
+      const fullEmail = `${newUser.email.trim().toLowerCase()}@ghanapost.com.gh`;
+
       const res = await fetch('/api/admin/create-user', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify(newUser)
+        body: JSON.stringify({ ...newUser, email: fullEmail })
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to create user');
@@ -1579,7 +1582,7 @@ function AdminUsers() {
       const optimisticUser = {
         id: data.uid,
         full_name: newUser.full_name,
-        email: newUser.email,
+        email: fullEmail,
         role: newUser.role,
         post_office: newUser.post_office,
         is_active: 1,
@@ -1678,14 +1681,24 @@ function AdminUsers() {
                 className="w-full px-4 py-2 rounded-xl border border-black/10"
                 required
               />
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={newUser.email}
-                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
-                className="w-full px-4 py-2 rounded-xl border border-black/10"
-                required
-              />
+              <div className="space-y-1">
+                <label className="block text-[10px] font-bold uppercase text-gp-blue/40 ml-1">Email Address</label>
+                <div className="flex items-stretch rounded-xl border border-black/10 overflow-hidden focus-within:ring-2 focus-within:ring-gp-blue/10 transition-all bg-white">
+                  <input
+                    placeholder="Username"
+                    value={newUser.email}
+                    onChange={(e) => {
+                      const val = e.target.value.toLowerCase().replace(/\s/g, '').replace(/@/g, '');
+                      setNewUser({ ...newUser, email: val });
+                    }}
+                    className="flex-1 px-4 py-2 border-none focus:outline-none text-sm placeholder:text-gray-300"
+                    required
+                  />
+                  <div className="px-3 py-2 bg-gp-light text-gp-blue/40 font-bold text-[11px] flex items-center border-l border-black/5 whitespace-nowrap">
+                    @ghanapost.com.gh
+                  </div>
+                </div>
+              </div>
               <input
                 type="password"
                 placeholder="Password"
