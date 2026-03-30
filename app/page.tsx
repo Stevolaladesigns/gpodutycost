@@ -480,9 +480,13 @@ function LandedCostForm({ user }: { user: any }) {
 
   const handlePrintQuotation = async () => {
     if (result && !hasPrinted) {
+      // Log successful transaction when printing
       await logTransaction(1, result);
-      setHasPrinted(true);
-      window.print();
+      setHasPrinted(true); // Button will hide immediately
+      // 300ms delay gives the UI time to re-render without the button before print engine starts
+      setTimeout(() => {
+        window.print();
+      }, 300);
     }
   };
 
@@ -529,7 +533,125 @@ function LandedCostForm({ user }: { user: any }) {
   };
 
   return (
-    <div className="print:hidden space-y-6">
+    <div className="space-y-6 relative">
+      {/* Hidden Print Layout */}
+      {result && (
+        <div className="hidden print:block print-layout bg-white text-black w-full">
+          <style>{`
+            @media print {
+              @page { size: auto; margin: 20mm; }
+              html, body {
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              nav, header, aside, .no-print, button, .screen-only { display: none !important; }
+              main { margin: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+              .print-layout {
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+                padding: 0 10mm !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+              }
+              table { width: 100%; border-collapse: collapse; }
+              thead { display: table-header-group; }
+              tr { page-break-inside: avoid; }
+            }
+          `}</style>
+          <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
+            <div>
+              <img src="/logo.png" className="h-16 object-contain mb-4" alt="Ghana Post" />
+              <h1 className="text-3xl font-bold text-black uppercase tracking-tight">Duty Cost Quotation</h1>
+              <p className="text-sm font-bold mt-1 text-black/60 tracking-widest uppercase">GPO Central System</p>
+            </div>
+            <div className="text-right flex flex-col items-end">
+              <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.8} height={50} fontSize={14} background="transparent" />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 mb-10">
+            <div>
+              <h3 className="font-bold text-xs uppercase tracking-widest text-black/40 mb-2">Shipment details</h3>
+              <div className="space-y-1 font-medium">
+                <p>Origin: {formData.ship_from_country}</p>
+                <p>Destination: {formData.ship_to.country} ({formData.ship_to.state || '-'}, {formData.ship_to.city || '-'})</p>
+                <p>Date: {new Date().toLocaleDateString()}</p>
+                <p>Branch: {user.post_office || 'General Post Office'}</p>
+                <p>User: {user.full_name || user.email}</p>
+              </div>
+            </div>
+            <div className="bg-black/5 p-6 rounded-2xl text-center">
+              <p className="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Total Duty Cost</p>
+              <p className="text-4xl font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
+            </div>
+          </div>
+
+          <div className="mb-10">
+            <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
+            <table className="w-full text-left">
+              <thead>
+                <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
+                  <th className="py-2">Item Description</th>
+                  <th className="py-2 text-right">Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {formData.items.map((item: any, idx: number) => (
+                  <tr key={idx} className="border-b border-black/10">
+                    <td className="py-3">
+                      <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br/>
+                      <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
+                    </td>
+                    <td className="py-3 text-right font-bold">
+                      {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="max-w-md ml-auto">
+            <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Cost Breakdown</h3>
+            <div className="flex justify-between py-2 border-b border-black/5">
+              <span className="font-medium text-black/60">Items Total</span>
+              <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-black/5">
+              <span className="font-medium text-black/60">Duties</span>
+              <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-black/5">
+              <span className="font-medium text-black/60">Taxes</span>
+              <span className="font-bold">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-black/5">
+              <span className="font-medium text-black/60">Fees</span>
+              <span className="font-bold">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 border-b border-black/5">
+              <span className="font-medium text-black/60">Shipping</span>
+              <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-4 mt-2 border-t-2 border-black text-xl">
+              <span className="font-extrabold">Total Landed Cost</span>
+              <span className="font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
+            </div>
+          </div>
+
+          <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
+            Generated by GPO Duty Cost Portal
+          </div>
+        </div>
+      )}
+
+      <div className="print:hidden space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Input Section */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 space-y-6">
@@ -799,14 +921,15 @@ function LandedCostForm({ user }: { user: any }) {
 
                 {/* Actions */}
                 <div className="flex gap-4 pt-4 border-t border-black/5">
-                  <button
-                    onClick={handlePrintQuotation}
-                    disabled={hasPrinted}
-                    className={`flex-1 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg ${hasPrinted ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-gp-blue text-white hover:bg-gp-blue/90 shadow-gp-blue/20'}`}
-                  >
-                    <Printer size={20} />
-                    {hasPrinted ? 'Already Printed' : 'Print Quotation'}
-                  </button>
+                  {!hasPrinted && (
+                    <button
+                      onClick={handlePrintQuotation}
+                      className="flex-1 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-colors shadow-lg bg-gp-blue text-white hover:bg-gp-blue/90 shadow-gp-blue/20"
+                    >
+                      <Printer size={20} />
+                      Print Quotation
+                    </button>
+                  )}
                   <button
                     onClick={handleReset}
                     className="flex-1 bg-black/5 text-gp-blue py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/10 transition-colors"
@@ -816,105 +939,7 @@ function LandedCostForm({ user }: { user: any }) {
                   </button>
                 </div>
 
-                {/* Print Layout */}
-                <div className="hidden print:block print-layout bg-white text-black w-full">
-                  <style>{`
-                    @media print {
-                      @page { size: auto; margin: 15mm 10mm; }
-                      html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
-                      nav, header, aside, .no-print, button { display: none !important; }
-                      main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
-                      .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
-                      table { width: 100%; border-collapse: collapse; }
-                      thead { display: table-header-group; }
-                      tr { page-break-inside: avoid; }
-                    }
-                  `}</style>
-                  <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
-                    <div>
-                      <img src="/logo.png" className="h-16 object-contain mb-4" alt="Ghana Post" />
-                      <h1 className="text-3xl font-bold text-black uppercase tracking-tight">Duty Cost Quotation</h1>
-                      <p className="text-sm font-bold mt-1 text-black/60 tracking-widest uppercase">GPO Central System</p>
-                    </div>
-                    <div className="text-right flex flex-col items-end">
-                      <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.8} height={50} fontSize={14} background="transparent" />
-                    </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-8 mb-10">
-                    <div>
-                      <h3 className="font-bold text-xs uppercase tracking-widest text-black/40 mb-2">Shipment details</h3>
-                      <div className="space-y-1 font-medium">
-                        <p>Origin: {formData.ship_from_country}</p>
-                        <p>Destination: {formData.ship_to.country} ({formData.ship_to.state || '-'}, {formData.ship_to.city || '-'})</p>
-                        <p>Date: {new Date().toLocaleDateString()}</p>
-                        <p>Branch: {user.post_office || 'General Post Office'}</p>
-                        <p>User: {user.full_name || user.email}</p>
-                      </div>
-                    </div>
-                    <div className="bg-black/5 p-6 rounded-2xl text-center">
-                      <p className="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Total Duty Cost</p>
-                      <p className="text-4xl font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-10">
-                    <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
-                    <table className="w-full text-left">
-                      <thead>
-                        <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
-                          <th className="py-2">Item Description</th>
-                          <th className="py-2 text-right">Price</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {formData.items.map((item: any, idx: number) => (
-                          <tr key={idx} className="border-b border-black/10">
-                            <td className="py-3">
-                              <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br/>
-                              <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
-                            </td>
-                            <td className="py-3 text-right font-bold">
-                              {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="max-w-md ml-auto">
-                    <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Cost Breakdown</h3>
-                    <div className="flex justify-between py-2 border-b border-black/5">
-                      <span className="font-medium text-black/60">Items Total</span>
-                      <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-black/5">
-                      <span className="font-medium text-black/60">Duties</span>
-                      <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-black/5">
-                      <span className="font-medium text-black/60">Taxes</span>
-                      <span className="font-bold">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-black/5">
-                      <span className="font-medium text-black/60">Fees</span>
-                      <span className="font-bold">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between py-2 border-b border-black/5">
-                      <span className="font-medium text-black/60">Shipping</span>
-                      <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
-                    </div>
-                    <div className="flex justify-between py-4 mt-2 border-t-2 border-black text-xl">
-                      <span className="font-extrabold">Total Landed Cost</span>
-                      <span className="font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
-                    Generated by GPO Duty Cost Portal
-                  </div>
-                </div>
 
               </motion.div>
             ) : !loading && !error && (
@@ -927,7 +952,8 @@ function LandedCostForm({ user }: { user: any }) {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, isAdmin: boolean }) {
@@ -938,6 +964,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
   const [printMode, setPrintMode] = useState<'LIST' | 'SINGLE'>('LIST');
   const [selectedTx, setSelectedTx] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Filters
   const [searchTrackUser, setSearchTrackUser] = useState('');
@@ -948,6 +975,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
 
   const fetchReports = async () => {
     setLoading(true);
+    setError(null);
     try {
       const txRef = collection(db, 'transactions');
       let q;
@@ -956,23 +984,24 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
       } else if (scope === 'MINE') {
         q = query(txRef, where('post_office', '==', user.post_office));
       } else {
-        q = query(txRef, orderBy('created_at', 'desc'));
+        // Fetch all transactions for admins. We'll sort them client-side for consistency
+        q = query(txRef);
       }
       
       const snapshot = await getDocs(q);
-      const data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
+      let data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
 
-      if (scope === 'MINE') {
-        data.sort((a, b) => {
-          const dateA = formatDate(a.created_at)?.getTime() || 0;
-          const dateB = formatDate(b.created_at)?.getTime() || 0;
-          return dateB - dateA;
-        });
-      }
+      // Always sort client-side to handle potential Firebase data inconsistencies (e.g., mixed Date/String types)
+      data.sort((a, b) => {
+        const dateA = formatDate(a.created_at)?.getTime() || 0;
+        const dateB = formatDate(b.created_at)?.getTime() || 0;
+        return dateB - dateA;
+      });
 
       setTransactions(data);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to fetch reports', err);
+      setError('Failed to load transaction reports. Please check your connection or try again.');
     } finally {
       setLoading(false);
     }
@@ -996,22 +1025,24 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
   const handlePrintSingle = (t: any) => {
     setPrintMode('SINGLE');
     setSelectedTx(t);
+    // Increased delay for stable rendering
     setTimeout(() => {
       window.print();
-    }, 100);
+    }, 300);
   };
 
   const handlePrintList = () => {
     setPrintMode('LIST');
     setSelectedTx(null);
+    // Increased delay for stable rendering
     setTimeout(() => {
       window.print();
-    }, 100);
+    }, 300);
   };
 
   useEffect(() => {
     fetchReports();
-  }, [scope]);
+  }, [scope, isAdmin, user.id, user.post_office]);
 
   const filteredTx = transactions.filter(t => {
     const matchSearch = (t.tracking_number?.toLowerCase() || '').includes(searchTrackUser.toLowerCase()) ||
@@ -1043,11 +1074,26 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
       <div className="hidden print:block print-layout bg-white text-black w-full">
         <style>{`
           @media print {
-            @page { size: auto; margin: 15mm 10mm; }
-            html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
-            nav, header, aside, .no-print, button { display: none !important; }
-            main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
-            .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
+            @page { size: auto; margin: 20mm; }
+            html, body {
+              background: white !important;
+              color: black !important;
+              margin: 0 !important;
+              padding: 0 !important;
+              -webkit-print-color-adjust: exact !important;
+              print-color-adjust: exact !important;
+            }
+            nav, header, aside, .no-print, button, .screen-only { display: none !important; }
+            main { margin: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+            .print-layout {
+              display: block !important;
+              position: relative !important;
+              width: 100% !important;
+              padding: 0 10mm !important;
+              z-index: 99999 !important;
+              visibility: visible !important;
+              opacity: 1 !important;
+            }
             table { width: 100%; border-collapse: collapse; table-layout: fixed; }
             thead { display: table-header-group; }
             tr { page-break-inside: avoid; }
@@ -1121,11 +1167,26 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
         <div className="hidden print:block print-layout bg-white text-black w-full">
           <style>{`
             @media print {
-              @page { size: auto; margin: 15mm 10mm; }
-              html, body { background: white !important; color: black !important; margin: 0 !important; padding: 0 !important; }
-              nav, header, aside, .no-print, button { display: none !important; }
-              main { margin-left: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
-              .print-layout { display: block !important; position: relative !important; width: 100% !important; z-index: 99999 !important; }
+              @page { size: auto; margin: 20mm; }
+              html, body {
+                background: white !important;
+                color: black !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
+              nav, header, aside, .no-print, button, .screen-only { display: none !important; }
+              main { margin: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
+              .print-layout {
+                display: block !important;
+                position: relative !important;
+                width: 100% !important;
+                padding: 0 10mm !important;
+                z-index: 99999 !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+              }
               table { width: 100%; border-collapse: collapse; }
               thead { display: table-header-group; }
               tr { page-break-inside: avoid; }
@@ -1255,6 +1316,14 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             </div>
           )}
         </div>
+        
+        {error && (
+          <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+            <AlertCircle size={20} />
+            <p className="font-medium text-sm">{error}</p>
+            <button onClick={fetchReports} className="ml-auto bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg text-xs font-bold transition-colors">Retry</button>
+          </div>
+        )}
 
         {/* Filters & Actions */}
         <div className="bg-white p-4 rounded-3xl shadow-sm border border-black/5 flex flex-wrap gap-4 items-center justify-between sticky top-0 z-30">
@@ -2360,28 +2429,30 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
   const [metrics, setMetrics] = useState({ total: 0, success: 0, failed: 0, revenue: 0, users: 0 });
   const [timeStats, setTimeStats] = useState({ today: 0, week: 0, month: 0 });
   const [branchStats, setBranchStats] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchDashboardData = async () => {
       setLoading(true);
+      setError(null);
       try {
         const txRef = collection(db, 'transactions');
         let q;
         if (!isAdmin) {
           q = query(txRef, where('user_id', '==', user.id));
         } else {
-          q = query(txRef, orderBy('created_at', 'desc'));
+          // Fetch all for admins, sort client-side for consistency across mixed data types
+          q = query(txRef);
         }
         const snapshot = await getDocs(q);
-        const data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
+        let data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
         
-        if (!isAdmin) {
-          data.sort((a: any, b: any) => {
-            const dateA = formatDate(a.created_at)?.getTime() || 0;
-            const dateB = formatDate(b.created_at)?.getTime() || 0;
-            return dateB - dateA;
-          });
-        }
+        // Always sort client-side to ensure consistent view regardless of Firestore-side data types
+        data.sort((a: any, b: any) => {
+          const dateA = formatDate(a.created_at)?.getTime() || 0;
+          const dateB = formatDate(b.created_at)?.getTime() || 0;
+          return dateB - dateA;
+        });
 
         setTransactions(data);
 
@@ -2426,14 +2497,15 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
           const sortedBranches = Object.keys(branchMap).map(k => ({ name: k, count: branchMap[k] })).sort((a, b) => b.count - a.count).slice(0, 5);
           setBranchStats(sortedBranches);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Failed to load dashboard data", err);
+        setError("Failed to load dashboard metrics. Please reload the page.");
       } finally {
         setLoading(false);
       }
     };
     fetchDashboardData();
-  }, [isAdmin, user.post_office, formatDate]);
+  }, [isAdmin, user.id, user.post_office, formatDate]);
 
   const recentTx = transactions.slice(0, 10);
 
@@ -2468,6 +2540,14 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
           </button>
         )}
       </div>
+
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-6 py-4 rounded-2xl flex items-center gap-3 animate-in fade-in slide-in-from-top-2">
+          <AlertCircle size={20} />
+          <p className="font-medium text-sm">{error}</p>
+          <button onClick={() => window.location.reload()} className="ml-auto bg-red-100 hover:bg-red-200 px-3 py-1 rounded-lg text-xs font-bold transition-colors">Reload Page</button>
+        </div>
+      )}
 
       {/* Metrics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -2863,7 +2943,7 @@ export default function App() {
           </div>
         </header>
 
-        <div className="p-8 max-w-7xl mx-auto">
+        <div className="p-8 max-w-7xl mx-auto print:p-0 print:m-0 print:max-w-none">
           <AnimatePresence mode="wait">
             <motion.div
               key={view}
