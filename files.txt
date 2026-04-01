@@ -1759,6 +1759,7 @@ HS CODE	DESCRIPTION  / KEYWORD
 392690	Pessaries
 392690	Syringe bulb
 392690	Syringe bulb
+392290  Bathing Sponge
 400110	Carboxylated styrene butadiene
 400110	Compounded rubber
 400110	Styrene butadiene rubber

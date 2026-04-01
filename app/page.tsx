@@ -3025,8 +3025,9 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
 
         {/* Transactions Over Time Bar Chart */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
-          <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-6">
+          <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-6 flex items-center justify-between">
             Activity Volume
+            {metrics.total === 0 && <span className="text-[10px] font-bold text-gp-orange animate-pulse px-2 py-0.5 bg-gp-orange/10 rounded-full">No activity records found</span>}
           </h3>
           <div className="flex items-end justify-between h-32 gap-6 px-1 mt-2">
             {[
@@ -3039,14 +3040,20 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-3">
                   <div className="w-full relative group h-24 flex items-end">
+                    {/* Background Rail */}
+                    <div className="absolute inset-x-0 bottom-0 h-full bg-black/[0.03] rounded-t-xl overflow-hidden">
+                      <div className="w-full h-full border-x border-t border-black/[0.03]"></div>
+                    </div>
+                    
                     <motion.div
                       initial={{ height: 0 }}
-                      animate={{ height: `${Math.max(height, 5)}%` }}
-                      className={`w-full ${stat.color} ${stat.val > 0 ? 'opacity-80' : 'opacity-10'} group-hover:opacity-100 rounded-t-xl transition-all relative flex items-start justify-center shadow-sm`}
+                      animate={{ height: `${Math.max(height, 8)}%` }}
+                      className={`w-full ${stat.color} ${stat.val > 0 ? 'opacity-90' : 'opacity-[0.15]'} group-hover:opacity-100 rounded-t-xl transition-all relative flex items-start justify-center shadow-sm z-10`}
                     >
-                      <span className="absolute -top-6 text-[10px] font-black text-gp-blue opacity-0 group-hover:opacity-100 transition-opacity bg-white border border-black/5 px-2 py-0.5 rounded shadow-sm">
-                        {stat.val}
-                      </span>
+                      <div className="absolute -top-8 text-[11px] font-black text-gp-blue opacity-0 group-hover:opacity-100 transition-all bg-white border border-black/10 px-2.5 py-1 rounded-lg shadow-xl translate-y-2 group-hover:translate-y-0 whitespace-nowrap z-20">
+                        {stat.val} records
+                      </div>
+                      {stat.val === 0 && <div className="w-full h-full border border-dashed border-black/10 rounded-t-xl box-border"></div>}
                     </motion.div>
                   </div>
                   <span className="text-[10px] font-black text-gp-blue/40 uppercase tracking-tighter whitespace-nowrap">{stat.label}</span>
@@ -3055,6 +3062,7 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
             })}
           </div>
         </div>
+
       </div>
 
       {/* Admin Advanced Insights */}
