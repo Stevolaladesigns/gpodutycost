@@ -4,7 +4,7 @@ import { admin } from '@/lib/firebaseAdmin';
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-  
+
   if (!token) {
     return NextResponse.json({ error: "Missing token" }, { status: 401 });
   }
@@ -20,9 +20,9 @@ export async function POST(request: Request) {
     // Only verify admin status via firestore read if needed.
     // Let's get the user doc to ensure they are an ADMIN
     const requestUserDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
-    
+
     const userData = requestUserDoc.data();
-    
+
     console.log("Create user request from UID:", decodedToken.uid);
     console.log("User doc exists?", requestUserDoc.exists);
     console.log("User doc data:", requestUserDoc.data());
@@ -48,6 +48,11 @@ export async function POST(request: Request) {
       role,
       post_office,
       is_active: 1,
+      permissions: {
+        pages: ['dashboard', 'calculator', 'reports'],
+        reportAccess: 'OWN', // 'OWN', 'ALL', or 'SPECIFIC'
+        accessibleUserIds: [] // for 'SPECIFIC' access
+      },
       created_at: admin.firestore.FieldValue.serverTimestamp()
     });
 

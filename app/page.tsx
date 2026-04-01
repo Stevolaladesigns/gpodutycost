@@ -986,13 +986,20 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
     try {
       const txRef = collection(db, 'transactions');
       let q;
-      if (!isAdmin) {
-        q = query(txRef, where('user_id', '==', user.id));
-      } else if (scope === 'MINE') {
-        q = query(txRef, where('post_office', '==', user.post_office));
+      const perms = user.permissions;
+      const reportAccess = perms?.reportAccess || (isAdmin ? 'ALL' : 'OWN');
+
+      if (reportAccess === 'ALL') {
+        if (scope === 'MINE') {
+          q = query(txRef, where('post_office', '==', user.post_office));
+        } else {
+          q = query(txRef);
+        }
+      } else if (reportAccess === 'SPECIFIC') {
+        const ids = [user.id, ...(perms?.accessibleUserIds || [])];
+        q = query(txRef, where('user_id', 'in', ids.slice(0, 30)));
       } else {
-        // Fetch all transactions for admins. We'll sort them client-side for consistency
-        q = query(txRef);
+        q = query(txRef, where('user_id', '==', user.id));
       }
 
       const snapshot = await getDocs(q);
@@ -1049,7 +1056,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
 
   useEffect(() => {
     fetchReports();
-  }, [scope, isAdmin, user.id, user.post_office]);
+  }, [scope, isAdmin, user.id, user.permissions, user.post_office]);
 
   const filteredTx = transactions.filter(t => {
     const matchSearch = (t.tracking_number?.toLowerCase() || '').includes(searchTrackUser.toLowerCase()) ||
@@ -1304,7 +1311,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             </h2>
             <p className="text-sm text-gp-blue/60 font-medium mt-1">View, search, and print reports of duty cost calculations</p>
           </div>
-          {isAdmin && (
+          {(user.permissions?.reportAccess === 'ALL' || (isAdmin && !user.permissions)) && (
             <div className="flex items-center gap-2">
               <div className="flex bg-white p-1 rounded-xl border border-black/5 shadow-sm">
                 <button
@@ -1442,7 +1449,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                             >
                               <Printer size={16} />
                             </button>
-                            {isAdmin && (
+                            {user.role === 'ADMIN' && (
                               <button
                                 onClick={() => handleDelete(t.id)}
                                 disabled={deletingId === t.id}
@@ -1720,6 +1727,10 @@ function AdminUsers() {
                 className="w-full px-4 py-2 rounded-xl border border-black/10"
               >
                 <option value="OPERATIONS">Operations</option>
+                <option value="FINANCE">Finance</option>
+                <option value="IT_UNIT">IT Unit</option>
+                <option value="AUDIT">Audit</option>
+                <option value="POSTMASTER">Postmaster</option>
                 <option value="ADMIN">Administrator</option>
               </select>
               <AutocompleteInput
@@ -1908,6 +1919,10 @@ function AdminUsers() {
                               className="w-full px-2 py-1 rounded border border-black/10 text-sm"
                             >
                               <option value="OPERATIONS">OPERATIONS</option>
+                              <option value="FINANCE">FINANCE</option>
+                              <option value="IT_UNIT">IT UNIT</option>
+                              <option value="AUDIT">AUDIT</option>
+                              <option value="POSTMASTER">POSTMASTER</option>
                               <option value="ADMIN">ADMIN</option>
                             </select>
                           </td>
@@ -1965,7 +1980,14 @@ function AdminUsers() {
                             <p className="text-xs text-gp-blue/60">{u.email}</p>
                           </td>
                           <td className="py-4">
-                            <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter ${u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'}`}>
+                            <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter ${
+                              u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 
+                              u.role === 'OPERATIONS' ? 'bg-blue-100 text-blue-700' :
+                              u.role === 'FINANCE' ? 'bg-green-100 text-green-700' :
+                              u.role === 'IT_UNIT' ? 'bg-orange-100 text-orange-700' :
+                              u.role === 'AUDIT' ? 'bg-yellow-100 text-yellow-700' :
+                              'bg-indigo-100 text-indigo-700'
+                            }`}>
                               {u.role}
                             </span>
                           </td>
@@ -2090,6 +2112,360 @@ function AdminUsers() {
           </div>
         )}
       </AnimatePresence>
+    </div>
+  );
+}
+
+// =========================================================
+// USER PERMISSION ROLE MANAGEMENT
+// =========================================================
+function UserPermissionRole() {
+  const [users, setUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState<string | null>(null);
+  const [editUser, setEditUser] = useState<any>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const res = await fetch('/api/admin/manage-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ action: 'LIST_USERS' })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Failed to fetch users');
+      setUsers(data.users || []);
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleUpdatePermissions = async (userId: string, permissions: any) => {
+    setSaving(userId);
+    try {
+      const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
+      const res = await fetch('/api/admin/manage-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ action: 'UPDATE_PERMISSIONS', targetUid: userId, data: { permissions } })
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Update failed');
+      
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, permissions } : u));
+      if (editUser?.id === userId) setEditUser({ ...editUser, permissions });
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  const togglePage = (userId: string, currentPerms: any, page: string) => {
+    const pages = currentPerms?.pages || ['dashboard', 'calculator', 'reports'];
+    const newPages = pages.includes(page) 
+      ? pages.filter((p: string) => p !== page)
+      : [...pages, page];
+    
+    handleUpdatePermissions(userId, { ...currentPerms, pages: newPages });
+  };
+
+  const setReportAccess = (userId: string, currentPerms: any, type: string) => {
+    handleUpdatePermissions(userId, { 
+      ...currentPerms, 
+      reportAccess: type,
+      accessibleUserIds: currentPerms?.accessibleUserIds || [] 
+    });
+  };
+
+  const toggleAccessibleUser = (userId: string, currentPerms: any, targetUserId: string) => {
+    const list = currentPerms?.accessibleUserIds || [];
+    const newList = list.includes(targetUserId)
+      ? list.filter((id: string) => id !== targetUserId)
+      : [...list, targetUserId];
+    
+    handleUpdatePermissions(userId, { ...currentPerms, accessibleUserIds: newList });
+  };
+
+  const filteredUsers = users.filter(u => 
+    (u.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (u.email || '').toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-gp-blue">
+            <ShieldCheck className="text-gp-blue" />
+            User Permission Role
+          </h2>
+          <p className="text-sm text-gp-blue/60 font-medium mt-1">Manage what users can see or do in the system</p>
+        </div>
+        <div className="relative w-64 group">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={16} />
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={e => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-xl border border-black/5 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-gp-orange/10 transition-all font-medium"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        {/* User List Panel */}
+        <div className="lg:col-span-4 bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden flex flex-col max-h-[700px]">
+          <div className="p-4 bg-gp-light/30 border-b border-black/5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gp-blue/40">Select User to Manage</span>
+          </div>
+          <div className="flex-1 overflow-y-auto divide-y divide-black/5">
+            {loading ? (
+               <div className="p-12 text-center text-gp-blue/40 animate-pulse italic text-sm font-medium">Loading users...</div>
+            ) : filteredUsers.length === 0 ? (
+               <div className="p-12 text-center text-gp-blue/40 italic text-sm font-medium">No users found.</div>
+            ) : filteredUsers.map(u => (
+              <button
+                key={u.id}
+                onClick={() => setEditUser(u)}
+                className={`w-full p-4 flex items-center gap-3 transition-all hover:bg-gp-light ${editUser?.id === u.id ? 'bg-gp-orange/5 border-r-4 border-gp-orange' : ''}`}
+              >
+                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold text-xs shrink-0 ${editUser?.id === u.id ? 'bg-gp-orange text-white' : 'bg-gp-light text-gp-blue/40'}`}>
+                  {(u.full_name || u.email || 'U').charAt(0).toUpperCase()}
+                </div>
+                <div className="text-left overflow-hidden">
+                  <p className={`text-sm font-bold truncate ${editUser?.id === u.id ? 'text-gp-orange' : 'text-gp-blue'}`}>{u.full_name || 'No Name'}</p>
+                  <p className="text-[10px] font-black uppercase tracking-tighter text-gp-blue/40 truncate">{u.role} • {u.post_office}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Permissions Management Panel */}
+        <div className="lg:col-span-8">
+          {editUser ? (
+            <motion.div 
+              initial={{ opacity: 0, x: 10 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="bg-white rounded-3xl shadow-sm border border-black/5 p-6 md:p-8 space-y-8"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-gp-orange/10 flex items-center justify-center font-black text-gp-orange text-xl uppercase">
+                    {(editUser.full_name || editUser.email || 'U').charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gp-blue">{editUser.full_name || 'Unnamed User'}</h3>
+                    <p className="text-sm font-medium text-gp-blue/40">{editUser.email}</p>
+                  </div>
+                </div>
+                {saving === editUser.id && (
+                  <div className="flex items-center gap-2 text-gp-orange text-xs font-black uppercase tracking-widest animate-pulse">
+                    <RefreshCcw size={12} className="animate-spin" /> Saving Changes
+                  </div>
+                )}
+              </div>
+
+              {/* Page Access */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-gp-blue/60 border-b border-black/5 pb-2">Page Visibility & Access</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Dashboard & Profile are locked */}
+                  <div className="p-4 rounded-2xl bg-gp-light/50 border border-black/5 flex items-center justify-between opacity-60">
+                    <div className="flex items-center gap-3">
+                      <LayoutDashboard size={20} className="text-gp-blue" />
+                      <span className="text-sm font-bold">Dashboard & Analytics</span>
+                    </div>
+                    <div className="w-10 h-5 bg-gp-blue/20 rounded-full flex items-center px-1">
+                      <div className="w-3 h-3 bg-gp-blue rounded-full translate-x-5" />
+                    </div>
+                  </div>
+                  <div className="p-4 rounded-2xl bg-gp-light/50 border border-black/5 flex items-center justify-between opacity-60">
+                    <div className="flex items-center gap-3">
+                      <UserCog size={20} className="text-gp-blue" />
+                      <span className="text-sm font-bold">Manage Profile</span>
+                    </div>
+                    <div className="w-10 h-5 bg-gp-blue/20 rounded-full flex items-center px-1">
+                      <div className="w-3 h-3 bg-gp-blue rounded-full translate-x-5" />
+                    </div>
+                  </div>
+
+                  {/* Configurable Pages */}
+                  <button 
+                    onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'calculator')}
+                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${
+                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
+                        ? 'bg-gp-orange/5 border-gp-orange/20'
+                        : 'bg-white border-black/5 hover:border-gp-blue/20'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <Calculator size={20} className={(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'text-gp-orange' : 'text-gp-blue/40'} />
+                      <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Duty Calculator</span>
+                    </div>
+                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${
+                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') 
+                        ? 'bg-gp-orange' 
+                        : 'bg-gray-200'
+                    }`}>
+                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                        (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'translate-x-5' : 'translate-x-0'
+                      }`} />
+                    </div>
+                  </button>
+
+                  <button 
+                    onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'reports')}
+                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${
+                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
+                        ? 'bg-gp-orange/5 border-gp-orange/20'
+                        : 'bg-white border-black/5 hover:border-gp-blue/20'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <BarChart3 size={20} className={(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'text-gp-orange' : 'text-gp-blue/40'} />
+                      <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Transaction Reports</span>
+                    </div>
+                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${
+                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') 
+                        ? 'bg-gp-orange' 
+                        : 'bg-gray-200'
+                    }`}>
+                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
+                        (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'translate-x-5' : 'translate-x-0'
+                      }`} />
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Report Access Level */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-gp-blue/60 border-b border-black/5 pb-2">Data Visibility (Reports & Analytics)</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {[
+                    { id: 'OWN', label: 'Own Records', desc: 'Can only see reports they created' },
+                    { id: 'ALL', label: 'All Records', desc: 'Full access to all branch data' },
+                    { id: 'SPECIFIC', label: 'Specific Users', desc: 'Access to selected users only' },
+                  ].map(option => (
+                    <button
+                      key={option.id}
+                      onClick={() => setReportAccess(editUser.id, editUser.permissions || {}, option.id)}
+                      className={`p-4 rounded-2xl border text-left transition-all ${
+                        (editUser.permissions?.reportAccess || 'OWN') === option.id
+                          ? 'bg-gp-blue border-gp-blue text-white shadow-lg'
+                          : 'bg-white border-black/5 hover:bg-gp-light text-gp-blue'
+                      }`}
+                    >
+                      <p className="font-bold text-sm tracking-tight">{option.label}</p>
+                      <p className={`text-[10px] mt-1 font-medium leading-relaxed ${(editUser.permissions?.reportAccess || 'OWN') === option.id ? 'text-white/60' : 'text-gp-blue/40'}`}>
+                        {option.desc}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Specific User List for access */}
+                {(editUser.permissions?.reportAccess === 'SPECIFIC') && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    className="mt-4 p-6 bg-gp-light rounded-3xl border border-gp-blue/10 space-y-4"
+                  >
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-gp-blue/40">Visible users in reports:</span>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-[10px] font-black text-gp-orange bg-gp-orange/10 px-2 py-1 rounded-lg">
+                            {(editUser.permissions?.accessibleUserIds || []).length} SELECTED
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="relative w-full md:w-64 group">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={14} />
+                        <input
+                          type="text"
+                          placeholder="Search users to add..."
+                          className="w-full pl-9 pr-4 py-2 rounded-xl border border-black/5 bg-white text-xs focus:outline-none focus:ring-2 focus:ring-gp-orange/10 transition-all font-medium"
+                          onChange={(e) => {
+                            const term = e.target.value.toLowerCase();
+                            const els = document.querySelectorAll('.user-select-item');
+                            els.forEach((el: any) => {
+                              const name = el.getAttribute('data-name')?.toLowerCase() || '';
+                              const email = el.getAttribute('data-email')?.toLowerCase() || '';
+                              if (name.includes(term) || email.includes(term)) {
+                                el.style.display = 'flex';
+                              } else {
+                                el.style.display = 'none';
+                              }
+                            });
+                          }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                      {users.filter(u => u.id !== editUser.id).map(u => (
+                        <button
+                          key={u.id}
+                          data-name={u.full_name}
+                          data-email={u.email}
+                          onClick={() => toggleAccessibleUser(editUser.id, editUser.permissions, u.id)}
+                          className="user-select-item flex items-center gap-3 p-3 rounded-2xl transition-all aria-pressed:bg-gp-blue aria-pressed:text-white aria-pressed:shadow-md bg-white border border-black/5 text-gp-blue hover:border-gp-blue/20"
+                          aria-pressed={(editUser.permissions?.accessibleUserIds || []).includes(u.id)}
+                          style={{
+                            backgroundColor: (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? '#0B1B3D' : '',
+                            color: (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'white' : ''
+                          }}
+                        >
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black ${
+                            (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'bg-white/20' : 'bg-gp-light'
+                          }`}>
+                            {(u.full_name || u.email || 'U').charAt(0).toUpperCase()}
+                          </div>
+                          <div className="text-left overflow-hidden">
+                            <p className="text-xs font-bold truncate tracking-tight">{u.full_name || u.email}</p>
+                            <p className={`text-[9px] font-black uppercase tracking-tighter ${
+                              (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'text-white/60' : 'text-gp-blue/40'
+                            }`}>{u.post_office}</p>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </div>
+              
+              <div className="pt-6 border-t border-black/5 flex items-center gap-2 text-gp-blue/40">
+                <AlertCircle size={14} className="shrink-0" />
+                <p className="text-[10px] font-black uppercase tracking-wider">Changes take effect after user reloads the application.</p>
+              </div>
+            </motion.div>
+          ) : (
+            <div className="h-full min-h-[500px] bg-gp-light/30 rounded-4xl border-2 border-dashed border-black/10 flex flex-col items-center justify-center p-20 text-center space-y-6">
+              <div className="w-24 h-24 rounded-4xl bg-white shadow-sm border border-black/5 flex items-center justify-center text-gp-blue/10">
+                <ShieldCheck size={64} strokeWidth={1.5} />
+              </div>
+              <div className="max-w-xs">
+                <h3 className="font-black text-xl text-gp-blue uppercase tracking-tight">Access Control</h3>
+                <p className="text-sm font-medium text-gp-blue/40 mt-2 leading-relaxed">Select a user from the directory to manage their specific permissions and data visibility settings.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
@@ -2458,11 +2834,16 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
       try {
         const txRef = collection(db, 'transactions');
         let q;
-        if (!isAdmin) {
-          q = query(txRef, where('user_id', '==', user.id));
-        } else {
-          // Fetch all for admins, sort client-side for consistency across mixed data types
+        const perms = user.permissions;
+        const reportAccess = perms?.reportAccess || (isAdmin ? 'ALL' : 'OWN');
+
+        if (reportAccess === 'ALL') {
           q = query(txRef);
+        } else if (reportAccess === 'SPECIFIC') {
+          const ids = [user.id, ...(perms?.accessibleUserIds || [])];
+          q = query(txRef, where('user_id', 'in', ids.slice(0, 30)));
+        } else {
+          q = query(txRef, where('user_id', '==', user.id));
         }
         const snapshot = await getDocs(q);
         let data = snapshot.docs.map(docSnap => ({ id: docSnap.id, ...(docSnap.data() as any) }));
@@ -2525,7 +2906,7 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
       }
     };
     fetchDashboardData();
-  }, [isAdmin, user.id, user.post_office, formatDate]);
+  }, [isAdmin, user.id, user.permissions, user.post_office, formatDate]);
 
   const recentTx = transactions.slice(0, 10);
 
@@ -2647,28 +3028,28 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
           <h3 className="font-bold text-sm uppercase tracking-widest text-gp-blue border-b border-black/5 pb-4 mb-6">
             Activity Volume
           </h3>
-          <div className="flex items-end justify-between h-32 gap-4 px-2">
+          <div className="flex items-end justify-between h-32 gap-6 px-1 mt-2">
             {[
-              { label: 'Today', val: timeStats.today },
-              { label: 'This Week', val: timeStats.week },
-              { label: 'This Month', val: timeStats.month }
+              { label: 'Today', val: timeStats.today, color: 'bg-gp-orange' },
+              { label: 'This Week', val: timeStats.week, color: 'bg-gp-blue' },
+              { label: 'This Month', val: timeStats.month, color: 'bg-gp-blue' }
             ].map((stat, idx) => {
               const maxVal = Math.max(timeStats.today, timeStats.week, timeStats.month, 1);
               const height = (stat.val / maxVal) * 100;
               return (
                 <div key={idx} className="flex-1 flex flex-col items-center gap-3">
-                  <div className="w-full relative group">
+                  <div className="w-full relative group h-24 flex items-end">
                     <motion.div
                       initial={{ height: 0 }}
-                      animate={{ height: `${height}%` }}
-                      className="w-full bg-gp-blue/10 group-hover:bg-gp-orange/20 rounded-t-xl transition-all relative flex items-end justify-center min-h-[4px]"
+                      animate={{ height: `${Math.max(height, 5)}%` }}
+                      className={`w-full ${stat.color} ${stat.val > 0 ? 'opacity-80' : 'opacity-10'} group-hover:opacity-100 rounded-t-xl transition-all relative flex items-start justify-center shadow-sm`}
                     >
-                      <span className="absolute -top-6 text-[10px] font-black text-gp-blue opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="absolute -top-6 text-[10px] font-black text-gp-blue opacity-0 group-hover:opacity-100 transition-opacity bg-white border border-black/5 px-2 py-0.5 rounded shadow-sm">
                         {stat.val}
                       </span>
                     </motion.div>
                   </div>
-                  <span className="text-[10px] font-bold text-gp-blue/40 uppercase tracking-tighter whitespace-nowrap">{stat.label}</span>
+                  <span className="text-[10px] font-black text-gp-blue/40 uppercase tracking-tighter whitespace-nowrap">{stat.label}</span>
                 </div>
               );
             })}
@@ -2882,39 +3263,52 @@ export default function App() {
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'dashboard' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
           >
             <LayoutDashboard size={20} />
-            <span className="hidden md:block font-medium">Dashboard</span>
+            <span className="hidden md:block font-medium text-sm">Dashboard</span>
           </button>
-          <button
-            onClick={() => setView('landed')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'landed' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
-          >
-            <Calculator size={20} />
-            <span className="hidden md:block font-medium">Calculator</span>
-          </button>
-          <button
-            onClick={() => setView('reports')}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'reports' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
-          >
-            <BarChart3 size={20} />
-            <span className="hidden md:block font-medium">Reports</span>
-          </button>
-          {user.role === 'ADMIN' && (
+          
+          {(!user.permissions || (user.permissions?.pages || []).includes('calculator')) && (
             <button
-              onClick={() => setView('admin')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'admin' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+              onClick={() => setView('landed')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'landed' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
             >
-              <Users size={20} />
-              <span className="hidden md:block font-medium">Users</span>
+              <Calculator size={20} />
+              <span className="hidden md:block font-medium text-sm">Duty Calculator</span>
+            </button>
+          )}
+
+          {(!user.permissions || (user.permissions?.pages || []).includes('reports')) && (
+            <button
+              onClick={() => setView('reports')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'reports' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+            >
+              <BarChart3 size={20} />
+              <span className="hidden md:block font-medium text-sm">Reports</span>
             </button>
           )}
           {user.role === 'ADMIN' && (
-            <button
-              onClick={() => setView('admin-settings')}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'admin-settings' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
-            >
-              <Settings size={20} />
-              <span className="hidden md:block font-medium">Admin Settings</span>
-            </button>
+            <>
+              <button
+                onClick={() => setView('admin')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'admin' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+              >
+                <Users size={20} />
+                <span className="hidden md:block font-medium text-sm">User Management</span>
+              </button>
+              <button
+                onClick={() => setView('admin-permissions')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'admin-permissions' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+              >
+                <ShieldCheck size={20} />
+                <span className="hidden md:block font-medium text-sm">User Permissions</span>
+              </button>
+              <button
+                onClick={() => setView('admin-settings')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'admin-settings' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+              >
+                <Settings size={20} />
+                <span className="hidden md:block font-medium text-sm">Admin Settings</span>
+              </button>
+            </>
           )}
           {user.role !== 'ADMIN' && (
             <button
@@ -2973,9 +3367,10 @@ export default function App() {
               transition={{ duration: 0.2 }}
             >
               {view === 'dashboard' && <Dashboard user={user} setView={setView} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
-              {view === 'landed' && <LandedCostForm user={user} />}
-              {view === 'reports' && <Reports user={user} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
+              {view === 'landed' && (!user.permissions || (user.permissions?.pages || []).includes('calculator')) && <LandedCostForm user={user} />}
+              {view === 'reports' && (!user.permissions || (user.permissions?.pages || []).includes('reports')) && <Reports user={user} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
               {view === 'admin' && user.role === 'ADMIN' && <AdminUsers />}
+              {view === 'admin-permissions' && user.role === 'ADMIN' && <UserPermissionRole />}
               {view === 'settings' && <UserSettings user={user} />}
               {view === 'admin-settings' && user.role === 'ADMIN' && <AdminSettings user={user} setView={setView} />}
             </motion.div>

@@ -12,7 +12,9 @@ service cloud.firestore {
     // Transactions: any authenticated user can read and write.
     // Reads are needed for the Reports tab; writes are for logging calculations.
     match /transactions/{transactionId} {
-      allow read, write: if request.auth != null;
+      allow read, create, update: if request.auth != null;
+      allow delete: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN';
     }
   }
 }

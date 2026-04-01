@@ -4,7 +4,7 @@ import { admin } from '@/lib/firebaseAdmin';
 export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization') || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
-  
+
   if (!token) {
     return NextResponse.json({ error: "Missing token" }, { status: 401 });
   }
@@ -19,7 +19,7 @@ export async function POST(request: Request) {
   try {
     const requestUserDoc = await admin.firestore().collection('users').doc(decodedToken.uid).get();
     const userData = requestUserDoc.data();
-    
+
     // Allow only explicit ADMINs.
     if (!requestUserDoc.exists || userData?.role !== 'ADMIN' || userData?.is_active === 0) {
       return NextResponse.json({ error: "Unauthorized. Admin access required." }, { status: 403 });
@@ -45,14 +45,14 @@ export async function POST(request: Request) {
       if (!targetDoc.exists) throw new Error("User not found");
       const currentStatus = targetDoc.data()?.is_active;
       const newStatus = currentStatus === 1 ? 0 : 1;
-      
+
       // Update Auth
       await admin.auth().updateUser(targetUid, { disabled: newStatus === 0 });
       // Update Firestore
       await admin.firestore().collection('users').doc(targetUid).update({ is_active: newStatus });
-      
+
       return NextResponse.json({ success: true, newStatus });
-    } 
+    }
     else if (action === 'EDIT_USER') {
       const { full_name, post_office } = data;
       // Update Auth (Name)
@@ -77,14 +77,20 @@ export async function POST(request: Request) {
       await admin.firestore().collection('users').doc(targetUid).delete();
       return NextResponse.json({ success: true });
     }
+    else if (action === 'UPDATE_PERMISSIONS') {
+      const { permissions } = data;
+      if (!permissions) throw new Error("Missing permissions data");
+      await admin.firestore().collection('users').doc(targetUid).update({ permissions });
+      return NextResponse.json({ success: true });
+    }
     else if (action === 'CLEANUP_GHOSTS') {
       // List all users from Auth (upto 1000 for simple cleanup)
       const authUsersResult = await admin.auth().listUsers(1000);
       const authUids = new Set(authUsersResult.users.map(u => u.uid));
-      
+
       const firestoreUsers = await admin.firestore().collection('users').get();
       let deletedCount = 0;
-      
+
       const batch = admin.firestore().batch();
       firestoreUsers.docs.forEach(doc => {
         if (!authUids.has(doc.id)) {
@@ -92,7 +98,7 @@ export async function POST(request: Request) {
           deletedCount++;
         }
       });
-      
+
       if (deletedCount > 0) await batch.commit();
       return NextResponse.json({ success: true, deletedCount });
     }
