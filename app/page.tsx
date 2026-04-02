@@ -1822,7 +1822,7 @@ function AdminUsers() {
                   "DAWHENYA POST OFFICE", "BULK MAIL", "ABURI CRAFT VILLAGE POST OFFICE", "TRAINING1 POST OFFICE", "TRAINING2 POST OFFICE",
                   "ANKAFUL PSYCHIATRIC POST OFFICE", "SPEEDLINK", "MANKRASO POST OFFICE", "ABUAKWA POST OFFICE", "ODUMASE SUNYANI POST OFFICE",
                   "LINK", "SCUTTLE PARCEL BOX", "OFOASE AYIREBI POST OFFICE", "KOMFO ANOKYE TEACHING HOSPITAL", "DHL WAREHOUSE", "DVLA HEAD OFFICE",
-                  "STANDARD CHARTERED", "PASSPORT OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
+                  "STANDARD CHARTERED", "PASSPORT OFFICE", "WA POST OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
                 ].sort().map(po => ({ label: po, sub: '', original: po }))}
               />
               {error && <p className="text-red-500 text-xs">{error}</p>}
@@ -1980,14 +1980,13 @@ function AdminUsers() {
                             <p className="text-xs text-gp-blue/60">{u.email}</p>
                           </td>
                           <td className="py-4">
-                            <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter ${
-                              u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' : 
-                              u.role === 'OPERATIONS' ? 'bg-blue-100 text-blue-700' :
-                              u.role === 'FINANCE' ? 'bg-green-100 text-green-700' :
-                              u.role === 'IT_UNIT' ? 'bg-orange-100 text-orange-700' :
-                              u.role === 'AUDIT' ? 'bg-yellow-100 text-yellow-700' :
-                              'bg-indigo-100 text-indigo-700'
-                            }`}>
+                            <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter ${u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
+                                u.role === 'OPERATIONS' ? 'bg-blue-100 text-blue-700' :
+                                  u.role === 'FINANCE' ? 'bg-green-100 text-green-700' :
+                                    u.role === 'IT_UNIT' ? 'bg-orange-100 text-orange-700' :
+                                      u.role === 'AUDIT' ? 'bg-yellow-100 text-yellow-700' :
+                                        'bg-indigo-100 text-indigo-700'
+                              }`}>
                               {u.role}
                             </span>
                           </td>
@@ -2160,7 +2159,7 @@ function UserPermissionRole() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Update failed');
-      
+
       setUsers(prev => prev.map(u => u.id === userId ? { ...u, permissions } : u));
       if (editUser?.id === userId) setEditUser({ ...editUser, permissions });
     } catch (err: any) {
@@ -2172,18 +2171,18 @@ function UserPermissionRole() {
 
   const togglePage = (userId: string, currentPerms: any, page: string) => {
     const pages = currentPerms?.pages || ['dashboard', 'calculator', 'reports'];
-    const newPages = pages.includes(page) 
+    const newPages = pages.includes(page)
       ? pages.filter((p: string) => p !== page)
       : [...pages, page];
-    
+
     handleUpdatePermissions(userId, { ...currentPerms, pages: newPages });
   };
 
   const setReportAccess = (userId: string, currentPerms: any, type: string) => {
-    handleUpdatePermissions(userId, { 
-      ...currentPerms, 
+    handleUpdatePermissions(userId, {
+      ...currentPerms,
       reportAccess: type,
-      accessibleUserIds: currentPerms?.accessibleUserIds || [] 
+      accessibleUserIds: currentPerms?.accessibleUserIds || []
     });
   };
 
@@ -2192,11 +2191,11 @@ function UserPermissionRole() {
     const newList = list.includes(targetUserId)
       ? list.filter((id: string) => id !== targetUserId)
       : [...list, targetUserId];
-    
+
     handleUpdatePermissions(userId, { ...currentPerms, accessibleUserIds: newList });
   };
 
-  const filteredUsers = users.filter(u => 
+  const filteredUsers = users.filter(u =>
     (u.full_name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
     (u.email || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -2231,9 +2230,9 @@ function UserPermissionRole() {
           </div>
           <div className="flex-1 overflow-y-auto divide-y divide-black/5">
             {loading ? (
-               <div className="p-12 text-center text-gp-blue/40 animate-pulse italic text-sm font-medium">Loading users...</div>
+              <div className="p-12 text-center text-gp-blue/40 animate-pulse italic text-sm font-medium">Loading users...</div>
             ) : filteredUsers.length === 0 ? (
-               <div className="p-12 text-center text-gp-blue/40 italic text-sm font-medium">No users found.</div>
+              <div className="p-12 text-center text-gp-blue/40 italic text-sm font-medium">No users found.</div>
             ) : filteredUsers.map(u => (
               <button
                 key={u.id}
@@ -2255,7 +2254,7 @@ function UserPermissionRole() {
         {/* Permissions Management Panel */}
         <div className="lg:col-span-8">
           {editUser ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 10 }}
               animate={{ opacity: 1, x: 0 }}
               className="bg-white rounded-3xl shadow-sm border border-black/5 p-6 md:p-8 space-y-8"
@@ -2302,49 +2301,43 @@ function UserPermissionRole() {
                   </div>
 
                   {/* Configurable Pages */}
-                  <button 
+                  <button
                     onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'calculator')}
-                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${
-                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
+                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
                         ? 'bg-gp-orange/5 border-gp-orange/20'
                         : 'bg-white border-black/5 hover:border-gp-blue/20'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <Calculator size={20} className={(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'text-gp-orange' : 'text-gp-blue/40'} />
                       <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Duty Calculator</span>
                     </div>
-                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${
-                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') 
-                        ? 'bg-gp-orange' 
+                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
+                        ? 'bg-gp-orange'
                         : 'bg-gray-200'
-                    }`}>
-                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
-                        (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'translate-x-5' : 'translate-x-0'
-                      }`} />
+                      }`}>
+                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
                     </div>
                   </button>
 
-                  <button 
+                  <button
                     onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'reports')}
-                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${
-                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
+                    className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
                         ? 'bg-gp-orange/5 border-gp-orange/20'
                         : 'bg-white border-black/5 hover:border-gp-blue/20'
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <BarChart3 size={20} className={(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'text-gp-orange' : 'text-gp-blue/40'} />
                       <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Transaction Reports</span>
                     </div>
-                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${
-                      (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') 
-                        ? 'bg-gp-orange' 
+                    <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
+                        ? 'bg-gp-orange'
                         : 'bg-gray-200'
-                    }`}>
-                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${
-                        (editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'translate-x-5' : 'translate-x-0'
-                      }`} />
+                      }`}>
+                      <div className={`w-3 h-3 bg-white rounded-full transition-transform ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'translate-x-5' : 'translate-x-0'
+                        }`} />
                     </div>
                   </button>
                 </div>
@@ -2362,11 +2355,10 @@ function UserPermissionRole() {
                     <button
                       key={option.id}
                       onClick={() => setReportAccess(editUser.id, editUser.permissions || {}, option.id)}
-                      className={`p-4 rounded-2xl border text-left transition-all ${
-                        (editUser.permissions?.reportAccess || 'OWN') === option.id
+                      className={`p-4 rounded-2xl border text-left transition-all ${(editUser.permissions?.reportAccess || 'OWN') === option.id
                           ? 'bg-gp-blue border-gp-blue text-white shadow-lg'
                           : 'bg-white border-black/5 hover:bg-gp-light text-gp-blue'
-                      }`}
+                        }`}
                     >
                       <p className="font-bold text-sm tracking-tight">{option.label}</p>
                       <p className={`text-[10px] mt-1 font-medium leading-relaxed ${(editUser.permissions?.reportAccess || 'OWN') === option.id ? 'text-white/60' : 'text-gp-blue/40'}`}>
@@ -2378,7 +2370,7 @@ function UserPermissionRole() {
 
                 {/* Specific User List for access */}
                 {(editUser.permissions?.reportAccess === 'SPECIFIC') && (
-                  <motion.div 
+                  <motion.div
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     className="mt-4 p-6 bg-gp-light rounded-3xl border border-gp-blue/10 space-y-4"
@@ -2392,7 +2384,7 @@ function UserPermissionRole() {
                           </span>
                         </div>
                       </div>
-                      
+
                       <div className="relative w-full md:w-64 group">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={14} />
                         <input
@@ -2430,16 +2422,14 @@ function UserPermissionRole() {
                             color: (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'white' : ''
                           }}
                         >
-                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black ${
-                            (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'bg-white/20' : 'bg-gp-light'
-                          }`}>
+                          <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-black ${(editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'bg-white/20' : 'bg-gp-light'
+                            }`}>
                             {(u.full_name || u.email || 'U').charAt(0).toUpperCase()}
                           </div>
                           <div className="text-left overflow-hidden">
                             <p className="text-xs font-bold truncate tracking-tight">{u.full_name || u.email}</p>
-                            <p className={`text-[9px] font-black uppercase tracking-tighter ${
-                              (editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'text-white/60' : 'text-gp-blue/40'
-                            }`}>{u.post_office}</p>
+                            <p className={`text-[9px] font-black uppercase tracking-tighter ${(editUser.permissions?.accessibleUserIds || []).includes(u.id) ? 'text-white/60' : 'text-gp-blue/40'
+                              }`}>{u.post_office}</p>
                           </div>
                         </button>
                       ))}
@@ -2447,7 +2437,7 @@ function UserPermissionRole() {
                   </motion.div>
                 )}
               </div>
-              
+
               <div className="pt-6 border-t border-black/5 flex items-center gap-2 text-gp-blue/40">
                 <AlertCircle size={14} className="shrink-0" />
                 <p className="text-[10px] font-black uppercase tracking-wider">Changes take effect after user reloads the application.</p>
@@ -3044,7 +3034,7 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
                     <div className="absolute inset-x-0 bottom-0 h-full bg-black/[0.03] rounded-t-xl overflow-hidden">
                       <div className="w-full h-full border-x border-t border-black/[0.03]"></div>
                     </div>
-                    
+
                     <motion.div
                       initial={{ height: 0 }}
                       animate={{ height: `${Math.max(height, 8)}%` }}
@@ -3273,7 +3263,7 @@ export default function App() {
             <LayoutDashboard size={20} />
             <span className="hidden md:block font-medium text-sm">Dashboard</span>
           </button>
-          
+
           {(!user.permissions || (user.permissions?.pages || []).includes('calculator')) && (
             <button
               onClick={() => setView('landed')}
