@@ -83,6 +83,14 @@ export async function POST(request: Request) {
       await admin.firestore().collection('users').doc(targetUid).update({ permissions });
       return NextResponse.json({ success: true });
     }
+    else if (action === 'RESET_PASSWORD') {
+      const { password } = data;
+      if (!password || password.length < 6) {
+        throw new Error("Password must be at least 6 characters long.");
+      }
+      await admin.auth().updateUser(targetUid, { password });
+      return NextResponse.json({ success: true });
+    }
     else if (action === 'CLEANUP_GHOSTS') {
       // List all users from Auth (upto 1000 for simple cleanup)
       const authUsersResult = await admin.auth().listUsers(1000);

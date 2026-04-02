@@ -29,7 +29,8 @@ import {
   UserCog,
   Search,
   Eye,
-  EyeOff
+  EyeOff,
+  Download
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Barcode from 'react-barcode';
@@ -294,7 +295,7 @@ function AutocompleteInput({
   onSelect: (val: string, item: any) => void;
   options: { label: string; sub: string; original: any }[];
   placeholder: string;
-  label: string;
+  label: string | React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -535,14 +536,96 @@ function LandedCostForm({ user }: { user: any }) {
     });
   };
 
+  const renderReceiptContent = () => (
+    <div className="w-full h-full flex flex-col justify-start">
+      {/* Reduced padding and margins for extreme compactness */}
+      <div className="flex justify-between items-start border-b-2 border-black pb-2 mb-3 mt-1">
+        <div>
+          <img src="/logo.png" className="h-9 object-contain mb-1" alt="Ghana Post" />
+          <h1 className="text-lg font-bold text-black uppercase tracking-tight leading-none">Duty Cost Quotation</h1>
+          <p className="text-[9px] font-bold mt-0.5 text-black/60 tracking-widest uppercase">GPO Central System</p>
+        </div>
+        <div className="text-right flex flex-col items-end pt-1">
+          <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.2} height={30} fontSize={10} background="transparent" />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-4 mb-3">
+        <div>
+          <h3 className="font-bold text-[9px] uppercase tracking-widest text-black/40 mb-1">Shipment details</h3>
+          <div className="space-y-0 font-medium text-[13px] leading-snug">
+            <p>Origin: {formData.ship_from_country}</p>
+            <p>Destination: {formData.ship_to.country} ({formData.ship_to.state || '-'}, {formData.ship_to.city || '-'})</p>
+            <p>Date: {new Date().toLocaleDateString()}</p>
+            <p>Branch: {user.post_office || 'General Post Office'}</p>
+            <p>User: {user.full_name || user.email}</p>
+          </div>
+        </div>
+        <div className="bg-black/5 p-3 rounded-xl text-center flex flex-col justify-center border border-black/5">
+          <p className="text-[9px] font-bold uppercase tracking-widest text-black/60 mb-0.5">Total Duty Cost</p>
+          <p className="text-2xl font-black">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
+        </div>
+      </div>
+
+      <div className="mb-3">
+        <h3 className="font-bold border-b border-black pb-1 mb-2 text-[9px] uppercase tracking-widest">Items Summary</h3>
+        <table className="w-full text-left text-[12px]">
+          <thead>
+            <tr className="border-b border-black/10 font-bold text-[9px] uppercase tracking-widest">
+              <th className="py-0.5">Item Description</th>
+              <th className="py-0.5 text-right">Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {formData.items.map((item: any) => (
+              <tr key={item.id} className="border-b border-black/5">
+                <td className="py-1">
+                  <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br />
+                  <span className="text-[9px] text-black/60 font-medium tracking-tight">HS Code: {item.hs_code || 'N/A'}</span>
+                </td>
+                <td className="py-1 text-right font-bold">
+                  {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="max-w-[240px] ml-auto text-[12px]">
+        <h3 className="font-bold border-b border-black pb-0.5 mb-1.5 text-[9px] uppercase tracking-widest">Cost Breakdown</h3>
+        <div className="flex justify-between py-0.5 border-b border-black/5">
+          <span className="font-medium text-black/60">Items Total</span>
+          <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between py-0.5 border-b border-black/5">
+          <span className="font-medium text-black/60">Duties</span>
+          <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between py-0.5 border-b border-black/5">
+          <span className="font-medium text-black/60">Shipping</span>
+          <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between py-1 mt-0.5 border-t border-black text-base">
+          <span className="font-black">Total Landed Cost</span>
+          <span className="font-black">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
+        </div>
+      </div>
+
+      <div className="mt-auto pt-2 text-center text-[8px] text-black/30 font-bold tracking-widest uppercase border-t border-black/5">
+        Generated by GPO Duty Cost Portal
+      </div>
+    </div>
+  );
+
   return (
     <div className="space-y-6 relative">
       {/* Hidden Print Layout */}
       {result && (
-        <div className="hidden print:block print-layout bg-white text-black w-full">
+        <div className="hidden print:flex print:flex-col print-layout bg-white text-black w-full h-[297mm] overflow-hidden">
           <style>{`
             @media print {
-              @page { size: auto; margin: 20mm; }
+              @page { size: A4 portrait; margin: 0; }
               html, body {
                 background: white !important;
                 color: black !important;
@@ -550,106 +633,49 @@ function LandedCostForm({ user }: { user: any }) {
                 padding: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                width: 210mm;
+                height: 297mm;
               }
               nav, header, aside, .no-print, button, .screen-only { display: none !important; }
               main { margin: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
               .print-layout {
-                display: block !important;
-                position: relative !important;
+                display: flex !important;
+                flex-direction: column !important;
                 width: 100% !important;
-                padding: 0 10mm !important;
+                height: 297mm !important; 
+                margin: 0 !important;
+                padding: 0 !important;
                 z-index: 99999 !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                overflow: hidden !important;
               }
-              table { width: 100%; border-collapse: collapse; }
-              thead { display: table-header-group; }
-              tr { page-break-inside: avoid; }
+              .receipt-half {
+                height: 148.5mm !important;
+                padding: 8mm 12mm !important;
+                position: relative !important;
+                overflow: hidden !important;
+                display: flex !important;
+                flex-direction: column !important;
+              }
+              .split-line-container {
+                height: 0;
+                width: 100%;
+                border-top: 1px dashed #ccc !important;
+                position: relative;
+                z-index: 10;
+              }
             }
           `}</style>
-          <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
-            <div>
-              <img src="/logo.png" className="h-16 object-contain mb-4" alt="Ghana Post" />
-              <h1 className="text-3xl font-bold text-black uppercase tracking-tight">Duty Cost Quotation</h1>
-              <p className="text-sm font-bold mt-1 text-black/60 tracking-widest uppercase">GPO Central System</p>
-            </div>
-            <div className="text-right flex flex-col items-end">
-              <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.8} height={50} fontSize={14} background="transparent" />
-            </div>
+          
+          <div className="receipt-half">
+            {renderReceiptContent()}
           </div>
 
-          <div className="grid grid-cols-2 gap-8 mb-10">
-            <div>
-              <h3 className="font-bold text-xs uppercase tracking-widest text-black/40 mb-2">Shipment details</h3>
-              <div className="space-y-1 font-medium">
-                <p>Origin: {formData.ship_from_country}</p>
-                <p>Destination: {formData.ship_to.country} ({formData.ship_to.state || '-'}, {formData.ship_to.city || '-'})</p>
-                <p>Date: {new Date().toLocaleDateString()}</p>
-                <p>Branch: {user.post_office || 'General Post Office'}</p>
-                <p>User: {user.full_name || user.email}</p>
-              </div>
-            </div>
-            <div className="bg-black/5 p-6 rounded-2xl text-center">
-              <p className="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Total Duty Cost</p>
-              <p className="text-4xl font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
-            </div>
-          </div>
+          <div className="split-line-container"></div>
 
-          <div className="mb-10">
-            <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
-            <table className="w-full text-left">
-              <thead>
-                <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
-                  <th className="py-2">Item Description</th>
-                  <th className="py-2 text-right">Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {formData.items.map((item: any) => (
-                  <tr key={item.id} className="border-b border-black/10">
-                    <td className="py-3">
-                      <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br />
-                      <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
-                    </td>
-                    <td className="py-3 text-right font-bold">
-                      {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="max-w-md ml-auto">
-            <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Cost Breakdown</h3>
-            <div className="flex justify-between py-2 border-b border-black/5">
-              <span className="font-medium text-black/60">Items Total</span>
-              <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-black/5">
-              <span className="font-medium text-black/60">Duties</span>
-              <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-black/5">
-              <span className="font-medium text-black/60">Taxes</span>
-              <span className="font-bold">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-black/5">
-              <span className="font-medium text-black/60">Fees</span>
-              <span className="font-bold">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-black/5">
-              <span className="font-medium text-black/60">Shipping</span>
-              <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
-            </div>
-            <div className="flex justify-between py-4 mt-2 border-t-2 border-black text-xl">
-              <span className="font-extrabold">Total Landed Cost</span>
-              <span className="font-extrabold">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
-            </div>
-          </div>
-
-          <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
-            Generated by GPO Duty Cost Portal
+          <div className="receipt-half">
+            {renderReceiptContent()}
           </div>
         </div>
       )}
@@ -691,8 +717,8 @@ function LandedCostForm({ user }: { user: any }) {
                 <input
                   placeholder="e.g. CP225658529GH "
                   value={formData.tracking_number}
-                  onChange={(e) => setFormData({ ...formData, tracking_number: e.target.value })}
-                  className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10"
+                  onChange={(e) => setFormData({ ...formData, tracking_number: e.target.value.toUpperCase() })}
+                  className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 uppercase"
                 />
               </div>
             </div>
@@ -705,8 +731,8 @@ function LandedCostForm({ user }: { user: any }) {
                   <input
                     placeholder="e.g. US"
                     value={formData.ship_to.country}
-                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, country: e.target.value } })}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10"
+                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, country: e.target.value.toUpperCase() } })}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 uppercase"
                   />
                 </div>
                 <div>
@@ -714,8 +740,8 @@ function LandedCostForm({ user }: { user: any }) {
                   <input
                     placeholder="e.g. New York"
                     value={formData.ship_to.state}
-                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, state: e.target.value } })}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10"
+                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, state: e.target.value.toUpperCase() } })}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 uppercase"
                   />
                 </div>
                 <div>
@@ -723,8 +749,8 @@ function LandedCostForm({ user }: { user: any }) {
                   <input
                     placeholder="e.g. New York"
                     value={formData.ship_to.city}
-                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, city: e.target.value } })}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10"
+                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, city: e.target.value.toUpperCase() } })}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 uppercase"
                   />
                 </div>
                 <div>
@@ -732,8 +758,8 @@ function LandedCostForm({ user }: { user: any }) {
                   <input
                     placeholder="e.g. 10001"
                     value={formData.ship_to.postal_code}
-                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, postal_code: e.target.value } })}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10"
+                    onChange={(e) => setFormData({ ...formData, ship_to: { ...formData.ship_to, postal_code: e.target.value.toUpperCase() } })}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 uppercase"
                   />
                 </div>
               </div>
@@ -1054,6 +1080,48 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
     }, 300);
   };
 
+  const handleExportReport = () => {
+    if (filteredTx.length === 0) {
+      alert("No data to export.");
+      return;
+    }
+
+    const headers = ["Date", "Time", "User", "Branch", "Tracking #", "Status", "Cost Paid"];
+    const csvRows = [headers.join(",")];
+
+    filteredTx.forEach(t => {
+      const d = formatDate(t.created_at);
+      const date = d ? d.toLocaleDateString() : 'N/A';
+      const time = d ? d.toLocaleTimeString() : '';
+      const displayName = t.user_name || (t.user_id ? t.user_id.substring(0, 8) + '...' : 'Unknown');
+      const branch = t.post_office || '';
+      const tracking = t.tracking_number || '-';
+      const status = t.success === 1 ? 'Success' : 'Failed';
+      const res = t.response_payload ? JSON.parse(t.response_payload) : null;
+      const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
+      
+      const row = [
+        `"${date}"`,
+        `"${time}"`,
+        `"${displayName.replace(/"/g, '""')}"`,
+        `"${branch.replace(/"/g, '""')}"`,
+        `"${tracking}"`,
+        `"${status}"`,
+        `"${t.currency || ''} ${total.toFixed(2)}"`
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const blob = new Blob([csvRows.join("\n")], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", `Duty_Cost_Report_${new Date().toISOString().substring(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   useEffect(() => {
     fetchReports();
   }, [scope, isAdmin, user.id, user.permissions, user.post_office]);
@@ -1176,12 +1244,11 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
         </div>
       )}
 
-      {/* Hidden Print Layout (SINGLE TRANSACTION) */}
       {printMode === 'SINGLE' && selectedTx && (
-        <div className="hidden print:block print-layout bg-white text-black w-full">
+        <div className="hidden print:flex print:flex-col print-layout bg-white text-black w-full h-[297mm] overflow-hidden">
           <style>{`
             @media print {
-              @page { size: auto; margin: 20mm; }
+              @page { size: A4 portrait; margin: 0; }
               html, body {
                 background: white !important;
                 color: black !important;
@@ -1189,73 +1256,94 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                 padding: 0 !important;
                 -webkit-print-color-adjust: exact !important;
                 print-color-adjust: exact !important;
+                width: 210mm;
+                height: 297mm;
               }
               nav, header, aside, .no-print, button, .screen-only { display: none !important; }
               main { margin: 0 !important; padding: 0 !important; width: 100% !important; display: block !important; }
               .print-layout {
-                display: block !important;
-                position: relative !important;
+                display: flex !important;
+                flex-direction: column !important;
                 width: 100% !important;
-                padding: 0 10mm !important;
+                height: 297mm !important; 
+                margin: 0 !important;
+                padding: 0 !important;
                 z-index: 99999 !important;
                 visibility: visible !important;
                 opacity: 1 !important;
+                overflow: hidden !important;
               }
-              table { width: 100%; border-collapse: collapse; }
-              thead { display: table-header-group; }
-              tr { page-break-inside: avoid; }
+              .receipt-half {
+                height: 148.5mm !important;
+                padding: 8mm 12mm !important;
+                position: relative !important;
+                overflow: hidden !important;
+                display: flex !important;
+                flex-direction: column !important;
+              }
+              .split-line-container {
+                height: 0;
+                width: 100%;
+                border-top: 1px dashed #ccc !important;
+                position: relative;
+                z-index: 10;
+              }
             }
           `}</style>
           {(() => {
             const formData = selectedTx.request_payload ? JSON.parse(selectedTx.request_payload) : {};
             const result = selectedTx.response_payload ? JSON.parse(selectedTx.response_payload) : {};
-            return (
-              <>
-                <div className="flex justify-between items-start border-b-2 border-black pb-8 mb-8 mt-4">
+            const dateStr = formatDate(selectedTx.created_at)?.toLocaleDateString() || new Date().toLocaleDateString();
+            const branchName = selectedTx.post_office;
+            const userName = selectedTx.user_name || 'System';
+
+            const SingleReceipt = () => (
+              <div className="w-full h-full flex flex-col justify-start">
+                <div className="flex justify-between items-start border-b-2 border-black pb-2 mb-3 mt-1">
                   <div>
-                    <img src="/logo.png" className="h-16 object-contain mb-4" alt="Ghana Post" />
-                    <h1 className="text-3xl font-bold text-black uppercase tracking-tight">Duty Cost Quotation</h1>
-                    <p className="text-sm font-bold mt-1 text-black/60 tracking-widest uppercase">GPO Central System</p>
+                    <img src="/logo.png" className="h-9 object-contain mb-1" alt="Ghana Post" />
+                    <h1 className="text-lg font-bold text-black uppercase tracking-tight leading-none">Duty Cost Quotation</h1>
+                    <p className="text-[9px] font-bold mt-0.5 text-black/60 tracking-widest uppercase">GPO Central System</p>
                   </div>
-                  <div className="text-right flex flex-col items-end text-black">
-                    <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.8} height={50} fontSize={14} background="transparent" />
+                  <div className="text-right flex flex-col items-end pt-1">
+                    <Barcode value={formData.tracking_number || 'UNKNOWN'} width={1.2} height={30} fontSize={10} background="transparent" />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-8 mb-10 text-black">
+                <div className="grid grid-cols-2 gap-4 mb-3 text-black">
                   <div>
-                    <h3 className="font-bold text-xs uppercase tracking-widest text-black/40 mb-2">Shipment details</h3>
-                    <div className="space-y-1 font-medium">
+                    <h3 className="font-bold text-[9px] uppercase tracking-widest text-black/40 mb-1">Shipment details</h3>
+                    <div className="space-y-0 font-medium text-[13px] leading-snug">
                       <p>Origin: {formData.ship_from_country || 'GH'}</p>
                       <p>Destination: {formData.ship_to?.country} ({formData.ship_to?.state || '-'}, {formData.ship_to?.city || '-'})</p>
-                      <p>Date: {formatDate(selectedTx.created_at)?.toLocaleDateString() || new Date().toLocaleDateString()}</p>
-                      <p>Branch: {selectedTx.post_office}</p>
-                      <p>User: {selectedTx.user_name || 'System'}</p>
+                      <p>Date: {dateStr}</p>
+                      <p>Branch: {branchName}</p>
+                      <p>User: {userName}</p>
                     </div>
                   </div>
-                  <div className="bg-black/5 p-6 rounded-2xl text-center">
-                    <p className="text-xs font-bold uppercase tracking-widest text-black/60 mb-1">Total Duty Cost</p>
-                    <p className="text-4xl font-extrabold">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
+                  <div className="bg-black/5 p-3 rounded-xl text-center flex flex-col justify-center border border-black/5">
+                    <p className="text-[9px] font-bold uppercase tracking-widest text-black/60 mb-0.5">Total Duty Cost</p>
+                    <p className="text-2xl font-black">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</p>
                   </div>
                 </div>
 
-                <div className="mb-10 overflow-hidden text-black">
-                  <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Items Summary</h3>
-                  <table className="w-full text-left">
+                <div className="mb-3 overflow-hidden text-black">
+                  <h3 className="font-bold border-b border-black pb-1 mb-2 text-[9px] uppercase tracking-widest">Items Summary</h3>
+                  <table className="w-full text-left text-[12px]">
                     <thead>
-                      <tr className="border-b border-black/20 font-bold text-xs uppercase tracking-widest">
-                        <th className="py-2">Item Description</th>
-                        <th className="py-2 text-right">Price</th>
+                      <tr className="border-b border-black/10 font-bold text-[9px] uppercase tracking-widest">
+                        <th className="py-0.5">Item Description</th>
+                        <th className="py-0.5 text-right">Price</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(formData.items || []).map((item: any, idx: number) => (
-                        <tr key={idx} className="border-b border-black/10">
-                          <td className="py-3">
+                        <tr key={idx} className="border-b border-black/5">
+                          <td className="py-2">
                             <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br />
-                            <span className="text-xs text-black/60 font-medium">HS Code: {item.hs_code || 'N/A'}</span>
+                            <span className="text-[9px] text-black/60 font-medium tracking-tight">HS Code: {item.hs_code || 'N/A'}</span>
                           </td>
-                          <td className="py-3 text-right font-bold">
+                          <td className="py-2 text-right font-bold">
                             {formData.currency || 'GHS'} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
                           </td>
                         </tr>
@@ -1264,36 +1352,40 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                   </table>
                 </div>
 
-                <div className="max-w-md ml-auto text-black">
-                  <h3 className="font-bold border-b-2 border-black pb-2 mb-4 text-sm uppercase tracking-widest">Cost Breakdown</h3>
-                  <div className="flex justify-between py-2 border-b border-black/5">
+                <div className="max-w-[240px] ml-auto text-black text-[12px]">
+                  <h3 className="font-bold border-b border-black pb-0.5 mb-1.5 text-[9px] uppercase tracking-widest">Cost Breakdown</h3>
+                  <div className="flex justify-between py-0.5 border-b border-black/5">
                     <span className="font-medium text-black/60">Items Total</span>
                     <span className="font-bold">{formData.currency || 'GHS'} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-black/5">
+                  <div className="flex justify-between py-0.5 border-b border-black/5">
                     <span className="font-medium text-black/60">Duties</span>
                     <span className="font-bold">{formData.currency || 'GHS'} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between py-2 border-b border-black/5">
-                    <span className="font-medium text-black/60">Taxes</span>
-                    <span className="font-bold">{formData.currency || 'GHS'} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-black/5">
-                    <span className="font-medium text-black/60">Fees</span>
-                    <span className="font-bold">{formData.currency || 'GHS'} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
-                  </div>
-                  <div className="flex justify-between py-2 border-b border-black/5">
+                  <div className="flex justify-between py-0.5 border-b border-black/5">
                     <span className="font-medium text-black/60">Shipping</span>
                     <span className="font-bold">{formData.currency || 'GHS'} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between py-4 mt-2 border-t-2 border-black text-xl">
-                    <span className="font-extrabold">Total Landed Cost</span>
-                    <span className="font-extrabold">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
+                  <div className="flex justify-between py-1 mt-0.5 border-t border-black text-base">
+                    <span className="font-black">Total Landed Cost</span>
+                    <span className="font-black">{formData.currency || 'GHS'} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
                   </div>
                 </div>
 
-                <div className="mt-12 text-center text-xs text-black/40 font-bold tracking-widest uppercase border-t border-black/10 pt-4">
+                <div className="mt-auto pt-2 text-center text-[8px] text-black/30 font-bold tracking-widest uppercase border-t border-black/5">
                   Generated by GPO Duty Cost Portal
+                </div>
+              </div>
+            );
+
+            return (
+              <>
+                <div className="receipt-half">
+                  <SingleReceipt />
+                </div>
+                <div className="split-line-container"></div>
+                <div className="receipt-half">
+                  <SingleReceipt />
                 </div>
               </>
             );
@@ -1376,13 +1468,24 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             </div>
           </div>
 
-          <button
-            onClick={handlePrintList}
-            className="bg-gp-blue text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-gp-blue/90 transition-all shadow-lg shadow-gp-blue/10 active:scale-95"
-          >
-            <Printer size={18} />
-            Print Report
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handlePrintList}
+              className="bg-gp-blue text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-gp-blue/90 transition-all shadow-lg shadow-gp-blue/10 active:scale-95"
+            >
+              <Printer size={18} />
+              Print Report
+            </button>
+            {user.role !== 'OPERATIONS' && (
+              <button
+                onClick={handleExportReport}
+                className="bg-green-600 text-white px-6 py-2.5 rounded-2xl font-bold flex items-center gap-2 hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 active:scale-95"
+              >
+                <Download size={18} />
+                Export Report
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Transactions Table */}
@@ -1526,6 +1629,8 @@ function AdminUsers() {
   const [userPage, setUserPage] = useState(1);
   const USERS_PER_PAGE = 25;
   const [showCleanupModal, setShowCleanupModal] = useState(false);
+  const [resetPwdUser, setResetPwdUser] = useState<any>(null);
+  const [newPassword, setNewPassword] = useState('');
 
   const fetchUsers = async () => {
     setFetchLoading(true);
@@ -1577,6 +1682,11 @@ function AdminUsers() {
     setError('');
 
     try {
+      if (!newUser.post_office.trim()) {
+        setError('Please select a Post Office branch.');
+        setLoading(false);
+        return;
+      }
       const token = auth.currentUser ? await auth.currentUser.getIdToken() : '';
       // Before sending, append the domain
       const fullEmail = `${newUser.email.trim().toLowerCase()}@ghanapost.com.gh`;
@@ -1607,11 +1717,6 @@ function AdminUsers() {
       setNewUser({ full_name: '', email: '', password: '', role: 'OPERATIONS', post_office: '' });
       setSuccessMsg('User successfully created!');
       setTimeout(() => setSuccessMsg(''), 4000);
-
-      // Also refetch in the background for accurate server data
-      setTimeout(() => {
-        fetchUsers();
-      }, 2000);
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -1662,8 +1767,18 @@ function AdminUsers() {
       const result = await res.json();
       if (!res.ok) throw new Error(result.error || 'Action failed');
 
-      if (action === 'EDIT_USER') setEditingUserId(null);
-      fetchUsers();
+      if (action === 'DELETE_USER') {
+        setUsers(prev => prev.filter(u => u.id !== targetUid));
+      } else if (action === 'TOGGLE_STATUS') {
+        setUsers(prev => prev.map(u => u.id === targetUid ? { ...u, is_active: result.newStatus } : u));
+      } else if (action === 'EDIT_USER') {
+        setUsers(prev => prev.map(u => u.id === targetUid ? { ...u, ...actionData } : u));
+        setEditingUserId(null);
+      } else if (action === 'RESET_PASSWORD') {
+        alert('Password successfully reset!');
+        setResetPwdUser(null);
+        setNewPassword('');
+      }
     } catch (err: any) {
       alert(err.message);
     }
@@ -1688,15 +1803,18 @@ function AdminUsers() {
               Add New User
             </h2>
             <form onSubmit={handleCreate} className="space-y-4">
-              <input
-                placeholder="Full Name"
-                value={newUser.full_name}
-                onChange={(e) => setNewUser({ ...newUser, full_name: e.target.value })}
-                className="w-full px-4 py-2 rounded-xl border border-black/10"
-                required
-              />
               <div className="space-y-1">
-                <label className="block text-[10px] font-bold uppercase text-gp-blue/40 ml-1">Email Address</label>
+                <label className="text-[10px] font-bold uppercase text-gp-blue/40 ml-1 flex items-center gap-1">Full Name <span className="text-red-500">*</span></label>
+                <input
+                  placeholder="Full Name"
+                  value={newUser.full_name}
+                  onChange={(e) => setNewUser({ ...newUser, full_name: e.target.value })}
+                  className="w-full px-4 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium text-sm"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="block text-[10px] font-bold uppercase text-gp-blue/40 ml-1 flex items-center gap-1">Email Address <span className="text-red-500">*</span></label>
                 <div className="flex items-stretch rounded-xl border border-black/10 overflow-hidden focus-within:ring-2 focus-within:ring-gp-blue/10 transition-all bg-white">
                   <input
                     placeholder="Username"
@@ -1713,34 +1831,41 @@ function AdminUsers() {
                   </div>
                 </div>
               </div>
-              <input
-                type="password"
-                placeholder="Password"
-                value={newUser.password}
-                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                className="w-full px-4 py-2 rounded-xl border border-black/10"
-                required
-              />
-              <select
-                value={newUser.role}
-                onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-                className="w-full px-4 py-2 rounded-xl border border-black/10"
-              >
-                <option value="OPERATIONS">Operations</option>
-                <option value="FINANCE">Finance</option>
-                <option value="IT_UNIT">IT Unit</option>
-                <option value="AUDIT">Audit</option>
-                <option value="POSTMASTER">Postmaster</option>
-                <option value="ADMIN">Administrator</option>
-              </select>
-              <AutocompleteInput
-                label="Post Office Branch"
-                placeholder="Search or Select Branch..."
-                value={newUser.post_office}
-                onChange={(val) => setNewUser({ ...newUser, post_office: val })}
-                onSelect={(val) => setNewUser({ ...newUser, post_office: val })}
-                options={[
-                  "GENERAL POST OFFICE", "ARTS CENTRE POST OFFICE", "31ST DEC. MKT POST OFFICE", "EXAM COUNCIL POST OFFICE",
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase text-gp-blue/40 ml-1 flex items-center gap-1">Password <span className="text-red-500">*</span></label>
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={newUser.password}
+                  onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                  className="w-full px-4 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium text-sm"
+                  required
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase text-gp-blue/40 ml-1 flex items-center gap-1">Role <span className="text-red-500">*</span></label>
+                <select
+                  value={newUser.role}
+                  onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+                  className="w-full px-4 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium text-sm"
+                >
+                  <option value="OPERATIONS">Operations</option>
+                  <option value="FINANCE">Finance</option>
+                  <option value="IT_UNIT">IT Unit</option>
+                  <option value="AUDIT">Audit/Compliance</option>
+                  <option value="POSTMASTER">Postmaster</option>
+                  <option value="ADMIN">Administrator</option>
+                </select>
+              </div>
+              <div className="space-y-0.5">
+                <AutocompleteInput
+                  label={<>Post Office Branch <span className="text-red-500">*</span></>}
+                  placeholder="Search or Select Branch..."
+                  value={newUser.post_office}
+                  onChange={(val) => setNewUser({ ...newUser, post_office: val })}
+                  onSelect={(val) => setNewUser({ ...newUser, post_office: val })}
+                  options={[
+                    "GENERAL POST OFFICE", "ARTS CENTRE POST OFFICE", "31ST DEC. MKT POST OFFICE", "EXAM COUNCIL POST OFFICE",
                   "ADABRAKA POST OFFICE", "JAMES TOWN POST OFFICE", "TUC POST OFFICE", "MAMPROBI POST OFFICE", "MINISTRIES POST OFFICE",
                   "SPORTS STADIUM POST OFFICE (ACCRA)", "VALLEY VIEW POST OFFICE", "CASTLE POST OFFICE", "LA POST OFFICE",
                   "OSU POST OFFICE", "TESHIE NUNGUA ESTATE P.OFFICE", "TESHIE POST OFFICE", "TRADE FAIR POST OFFICE",
@@ -1825,6 +1950,7 @@ function AdminUsers() {
                   "STANDARD CHARTERED", "PASSPORT OFFICE", "WA POST OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
                 ].sort().map(po => ({ label: po, sub: '', original: po }))}
               />
+              </div>
               {error && <p className="text-red-500 text-xs">{error}</p>}
               {successMsg && (
                 <div className="bg-green-50 text-green-600 p-3 rounded-xl text-sm font-medium flex items-center gap-2 border border-green-200">
@@ -1921,7 +2047,7 @@ function AdminUsers() {
                               <option value="OPERATIONS">OPERATIONS</option>
                               <option value="FINANCE">FINANCE</option>
                               <option value="IT_UNIT">IT UNIT</option>
-                              <option value="AUDIT">AUDIT</option>
+                              <option value="AUDIT">AUDIT/COMPLIANCE</option>
                               <option value="POSTMASTER">POSTMASTER</option>
                               <option value="ADMIN">ADMIN</option>
                             </select>
@@ -2022,6 +2148,14 @@ function AdminUsers() {
                                 {(u.is_active === 0 || u.is_active === false) ? <Power size={16} /> : <PowerOff size={16} />}
                               </button>
                               <button
+                                onClick={() => {
+                                  setResetPwdUser(u);
+                                  setNewPassword('');
+                                }}
+                                className="text-blue-500 hover:bg-blue-100 p-2 rounded-lg transition-colors" title="Reset Password">
+                                <Lock size={16} />
+                              </button>
+                              <button
                                 onClick={() => handleAction('DELETE_USER', u.id)}
                                 className="text-red-500 hover:bg-red-100 p-2 rounded-lg transition-colors" title="Delete User">
                                 <Trash2 size={16} />
@@ -2106,6 +2240,76 @@ function AdminUsers() {
                 >
                   Confirm
                 </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Reset Password Modal */}
+      <AnimatePresence>
+        {resetPwdUser && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              onClick={() => setResetPwdUser(null)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -10 }}
+              className="relative bg-white p-6 md:p-8 rounded-3xl shadow-xl border border-black/5 w-full max-w-sm space-y-6"
+            >
+              <div className="flex flex-col items-center text-center space-y-2">
+                <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mb-2">
+                  <Lock size={32} />
+                </div>
+                <h3 className="text-xl font-bold text-gp-blue">Reset Password</h3>
+                <p className="text-sm font-medium text-gp-blue/60 leading-relaxed">
+                  Enter a new temporary password for <span className="text-gp-blue font-bold">{resetPwdUser.full_name}</span>
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-gp-blue/40 ml-1">New Password</label>
+                  <div className="relative group">
+                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-blue transition-colors" size={16} />
+                    <input
+                      type="text"
+                      autoFocus
+                      placeholder="Min 6 characters"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full pl-10 pr-4 py-3 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/20 transition-all font-medium text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex w-full gap-3 pt-2">
+                  <button
+                    onClick={() => setResetPwdUser(null)}
+                    className="flex-1 bg-gp-light text-gp-blue py-3 rounded-xl font-bold hover:bg-black/5 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (newPassword.length < 6) {
+                        alert('Password must be at least 6 characters.');
+                        return;
+                      }
+                      handleAction('RESET_PASSWORD', resetPwdUser.id, { password: newPassword });
+                    }}
+                    disabled={newPassword.length < 6 || loading}
+                    className="flex-1 bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:shadow-none"
+                  >
+                    {loading ? 'Updating...' : 'Update'}
+                  </button>
+                </div>
               </div>
             </motion.div>
           </div>
