@@ -130,59 +130,26 @@ function Login() {
 
   return (
     <div className="min-h-screen flex flex-col lg:flex-row bg-white font-sans">
-      {/* Left side - Hero Image (55%) */}
-      <div className="lg:w-[55%] relative hidden lg:block overflow-hidden">
-        <img
-          src="/building.webp"
-          alt="Ghana Post Building"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        {/* Deep blue overlay to match the screenshot */}
-        <div className="absolute inset-0 bg-[#0A1172]/70 backdrop-blur-[1px]"></div>
+      {/* Left side - Login Form (50%) */}
+      <div className="flex-1 lg:w-[50%] flex items-center justify-center p-8 lg:p-16 shrink-0 relative overflow-hidden"
+        style={{ background: 'linear-gradient(145deg, #f8f9ff 0%, #eef0fb 50%, #fff5ef 100%)' }}
+      >
+        {/* Decorative orbs */}
+        <div className="absolute -top-24 -left-24 w-80 h-80 rounded-full opacity-20 blur-3xl pointer-events-none"
+          style={{ background: '#F26522' }} />
+        <div className="absolute -bottom-24 -right-24 w-96 h-96 rounded-full opacity-15 blur-3xl pointer-events-none"
+          style={{ background: '#0A1172' }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 rounded-full opacity-5 blur-2xl pointer-events-none"
+          style={{ background: '#F26522' }} />
 
-        {/* Logo in top left */}
-        <div className="absolute top-10 left-10">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-4 rounded-2xl shadow-2xl flex items-center justify-center w-32 h-20"
-          >
-            <img src="/logo.png" alt="Ghana Post Logo" className="w-full h-full object-contain" />
-          </motion.div>
-        </div>
+        {/* Dot grid texture */}
+        <div className="absolute inset-0 opacity-[0.035] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle, #0A1172 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
 
-        {/* Center Content */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-12 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-6xl font-bold mb-6 tracking-tight"
-          >
-            Welcome back!
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-xl text-white/80 max-w-md leading-relaxed"
-          >
-            Enter your credentials to access the<br></br> GPO Duty Cost Portal.
-          </motion.p>
-        </div>
-
-        {/* Footer */}
-        <div className="absolute bottom-10 inset-x-0 text-center text-white/40 text-sm font-medium">
-          © {new Date().getFullYear()} Ghana Post. All rights reserved.
-        </div>
-      </div>
-
-      {/* Right side - Login Form (45%) */}
-      <div className="flex-1 lg:w-[45%] flex items-center justify-center p-8 lg:p-16 bg-white shrink-0">
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="w-full max-w-sm"
+          className="w-full max-w-md relative z-10 bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl shadow-gp-blue/10 border border-white/60 p-8 lg:p-10"
         >
           {/* Mobile Logo */}
           <div className="lg:hidden flex justify-center mb-8">
@@ -201,7 +168,7 @@ function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gp-orange/20 focus:border-gp-orange transition-all placeholder:text-gray-400"
+                className="w-full px-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-gp-orange/20 focus:border-gp-orange transition-all placeholder:text-gray-400"
                 placeholder="Enter Your Email"
                 required
               />
@@ -214,7 +181,7 @@ function Login() {
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-4 pr-12 py-3.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-gp-orange/20 focus:border-gp-orange transition-all placeholder:text-gray-400"
+                  className="w-full pl-4 pr-12 py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-gp-orange/20 focus:border-gp-orange transition-all placeholder:text-gray-400"
                   placeholder="Enter Password"
                   required
                 />
@@ -238,7 +205,7 @@ function Login() {
                     className="peer sr-only"
                   />
                   <div className="w-5 h-5 border-2 border-gray-300 rounded-md peer-checked:bg-gp-orange peer-checked:border-gp-orange transition-all"></div>
-                  <svg className="absolute w-3 h-3 text-white left-1 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                  <svg className="absolute w-3 h-3 text-white left-1 opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -271,12 +238,59 @@ function Login() {
             </button>
           </form>
 
-          <div className="mt-10 text-center">
+          <div className="mt-8 text-center">
             <p className="text-gray-400 text-sm font-medium">
               Powered by GPO Digital Systems
             </p>
           </div>
         </motion.div>
+      </div>
+
+      {/* Right side - Hero Image (50%) */}
+      <div className="lg:w-[50%] relative hidden lg:block overflow-hidden">
+        <img
+          src="/building.webp"
+          alt="Ghana Post Building"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        {/* Deep blue overlay */}
+        <div className="absolute inset-0 bg-[#0A1172]/70 backdrop-blur-[1px]"></div>
+
+        {/* Logo in top right */}
+        <div className="absolute top-10 right-10">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-4 rounded-2xl shadow-2xl flex items-center justify-center w-32 h-20"
+          >
+            <img src="/logo.png" alt="Ghana Post Logo" className="w-full h-full object-contain" />
+          </motion.div>
+        </div>
+
+        {/* Center Content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white px-12 text-center">
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-6xl font-bold mb-6 tracking-tight"
+          >
+            Welcome back!
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="text-xl text-white/80 max-w-md leading-relaxed"
+          >
+            Enter your credentials to access the<br /> GPO Duty Cost Portal.
+          </motion.p>
+        </div>
+
+        {/* Footer */}
+        <div className="absolute bottom-10 inset-x-0 text-center text-white/40 text-sm font-medium">
+          © {new Date().getFullYear()} Ghana Post. All rights reserved.
+        </div>
       </div>
     </div>
   );
@@ -569,23 +583,26 @@ function LandedCostForm({ user }: { user: any }) {
 
       <div className="mb-3">
         <h3 className="font-bold border-b border-black pb-1 mb-2 text-[9px] uppercase tracking-widest">Items Summary</h3>
-        <table className="w-full text-left text-[12px]">
+        <table className="w-full text-left text-[11px]" style={{ borderCollapse: 'collapse' }}>
           <thead>
-            <tr className="border-b border-black/10 font-bold text-[9px] uppercase tracking-widest">
-              <th className="py-0.5">Item Description</th>
-              <th className="py-0.5 text-right">Price</th>
+            <tr className="border-b border-black/20 font-bold text-[8px] uppercase tracking-widest bg-black/5">
+              <th className="py-1 px-1">#</th>
+              <th className="py-1 px-1">Description</th>
+              <th className="py-1 px-1">HS Code</th>
+              <th className="py-1 px-1 text-center">Qty</th>
+              <th className="py-1 px-1 text-right">Unit Price</th>
+              <th className="py-1 px-1 text-right">Total</th>
             </tr>
           </thead>
           <tbody>
-            {formData.items.map((item: any) => (
-              <tr key={item.id} className="border-b border-black/5">
-                <td className="py-1">
-                  <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br />
-                  <span className="text-[9px] text-black/60 font-medium tracking-tight">HS Code: {item.hs_code || 'N/A'}</span>
-                </td>
-                <td className="py-1 text-right font-bold">
-                  {formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
-                </td>
+            {formData.items.map((item: any, idx: number) => (
+              <tr key={item.id} className="border-b border-black/10" style={{ pageBreakInside: 'avoid' }}>
+                <td className="py-1 px-1 text-black/50 font-bold">{idx + 1}</td>
+                <td className="py-1 px-1 font-bold" style={{ maxWidth: '120px', wordBreak: 'break-word' }}>{item.description || 'Unknown Item'}</td>
+                <td className="py-1 px-1 text-black/60 font-mono text-[9px]">{item.hs_code || 'N/A'}</td>
+                <td className="py-1 px-1 text-center font-bold">{item.quantity || 1}</td>
+                <td className="py-1 px-1 text-right text-black/70">{formData.currency} {Number(item.amount).toFixed(2)}</td>
+                <td className="py-1 px-1 text-right font-bold">{formData.currency} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -607,7 +624,7 @@ function LandedCostForm({ user }: { user: any }) {
           <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
         </div>
         <div className="flex justify-between py-1 mt-0.5 border-t border-black text-base">
-          <span className="font-black">Total Landed Cost</span>
+          <span className="font-black">Total Duty Cost</span>
           <span className="font-black">{formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}</span>
         </div>
       </div>
@@ -642,7 +659,7 @@ function LandedCostForm({ user }: { user: any }) {
                 display: flex !important;
                 flex-direction: column !important;
                 width: 100% !important;
-                height: 297mm !important; 
+                height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 z-index: 99999 !important;
@@ -667,7 +684,7 @@ function LandedCostForm({ user }: { user: any }) {
               }
             }
           `}</style>
-          
+
           <div className="receipt-half">
             {renderReceiptContent()}
           </div>
@@ -1099,7 +1116,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
       const status = t.success === 1 ? 'Success' : 'Failed';
       const res = t.response_payload ? JSON.parse(t.response_payload) : null;
       const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
-      
+
       const row = [
         `"${date}"`,
         `"${time}"`,
@@ -1116,7 +1133,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `Duty_Cost_Report_${new Date().toISOString().substring(0,10)}.csv`);
+    link.setAttribute("download", `Duty_Cost_Report_${new Date().toISOString().substring(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -1265,7 +1282,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                 display: flex !important;
                 flex-direction: column !important;
                 width: 100% !important;
-                height: 297mm !important; 
+                height: 297mm !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 z-index: 99999 !important;
@@ -1327,25 +1344,28 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                   </div>
                 </div>
 
-                <div className="mb-3 overflow-hidden text-black">
+                <div className="mb-3 text-black">
                   <h3 className="font-bold border-b border-black pb-1 mb-2 text-[9px] uppercase tracking-widest">Items Summary</h3>
-                  <table className="w-full text-left text-[12px]">
+                  <table className="w-full text-left text-[11px]" style={{ borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr className="border-b border-black/10 font-bold text-[9px] uppercase tracking-widest">
-                        <th className="py-0.5">Item Description</th>
-                        <th className="py-0.5 text-right">Price</th>
+                      <tr className="border-b border-black/20 font-bold text-[8px] uppercase tracking-widest bg-black/5">
+                        <th className="py-1 px-1">#</th>
+                        <th className="py-1 px-1">Description</th>
+                        <th className="py-1 px-1">HS Code</th>
+                        <th className="py-1 px-1 text-center">Qty</th>
+                        <th className="py-1 px-1 text-right">Unit Price</th>
+                        <th className="py-1 px-1 text-right">Total</th>
                       </tr>
                     </thead>
                     <tbody>
                       {(formData.items || []).map((item: any, idx: number) => (
-                        <tr key={idx} className="border-b border-black/5">
-                          <td className="py-2">
-                            <span className="font-bold">{(item.quantity || 1)}x {item.description || 'Unknown Item'}</span><br />
-                            <span className="text-[9px] text-black/60 font-medium tracking-tight">HS Code: {item.hs_code || 'N/A'}</span>
-                          </td>
-                          <td className="py-2 text-right font-bold">
-                            {formData.currency || 'GHS'} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}
-                          </td>
+                        <tr key={idx} className="border-b border-black/10" style={{ pageBreakInside: 'avoid' }}>
+                          <td className="py-1 px-1 text-black/50 font-bold">{idx + 1}</td>
+                          <td className="py-1 px-1 font-bold" style={{ maxWidth: '120px', wordBreak: 'break-word' }}>{item.description || 'Unknown Item'}</td>
+                          <td className="py-1 px-1 text-black/60 font-mono text-[9px]">{item.hs_code || 'N/A'}</td>
+                          <td className="py-1 px-1 text-center font-bold">{item.quantity || 1}</td>
+                          <td className="py-1 px-1 text-right text-black/70">{formData.currency || 'GHS'} {Number(item.amount).toFixed(2)}</td>
+                          <td className="py-1 px-1 text-right font-bold">{formData.currency || 'GHS'} {(Number(item.amount) * (Number(item.quantity) || 1)).toFixed(2)}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -1866,90 +1886,90 @@ function AdminUsers() {
                   onSelect={(val) => setNewUser({ ...newUser, post_office: val })}
                   options={[
                     "GENERAL POST OFFICE", "ARTS CENTRE POST OFFICE", "31ST DEC. MKT POST OFFICE", "EXAM COUNCIL POST OFFICE",
-                  "ADABRAKA POST OFFICE", "JAMES TOWN POST OFFICE", "TUC POST OFFICE", "MAMPROBI POST OFFICE", "MINISTRIES POST OFFICE",
-                  "SPORTS STADIUM POST OFFICE (ACCRA)", "VALLEY VIEW POST OFFICE", "CASTLE POST OFFICE", "LA POST OFFICE",
-                  "OSU POST OFFICE", "TESHIE NUNGUA ESTATE P.OFFICE", "TESHIE POST OFFICE", "TRADE FAIR POST OFFICE",
-                  "KOTOKA INTER. AIRPORT P.O", "Airport Transhipment", "BURMA CAMP POST OFFICE", "MADINA POST OFFICE",
-                  "ABOKOBI POST OFFICE", "DODOWA POST OFFICE", "NUNGUA POST OFFICE", "STATE HOUSE", "ACCRA NORTH POST OFFICE",
-                  "CANTONMENTS POST OFFICE", "LEGON POST OFFICE", "NIMA POST OFFICE", "ACCRA NEW TOWN POST OFF.", "ACHIMOTA POST OFFICE",
-                  "ALAJO CONTAINER POST OFFICE", "AMASAMAN POST OFFICE", "OFANKOR POST OFFICE", "MILE 7 CONTAINER POST OFFICE",
-                  "TAIFA CONTAINER POST OFFICE", "ACHIMOTA MARKET POST OFFICE", "KOTOBABI CONTAINER POST OFFICE", "KANDA POST OFFICE",
-                  "ADENTA POST OFFICE", "KANESHIE POST OFFICE", "DANSOMAN ESTATE POST OFFICE", "KORLE- BU POST OFFICE",
-                  "DANSOMAN COMMUNITY P.O.", "ABEKA POST OFFICE", "MALLAM POST OFFICE", "ABOSSEY OKAI POST OFFICE", "DARKUMAN POST OFFICE",
-                  "S.T.C. CONTAINER POST OFFICE", "ODORKOR CONTAINER POST OFFICE", "WEIJA GICEL POST OFFICE", "Lartebiokorshie Post Office",
-                  "NII BOI TOWN POST OFFICE", "TEMA COM 1 POST OFFICE", "TEMA COMM. 2 POST OFFICE", "TEMA COMM. 7 POST OFFICE",
-                  "TEMA COMM. 11 POST OFFICE", "SAKUMONO POST OFFICE", "Ashiaman Post Office", "VALCO FLATS POST OFFICE",
-                  "ADA FOAH POST OFFICE", "PRAMPRAM POST OFFICE", "SPINTEX ROAD", "TEMA NEW TOWN POST OFFICE", "TEMA SHOPPING CENTRE P. OFF",
-                  "Koforidua Post Office", "AKOSOMBO POST OFFICE", "ABURI POST OFFICE", "AKROPONG AKWAPIM P.OFFICE", "AFIDWASE (ER) POST OFFICE",
-                  "ASESEWA POST OFFICE", "MAMPONG -AKWAPIM P.OFFICE", "SOMANYA POST OFFICE", "ADUKROM POST OFFICE", "MAMFE POST OFFICE",
-                  "LARTEH POST OFFICE", "AKUSE POST OFFICE", "ANUM POST OFFICE", "JUMAPO POST OFFICE", "MANGOASE POST OFFICE",
-                  "CHARLIE JUNCTION POST OFFICE", "ODUMASI KROBO POST OFFICE", "Oyoko Post Office", "NEW AKRADE POST OFFICE",
-                  "APEGUSO POST OFFICE", "ASOKORE (ER) POST OFFICE", "MPRAESO POST OFFICE", "ANYINAM POST OFFICE", "NKAWKAW POST OFFICE",
-                  "DONKOKROM POST OFFICE", "ABETIFI POST OFFICE", "NKWATIA POST OFFICE", "Obo Post Office", "KWABENG POST OFFICE",
-                  "KWAHU PRASO POST OFFICE", "KWAHU TAFO POST OFFICE", "Osino Post Office", "NEW ABIREM POST OFFICE", "BEGORO POST OFFICE",
-                  "Suhum Post Office", "ASAMANKESE POST OFFICE", "New Tafo (Eastern) Post Office", "Kukurantumi Post Ofice", "BOSUSO POST OFFICE",
-                  "KIBI POST OFFICE", "ASIAKWA POST OFFICE", "MEPOM POST OFFICE", "Old Tafo Post Office", "ADEISO POST OFFCIE",
-                  "NSAWAM POST OFFICE", "APEDWA POST OFFICE", "KRABOA COALTAR POST OFFICE", "Bunso Post Office", "ADOAGYIRI POST OFFICE",
-                  "ODA POST OFFICE", "AKWATIA POST OFFICE", "AKIM SWEDRU POST OFFICE", "KADE POST OFFICE", "AKROSO POST OFFICE",
-                  "AKIM MANSO POST OFFICE", "ASUOM POST OFFICE", "ACHIASE POST OFFICE", "Ho Post Office", "Mawuli Post Office",
-                  "DZODZE POST OFFICE", "Peki Post Office", "AMEDZOFE POST OFFICE", "Tsito Post Office", "AGOTIME-KPETOE POST OFFICE",
-                  "JUAPONG POST OFFICE", "Vane Post Office", "KPEDZE POST OFFICE", "KPEVE POST OFFICE", "KPANDO POST OFFICE",
-                  "HOHOE POST OFFICE", "KETE-KRACHI POST OFFICE", "NKONYA-AHENKRO POST OFFICE", "Vakpo Post Office", "WORAWORA POST OFFICE",
-                  "JASIKAN POST OFFICE", "KADJEBI POST OFFICE", "ANFOEGA POST OFFICE", "DODI-PAPASE POST OFFICE", "GOLOKWATI POST OFFICE",
-                  "NKWANTA POST OFFICE", "AGBOSOME POST OFFICE", "DENU POST OFFICE", "AKATSI POST OFFICE", "KETA POST OFFICE",
-                  "ADIDOME POST OFFICE", "AFLAO POST OFFICE", "SOGAKOFE POST OFFICE", "ANLOGA POST OFFICE", "Adisadel Post Office",
-                  "DUNKWA ON OFFIN POST OFFICE", "Elmina Post Office", "ASSIN-FOSU POST OFFICE", "Kotokuraba Post Office", "MANKESSIM POST OFFICE",
-                  "Twifo-Praso Post Office", "Cape Coast Post Office", "ANOMABU POST OFFICE", "ABURA DUNKWA POST OFFICE", "KOMENDA POST OFFICE",
-                  "SALTPOND POST OFFICE", "SWEDRU POST OFFICE", "BAWJIASE POST OFFICE", "BREMAN ESIKUMA POST OFFICE", "Winneba Post Office",
-                  "KASOA NYANYANU POST OFFICE", "MARKET AVENUE/SWEDRU", "KOJO BEEDU POST OFFICE", "AJUMAKO POST OFFICE", "APAM POST OFFICE",
-                  "BISEASE POST OFFICE", "ESIAM POST OFFICE", "KWANYAKU POST OFFICE", "AGONA DUAKWA POST OFFICE", "ANKAMU POST OFFICE",
-                  "Pinanko Post Office", "Odoben Post Office", "SENYA BEREKU", "NSABA POST OFFICE", "Nyakrom Post Office", "ODUPONG KPEHE",
-                  "TAKORADI POST OFFICE", "TARKWA POST OFFICE", "AIYINASI POST OFFICE", "AXIM POST OFFICE", "HALF ASSINI POST OFFICE",
-                  "Market Circle Post Office", "Lagoon Road Post Office", "AXIM ROAD P.OFFICE, TAKORADI", "Effia Nkwanta Post Office",
-                  "Effiakuma Post Office", "ELUBO POST OFFICE", "KETAN CONTAINER POST OFFICE", "Kojokrom Container Post Office", "Shama Post Office",
-                  "ABOSO POST OFFICE", "NSUTA WASSAW POST OFFICE", "ESIAMA POST OFFICE", "BEYIN POST OFFICE", "Kwesimintsim Post Office",
-                  "BONYERE POST OFFICE", "Sekondi Post Office", "NKROFUL POST OFFICE", "DABOASE POST OFFICE", "Apowa Post Office",
-                  "SEFWI WIAWSO POST OFFICE", "BIBIANI POST OFFICE", "ENCHI POST OFFICE", "SEFWI BEKWAI POST OFFICE", "PRESTEA POST OFFICE",
-                  "ASANKRAGWA POST OFFICE", "BOGOSO POST OFFICE", "SAMREBOI POST OFFICE", "AWASO POST OFFICE", "AKROPONG WASSAW POST OFF.",
-                  "HUNI VALLEY POST OFFICE", "ATIEKU POST OFFICE", "JUABESO POST OFFICE", "Kumasi General Post Office", "KEJETIA POST OFFICE",
-                  "Fanti New Town Post Office", "AKUMADAN POST OFFICE", "OFFINSO POST OFFICE", "TEPA POST OFFICE", "Railways Container P.Office",
-                  "Santasi Post Office", "Bantama Post Office", "Bohyen-Ampabame P.Office", "Kwadaso Post Office", "KWADASO ACADEMY POST OFFICE",
-                  "NKAWIE POST OFFICE", "NKENKASU POST OFFICE", "Asuoyeboa Post Office", "AKROPONG KUMASI POST OFFICE", "Ahensan Post Office",
-                  "Suame Post Office", "Sports Stadium Post Office (Kumasi)", "University Post Office KNUST", "Ashanti New Town P.Office",
-                  "Aboabo Container Post Office", "MANPONTEN POST OFFICE", "ANLOGA CONT. ASHANTI POST OFFICE", "CHIRAPATRE CONT. POST OFFICE",
-                  "Tafo Asante Post Office", "New Tafo (Ashanti) Post Office", "Asawase Post Office", "SEPE APAMPINAM POST OFFICE",
-                  "KONONGO POST OFFICE", "AGOGO POST OFFICE", "Ejisu Post Office", "JUANSA POST OFFICE", "BOMPATA POST OFFICE",
-                  "JUASO POST OFFICE", "BOMFA POST OFFICE", "ODUMASI POST OFFICE", "BEKWAI ASHANTI POST OFFICE", "OBUASI POST OFFICE",
-                  "FOMENA POST OFFICE", "AKROKERI POST OFFICE", "AKROPONG BEKWAI POST OFFICE", "AKROFUOM POST OFFICE", "JACHI POST OFFICE",
-                  "MAMPONG-ASHANTI POST OFFICE", "AGONA (ASHANTI) POST OFFICE", "JAMASI (ASHANTI) POST OFFICE", "EJURA POST OFFICE",
-                  "BONWIRE POST OFFICE", "NSUTA-ASH. POST OFFICE", "KUMAWU POST OFFICE", "EFFIDUASI (ASH) POST OFFICE", "JUABEN-ASHANTI POST OFFICE",
-                  "NEW EDUBIASE", "Sunyani Post Office", "BEREKUM POST OFFICE", "NSOATRE POST OFFICE", "GYAPEKROM POST OFFICE", "DROBO POST OFFICE",
-                  "DORMAA AHENKRO POST OFFICE", "CHIRAA POST OFFICE", "SAMPA POST OFFICE", "WAMFIE POST OFFICE", "BECHEM POST OFFICE",
-                  "MIM-AHAFO POST OFFICE", "HWIDIEM POST OFFICE", "GOASO POST OFFICE", "KUKUOM POST OFFICE", "KENYASI POST OFFICE",
-                  "DUAYAW NKWANTA POST OFFICE", "AKYERENSUA POST OFFICE", "Techimentia Post Office", "NKORANZA POST OFFICE", "KINTAMPO POST OFFICE",
-                  "ATEBUBU POST OFFICE", "PRANG POST OFFICE", "TECHIMAN POST OFFICE", "WENCHI POST OFFICE", "YEJI POST OFFICE", "JEMA POST OFFICE",
-                  "Tamale Gen. Post Office", "EDUCATION RIDGE POST OFFICE", "YENDI POST OFFICE", "DAMONGO POST OFFICE", "SALAGA POST OFFICE",
-                  "BIMBILLA POST OFFICE", "BOLE POST OFFICE", "GAMBAGA POST OFFICE", "WALEWALE POST OFFICE", "Savulugu Post Office",
-                  "Bolgatanga Post Office", "BAWKU POST OFFICE", "NAVRONGO POST OFFICE", "PAGA POST OFFICE", "SANDEMA POSTAL AGENCY",
-                  "PUSIGA POSTAL AGENCY", "ZEBILLA POSTAL AGENCY", "GARU POSTAL AGENCY", "BONGO POSTAL AGENCY", "WA (MAIN) POST OFFICE",
-                  "LAWRA POST OFFICE", "TUMU POST OFFICE", "JIRAPA POST OFFICE", "NADOWLI POST OFFICE", "HAMILE POST OFFICE", "NANDOM POST OFFICE",
-                  "BABILE POSTAL AGENCY", "FUNSI POSTAL AGENCY", "FIELMUO POSTAL AGENCY", "TAIFA-BURKINA POST OFFICE", "DOME-KWABENYA POST OFFICE",
-                  "KPANDAI POST OFFICE", "Madina Redco Post Office", "BIG ADA POST OFFICE", "KPONE POST OFFICE", "GOMOA ESHIEM POST OFFICE",
-                  "GOMOA ODINA POST OFFICE", "UNIVERSITY (CAPE COAST) POST OFFICE", "NEW ODUMAN POST OFFICE", "Head-Quarters",
-                  "ASAMANG (ASHANTI) POST OFFICE", "KWAMANG (ASHANTI) POST OFFICE", "SEKYEDUMASE POST OFFICE", "WIAMOASE (ASHANTI) POST OFFICE",
-                  "NYINAHIN POST OFFICE", "BOAMANG POST OFFICE", "Prempeh College Post Office", "ADAWSO POST OFFICE", "Osiem Post Office",
-                  "MANYA KPONGUNOR POST OFFICE", "ASOKORE (ASH) POST OFFICE", "TONGO POSTAL AGENCY", "UDS Post Office (Wa)", "ABOR POST OFFICE",
-                  "APESOKUBI POST OFFICE", "KOKOFU POST OFFICE", "Takoradi Poly Post Office", "NSUAEM POST OFFICE", "AGONA AHANTA POSTAL AGENCY",
-                  "BUIPE POST OFFICE", "UDS-TAMALE POST OFFICE", "BISCO POST OFFICE", "NORTH KANESHIE POST OFFICE", "DAMBAI POST OFFICE",
-                  "GHANASS", "CENTRAL UNIVERSITY POST OFFICE", "PINANKO POST OFFICE", "GOMOA AFRANSI", "DWENASE POST OFFICE", "SAWLA POST OFFICE",
-                  "TUNA POST OFFICE", "GWOLLU POST OFFICE", "WECHAU POST OFFICE", "WEST AFRICAN SHS", "W", "OYIBI POST OFFICE", "BAMAHU CIC POST OFFICE",
-                  "UEW-K POST OFFICE", "HO STADIUM POST OFFICE", "AIRPORT KUMASI", "DOMPOASE POST OFFIICE", "ONLINE SALES", "JUMIA GHANA OFFICE",
-                  "DAWHENYA POST OFFICE", "BULK MAIL", "ABURI CRAFT VILLAGE POST OFFICE", "TRAINING1 POST OFFICE", "TRAINING2 POST OFFICE",
-                  "ANKAFUL PSYCHIATRIC POST OFFICE", "SPEEDLINK", "MANKRASO POST OFFICE", "ABUAKWA POST OFFICE", "ODUMASE SUNYANI POST OFFICE",
-                  "LINK", "SCUTTLE PARCEL BOX", "OFOASE AYIREBI POST OFFICE", "KOMFO ANOKYE TEACHING HOSPITAL", "DHL WAREHOUSE", "DVLA HEAD OFFICE",
-                  "STANDARD CHARTERED", "PASSPORT OFFICE", "WA POST OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
-                ].sort().map(po => ({ label: po, sub: '', original: po }))}
-              />
+                    "ADABRAKA POST OFFICE", "JAMES TOWN POST OFFICE", "TUC POST OFFICE", "MAMPROBI POST OFFICE", "MINISTRIES POST OFFICE",
+                    "SPORTS STADIUM POST OFFICE (ACCRA)", "VALLEY VIEW POST OFFICE", "CASTLE POST OFFICE", "LA POST OFFICE",
+                    "OSU POST OFFICE", "TESHIE NUNGUA ESTATE P.OFFICE", "TESHIE POST OFFICE", "TRADE FAIR POST OFFICE",
+                    "KOTOKA INTER. AIRPORT P.O", "Airport Transhipment", "BURMA CAMP POST OFFICE", "MADINA POST OFFICE",
+                    "ABOKOBI POST OFFICE", "DODOWA POST OFFICE", "NUNGUA POST OFFICE", "STATE HOUSE", "ACCRA NORTH POST OFFICE",
+                    "CANTONMENTS POST OFFICE", "LEGON POST OFFICE", "NIMA POST OFFICE", "ACCRA NEW TOWN POST OFF.", "ACHIMOTA POST OFFICE",
+                    "ALAJO CONTAINER POST OFFICE", "AMASAMAN POST OFFICE", "OFANKOR POST OFFICE", "MILE 7 CONTAINER POST OFFICE",
+                    "TAIFA CONTAINER POST OFFICE", "ACHIMOTA MARKET POST OFFICE", "KOTOBABI CONTAINER POST OFFICE", "KANDA POST OFFICE",
+                    "ADENTA POST OFFICE", "KANESHIE POST OFFICE", "DANSOMAN ESTATE POST OFFICE", "KORLE- BU POST OFFICE",
+                    "DANSOMAN COMMUNITY P.O.", "ABEKA POST OFFICE", "MALLAM POST OFFICE", "ABOSSEY OKAI POST OFFICE", "DARKUMAN POST OFFICE",
+                    "S.T.C. CONTAINER POST OFFICE", "ODORKOR CONTAINER POST OFFICE", "WEIJA GICEL POST OFFICE", "Lartebiokorshie Post Office",
+                    "NII BOI TOWN POST OFFICE", "TEMA COM 1 POST OFFICE", "TEMA COMM. 2 POST OFFICE", "TEMA COMM. 7 POST OFFICE",
+                    "TEMA COMM. 11 POST OFFICE", "SAKUMONO POST OFFICE", "Ashiaman Post Office", "VALCO FLATS POST OFFICE",
+                    "ADA FOAH POST OFFICE", "PRAMPRAM POST OFFICE", "SPINTEX ROAD", "TEMA NEW TOWN POST OFFICE", "TEMA SHOPPING CENTRE P. OFF",
+                    "Koforidua Post Office", "AKOSOMBO POST OFFICE", "ABURI POST OFFICE", "AKROPONG AKWAPIM P.OFFICE", "AFIDWASE (ER) POST OFFICE",
+                    "ASESEWA POST OFFICE", "MAMPONG -AKWAPIM P.OFFICE", "SOMANYA POST OFFICE", "ADUKROM POST OFFICE", "MAMFE POST OFFICE",
+                    "LARTEH POST OFFICE", "AKUSE POST OFFICE", "ANUM POST OFFICE", "JUMAPO POST OFFICE", "MANGOASE POST OFFICE",
+                    "CHARLIE JUNCTION POST OFFICE", "ODUMASI KROBO POST OFFICE", "Oyoko Post Office", "NEW AKRADE POST OFFICE",
+                    "APEGUSO POST OFFICE", "ASOKORE (ER) POST OFFICE", "MPRAESO POST OFFICE", "ANYINAM POST OFFICE", "NKAWKAW POST OFFICE",
+                    "DONKOKROM POST OFFICE", "ABETIFI POST OFFICE", "NKWATIA POST OFFICE", "Obo Post Office", "KWABENG POST OFFICE",
+                    "KWAHU PRASO POST OFFICE", "KWAHU TAFO POST OFFICE", "Osino Post Office", "NEW ABIREM POST OFFICE", "BEGORO POST OFFICE",
+                    "Suhum Post Office", "ASAMANKESE POST OFFICE", "New Tafo (Eastern) Post Office", "Kukurantumi Post Ofice", "BOSUSO POST OFFICE",
+                    "KIBI POST OFFICE", "ASIAKWA POST OFFICE", "MEPOM POST OFFICE", "Old Tafo Post Office", "ADEISO POST OFFCIE",
+                    "NSAWAM POST OFFICE", "APEDWA POST OFFICE", "KRABOA COALTAR POST OFFICE", "Bunso Post Office", "ADOAGYIRI POST OFFICE",
+                    "ODA POST OFFICE", "AKWATIA POST OFFICE", "AKIM SWEDRU POST OFFICE", "KADE POST OFFICE", "AKROSO POST OFFICE",
+                    "AKIM MANSO POST OFFICE", "ASUOM POST OFFICE", "ACHIASE POST OFFICE", "Ho Post Office", "Mawuli Post Office",
+                    "DZODZE POST OFFICE", "Peki Post Office", "AMEDZOFE POST OFFICE", "Tsito Post Office", "AGOTIME-KPETOE POST OFFICE",
+                    "JUAPONG POST OFFICE", "Vane Post Office", "KPEDZE POST OFFICE", "KPEVE POST OFFICE", "KPANDO POST OFFICE",
+                    "HOHOE POST OFFICE", "KETE-KRACHI POST OFFICE", "NKONYA-AHENKRO POST OFFICE", "Vakpo Post Office", "WORAWORA POST OFFICE",
+                    "JASIKAN POST OFFICE", "KADJEBI POST OFFICE", "ANFOEGA POST OFFICE", "DODI-PAPASE POST OFFICE", "GOLOKWATI POST OFFICE",
+                    "NKWANTA POST OFFICE", "AGBOSOME POST OFFICE", "DENU POST OFFICE", "AKATSI POST OFFICE", "KETA POST OFFICE",
+                    "ADIDOME POST OFFICE", "AFLAO POST OFFICE", "SOGAKOFE POST OFFICE", "ANLOGA POST OFFICE", "Adisadel Post Office",
+                    "DUNKWA ON OFFIN POST OFFICE", "Elmina Post Office", "ASSIN-FOSU POST OFFICE", "Kotokuraba Post Office", "MANKESSIM POST OFFICE",
+                    "Twifo-Praso Post Office", "Cape Coast Post Office", "ANOMABU POST OFFICE", "ABURA DUNKWA POST OFFICE", "KOMENDA POST OFFICE",
+                    "SALTPOND POST OFFICE", "SWEDRU POST OFFICE", "BAWJIASE POST OFFICE", "BREMAN ESIKUMA POST OFFICE", "Winneba Post Office",
+                    "KASOA NYANYANU POST OFFICE", "MARKET AVENUE/SWEDRU", "KOJO BEEDU POST OFFICE", "AJUMAKO POST OFFICE", "APAM POST OFFICE",
+                    "BISEASE POST OFFICE", "ESIAM POST OFFICE", "KWANYAKU POST OFFICE", "AGONA DUAKWA POST OFFICE", "ANKAMU POST OFFICE",
+                    "Pinanko Post Office", "Odoben Post Office", "SENYA BEREKU", "NSABA POST OFFICE", "Nyakrom Post Office", "ODUPONG KPEHE",
+                    "TAKORADI POST OFFICE", "TARKWA POST OFFICE", "AIYINASI POST OFFICE", "AXIM POST OFFICE", "HALF ASSINI POST OFFICE",
+                    "Market Circle Post Office", "Lagoon Road Post Office", "AXIM ROAD P.OFFICE, TAKORADI", "Effia Nkwanta Post Office",
+                    "Effiakuma Post Office", "ELUBO POST OFFICE", "KETAN CONTAINER POST OFFICE", "Kojokrom Container Post Office", "Shama Post Office",
+                    "ABOSO POST OFFICE", "NSUTA WASSAW POST OFFICE", "ESIAMA POST OFFICE", "BEYIN POST OFFICE", "Kwesimintsim Post Office",
+                    "BONYERE POST OFFICE", "Sekondi Post Office", "NKROFUL POST OFFICE", "DABOASE POST OFFICE", "Apowa Post Office",
+                    "SEFWI WIAWSO POST OFFICE", "BIBIANI POST OFFICE", "ENCHI POST OFFICE", "SEFWI BEKWAI POST OFFICE", "PRESTEA POST OFFICE",
+                    "ASANKRAGWA POST OFFICE", "BOGOSO POST OFFICE", "SAMREBOI POST OFFICE", "AWASO POST OFFICE", "AKROPONG WASSAW POST OFF.",
+                    "HUNI VALLEY POST OFFICE", "ATIEKU POST OFFICE", "JUABESO POST OFFICE", "Kumasi General Post Office", "KEJETIA POST OFFICE",
+                    "Fanti New Town Post Office", "AKUMADAN POST OFFICE", "OFFINSO POST OFFICE", "TEPA POST OFFICE", "Railways Container P.Office",
+                    "Santasi Post Office", "Bantama Post Office", "Bohyen-Ampabame P.Office", "Kwadaso Post Office", "KWADASO ACADEMY POST OFFICE",
+                    "NKAWIE POST OFFICE", "NKENKASU POST OFFICE", "Asuoyeboa Post Office", "AKROPONG KUMASI POST OFFICE", "Ahensan Post Office",
+                    "Suame Post Office", "Sports Stadium Post Office (Kumasi)", "University Post Office KNUST", "Ashanti New Town P.Office",
+                    "Aboabo Container Post Office", "MANPONTEN POST OFFICE", "ANLOGA CONT. ASHANTI POST OFFICE", "CHIRAPATRE CONT. POST OFFICE",
+                    "Tafo Asante Post Office", "New Tafo (Ashanti) Post Office", "Asawase Post Office", "SEPE APAMPINAM POST OFFICE",
+                    "KONONGO POST OFFICE", "AGOGO POST OFFICE", "Ejisu Post Office", "JUANSA POST OFFICE", "BOMPATA POST OFFICE",
+                    "JUASO POST OFFICE", "BOMFA POST OFFICE", "ODUMASI POST OFFICE", "BEKWAI ASHANTI POST OFFICE", "OBUASI POST OFFICE",
+                    "FOMENA POST OFFICE", "AKROKERI POST OFFICE", "AKROPONG BEKWAI POST OFFICE", "AKROFUOM POST OFFICE", "JACHI POST OFFICE",
+                    "MAMPONG-ASHANTI POST OFFICE", "AGONA (ASHANTI) POST OFFICE", "JAMASI (ASHANTI) POST OFFICE", "EJURA POST OFFICE",
+                    "BONWIRE POST OFFICE", "NSUTA-ASH. POST OFFICE", "KUMAWU POST OFFICE", "EFFIDUASI (ASH) POST OFFICE", "JUABEN-ASHANTI POST OFFICE",
+                    "NEW EDUBIASE", "Sunyani Post Office", "BEREKUM POST OFFICE", "NSOATRE POST OFFICE", "GYAPEKROM POST OFFICE", "DROBO POST OFFICE",
+                    "DORMAA AHENKRO POST OFFICE", "CHIRAA POST OFFICE", "SAMPA POST OFFICE", "WAMFIE POST OFFICE", "BECHEM POST OFFICE",
+                    "MIM-AHAFO POST OFFICE", "HWIDIEM POST OFFICE", "GOASO POST OFFICE", "KUKUOM POST OFFICE", "KENYASI POST OFFICE",
+                    "DUAYAW NKWANTA POST OFFICE", "AKYERENSUA POST OFFICE", "Techimentia Post Office", "NKORANZA POST OFFICE", "KINTAMPO POST OFFICE",
+                    "ATEBUBU POST OFFICE", "PRANG POST OFFICE", "TECHIMAN POST OFFICE", "WENCHI POST OFFICE", "YEJI POST OFFICE", "JEMA POST OFFICE",
+                    "Tamale Gen. Post Office", "EDUCATION RIDGE POST OFFICE", "YENDI POST OFFICE", "DAMONGO POST OFFICE", "SALAGA POST OFFICE",
+                    "BIMBILLA POST OFFICE", "BOLE POST OFFICE", "GAMBAGA POST OFFICE", "WALEWALE POST OFFICE", "Savulugu Post Office",
+                    "Bolgatanga Post Office", "BAWKU POST OFFICE", "NAVRONGO POST OFFICE", "PAGA POST OFFICE", "SANDEMA POSTAL AGENCY",
+                    "PUSIGA POSTAL AGENCY", "ZEBILLA POSTAL AGENCY", "GARU POSTAL AGENCY", "BONGO POSTAL AGENCY", "WA (MAIN) POST OFFICE",
+                    "LAWRA POST OFFICE", "TUMU POST OFFICE", "JIRAPA POST OFFICE", "NADOWLI POST OFFICE", "HAMILE POST OFFICE", "NANDOM POST OFFICE",
+                    "BABILE POSTAL AGENCY", "FUNSI POSTAL AGENCY", "FIELMUO POSTAL AGENCY", "TAIFA-BURKINA POST OFFICE", "DOME-KWABENYA POST OFFICE",
+                    "KPANDAI POST OFFICE", "Madina Redco Post Office", "BIG ADA POST OFFICE", "KPONE POST OFFICE", "GOMOA ESHIEM POST OFFICE",
+                    "GOMOA ODINA POST OFFICE", "UNIVERSITY (CAPE COAST) POST OFFICE", "NEW ODUMAN POST OFFICE", "Head-Quarters",
+                    "ASAMANG (ASHANTI) POST OFFICE", "KWAMANG (ASHANTI) POST OFFICE", "SEKYEDUMASE POST OFFICE", "WIAMOASE (ASHANTI) POST OFFICE",
+                    "NYINAHIN POST OFFICE", "BOAMANG POST OFFICE", "Prempeh College Post Office", "ADAWSO POST OFFICE", "Osiem Post Office",
+                    "MANYA KPONGUNOR POST OFFICE", "ASOKORE (ASH) POST OFFICE", "TONGO POSTAL AGENCY", "UDS Post Office (Wa)", "ABOR POST OFFICE",
+                    "APESOKUBI POST OFFICE", "KOKOFU POST OFFICE", "Takoradi Poly Post Office", "NSUAEM POST OFFICE", "AGONA AHANTA POSTAL AGENCY",
+                    "BUIPE POST OFFICE", "UDS-TAMALE POST OFFICE", "BISCO POST OFFICE", "NORTH KANESHIE POST OFFICE", "DAMBAI POST OFFICE",
+                    "GHANASS", "CENTRAL UNIVERSITY POST OFFICE", "PINANKO POST OFFICE", "GOMOA AFRANSI", "DWENASE POST OFFICE", "SAWLA POST OFFICE",
+                    "TUNA POST OFFICE", "GWOLLU POST OFFICE", "WECHAU POST OFFICE", "WEST AFRICAN SHS", "W", "OYIBI POST OFFICE", "BAMAHU CIC POST OFFICE",
+                    "UEW-K POST OFFICE", "HO STADIUM POST OFFICE", "AIRPORT KUMASI", "DOMPOASE POST OFFIICE", "ONLINE SALES", "JUMIA GHANA OFFICE",
+                    "DAWHENYA POST OFFICE", "BULK MAIL", "ABURI CRAFT VILLAGE POST OFFICE", "TRAINING1 POST OFFICE", "TRAINING2 POST OFFICE",
+                    "ANKAFUL PSYCHIATRIC POST OFFICE", "SPEEDLINK", "MANKRASO POST OFFICE", "ABUAKWA POST OFFICE", "ODUMASE SUNYANI POST OFFICE",
+                    "LINK", "SCUTTLE PARCEL BOX", "OFOASE AYIREBI POST OFFICE", "KOMFO ANOKYE TEACHING HOSPITAL", "DHL WAREHOUSE", "DVLA HEAD OFFICE",
+                    "STANDARD CHARTERED", "PASSPORT OFFICE", "WA POST OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
+                  ].sort().map(po => ({ label: po, sub: '', original: po }))}
+                />
               </div>
               {error && <p className="text-red-500 text-xs">{error}</p>}
               {successMsg && (
@@ -2107,11 +2127,11 @@ function AdminUsers() {
                           </td>
                           <td className="py-4">
                             <span className={`px-2 py-1 rounded-lg text-[10px] font-bold uppercase tracking-tighter ${u.role === 'ADMIN' ? 'bg-purple-100 text-purple-700' :
-                                u.role === 'OPERATIONS' ? 'bg-blue-100 text-blue-700' :
-                                  u.role === 'FINANCE' ? 'bg-green-100 text-green-700' :
-                                    u.role === 'IT_UNIT' ? 'bg-orange-100 text-orange-700' :
-                                      u.role === 'AUDIT' ? 'bg-yellow-100 text-yellow-700' :
-                                        'bg-indigo-100 text-indigo-700'
+                              u.role === 'OPERATIONS' ? 'bg-blue-100 text-blue-700' :
+                                u.role === 'FINANCE' ? 'bg-green-100 text-green-700' :
+                                  u.role === 'IT_UNIT' ? 'bg-orange-100 text-orange-700' :
+                                    u.role === 'AUDIT' ? 'bg-yellow-100 text-yellow-700' :
+                                      'bg-indigo-100 text-indigo-700'
                               }`}>
                               {u.role}
                             </span>
@@ -2508,8 +2528,8 @@ function UserPermissionRole() {
                   <button
                     onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'calculator')}
                     className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
-                        ? 'bg-gp-orange/5 border-gp-orange/20'
-                        : 'bg-white border-black/5 hover:border-gp-blue/20'
+                      ? 'bg-gp-orange/5 border-gp-orange/20'
+                      : 'bg-white border-black/5 hover:border-gp-blue/20'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -2517,8 +2537,8 @@ function UserPermissionRole() {
                       <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Duty Calculator</span>
                     </div>
                     <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator')
-                        ? 'bg-gp-orange'
-                        : 'bg-gray-200'
+                      ? 'bg-gp-orange'
+                      : 'bg-gray-200'
                       }`}>
                       <div className={`w-3 h-3 bg-white rounded-full transition-transform ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('calculator') ? 'translate-x-5' : 'translate-x-0'
                         }`} />
@@ -2528,8 +2548,8 @@ function UserPermissionRole() {
                   <button
                     onClick={() => togglePage(editUser.id, editUser.permissions || {}, 'reports')}
                     className={`p-4 rounded-2xl border transition-all flex items-center justify-between group ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
-                        ? 'bg-gp-orange/5 border-gp-orange/20'
-                        : 'bg-white border-black/5 hover:border-gp-blue/20'
+                      ? 'bg-gp-orange/5 border-gp-orange/20'
+                      : 'bg-white border-black/5 hover:border-gp-blue/20'
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -2537,8 +2557,8 @@ function UserPermissionRole() {
                       <span className={`text-sm font-bold ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'text-gp-orange' : 'text-gp-blue/40 group-hover:text-gp-blue/60'}`}>Transaction Reports</span>
                     </div>
                     <div className={`w-10 h-5 rounded-full flex items-center px-1 transition-colors ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports')
-                        ? 'bg-gp-orange'
-                        : 'bg-gray-200'
+                      ? 'bg-gp-orange'
+                      : 'bg-gray-200'
                       }`}>
                       <div className={`w-3 h-3 bg-white rounded-full transition-transform ${(editUser.permissions?.pages || ['dashboard', 'calculator', 'reports']).includes('reports') ? 'translate-x-5' : 'translate-x-0'
                         }`} />
@@ -2560,8 +2580,8 @@ function UserPermissionRole() {
                       key={option.id}
                       onClick={() => setReportAccess(editUser.id, editUser.permissions || {}, option.id)}
                       className={`p-4 rounded-2xl border text-left transition-all ${(editUser.permissions?.reportAccess || 'OWN') === option.id
-                          ? 'bg-gp-blue border-gp-blue text-white shadow-lg'
-                          : 'bg-white border-black/5 hover:bg-gp-light text-gp-blue'
+                        ? 'bg-gp-blue border-gp-blue text-white shadow-lg'
+                        : 'bg-white border-black/5 hover:bg-gp-light text-gp-blue'
                         }`}
                     >
                       <p className="font-bold text-sm tracking-tight">{option.label}</p>
