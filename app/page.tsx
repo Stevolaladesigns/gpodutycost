@@ -421,8 +421,14 @@ function LandedCostForm({ user }: { user: any }) {
 
   const handleCalculate = async () => {
     // Basic validations
-    if (!formData.tracking_number?.trim()) {
+    const trackingNo = formData.tracking_number?.trim() || "";
+    if (!trackingNo) {
       setError("Please provide a Tracking Number");
+      return;
+    }
+    const trackingRegex = /^[A-Za-z]{2}\d{9}[A-Za-z]{2}$/;
+    if (!trackingRegex.test(trackingNo)) {
+      setError("Tracking Number must start with 2 letters, followed by 9 numbers, and end with 2 letters (e.g. CP225658529GH)");
       return;
     }
     if (!formData.ship_to.country?.trim()) {
@@ -621,7 +627,11 @@ function LandedCostForm({ user }: { user: any }) {
         </div>
         <div className="flex justify-between py-0.5 border-b border-black/5">
           <span className="font-medium text-black/60">Shipping</span>
-          <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+          <span className="font-bold">{formData.currency} {Number(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+        </div>
+        <div className="flex justify-between py-0.5 border-b border-black/5">
+          <span className="font-medium text-black/60">Fees</span>
+          <span className="font-bold">{formData.currency} {Number(result.amountSubtotals?.fees || 0).toFixed(2)}</span>
         </div>
         <div className="flex justify-between py-1 mt-0.5 border-t border-black text-base">
           <span className="font-black">Total Duty Cost</span>
@@ -815,7 +825,7 @@ function LandedCostForm({ user }: { user: any }) {
                   />
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Price</label>
+                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Unit Price</label>
                       <input
                         type="number"
                         placeholder="0.00"
@@ -1384,7 +1394,11 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                   </div>
                   <div className="flex justify-between py-0.5 border-b border-black/5">
                     <span className="font-medium text-black/60">Shipping</span>
-                    <span className="font-bold">{formData.currency || 'GHS'} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {Number(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+                  </div>
+                  <div className="flex justify-between py-0.5 border-b border-black/5">
+                    <span className="font-medium text-black/60">Fees</span>
+                    <span className="font-bold">{formData.currency || 'GHS'} {Number(result.amountSubtotals?.fees || 0).toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between py-1 mt-0.5 border-t border-black text-base">
                     <span className="font-black">Total Landed Cost</span>
@@ -3434,7 +3448,7 @@ export default function App() {
       clearTimeout(idleTimer);
       idleTimer = setTimeout(() => {
         handleLogout();
-      }, 5 * 60 * 1000); // 5 minutes
+      }, 10 * 60 * 1000); // 10 minutes
     };
 
     const events = ['mousemove', 'keydown', 'mousedown', 'touchstart', 'scroll'];
