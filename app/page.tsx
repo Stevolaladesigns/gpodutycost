@@ -1,6 +1,6 @@
 'use client';
 export const dynamic = 'force-dynamic';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Calculator,
   LayoutDashboard,
@@ -396,6 +396,7 @@ function LandedCostForm({ user }: { user: any }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasPrinted, setHasPrinted] = useState(false);
+  const isPrintingRef = useRef(false);
 
   const logTransaction = async (success: number, payloadRes: any, errorMsg?: string) => {
     try {
@@ -491,6 +492,7 @@ function LandedCostForm({ user }: { user: any }) {
       const res = await API.getLandedCost(cleanedData);
       setResult(res);
       setHasPrinted(false); // Reset print status for new calculation
+      isPrintingRef.current = false;
     } catch (err: any) {
       setError(err.message);
       // Removed: logTransaction(0, null, err.message);
@@ -500,13 +502,15 @@ function LandedCostForm({ user }: { user: any }) {
   };
 
   const handlePrintQuotation = async () => {
-    if (result && !hasPrinted) {
+    if (result && !hasPrinted && !isPrintingRef.current) {
+      isPrintingRef.current = true;
       setHasPrinted(true); // Button will hide immediately
       // Log successful transaction when printing
       await logTransaction(1, result);
       // 300ms delay gives the UI time to re-render without the button before print engine starts
       setTimeout(() => {
         window.print();
+        isPrintingRef.current = false;
       }, 300);
     }
   };
@@ -524,6 +528,7 @@ function LandedCostForm({ user }: { user: any }) {
     setResult(null);
     setError('');
     setHasPrinted(false);
+    isPrintingRef.current = false;
   };
 
   const addItem = () => {
