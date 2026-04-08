@@ -1017,8 +1017,8 @@ function LandedCostForm({ user }: { user: any }) {
 };
 
 function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, isAdmin: boolean }) {
-  // Non-admins are always locked to their own branch
-  const [scope, setScope] = useState<'MINE' | 'ALL'>(isAdmin ? 'ALL' : 'MINE');
+  // Users with 'ALL' report access default to 'ALL' scope
+  const [scope, setScope] = useState<'MINE' | 'ALL'>((isAdmin || user?.permissions?.reportAccess === 'ALL') ? 'ALL' : 'MINE');
   const [transactions, setTransactions] = useState<any[]>([]);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [printMode, setPrintMode] = useState<'LIST' | 'SINGLE'>('LIST');
@@ -3105,7 +3105,7 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
             const amount = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
             rev += amount;
 
-            if (isAdmin) {
+            if (isAdmin || reportAccess === 'ALL') {
               const po = t.post_office || 'Unknown';
               branchMap[po] = (branchMap[po] || 0) + 1;
             }
@@ -3122,7 +3122,7 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
         setMetrics({ total: data.length, success: successCount, failed: data.length - successCount, revenue: rev, users: 0 });
         setTimeStats({ today: todayCount, week: weekCount, month: monthCount });
 
-        if (isAdmin) {
+        if (isAdmin || reportAccess === 'ALL') {
           const sortedBranches = Object.keys(branchMap).map(k => ({ name: k, count: branchMap[k] })).sort((a, b) => b.count - a.count).slice(0, 5);
           setBranchStats(sortedBranches);
         }
