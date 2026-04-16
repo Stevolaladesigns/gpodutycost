@@ -30,7 +30,16 @@ import {
   Search,
   Eye,
   EyeOff,
-  Download
+  Download,
+  Zap,
+  Mail,
+  ScanBarcode,
+  FileText,
+  User,
+  Edit,
+  ChevronDown,
+  MapPin,
+  Box
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import Barcode from 'react-barcode';
@@ -1031,6 +1040,13 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Deletion Audit State
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [txToDelete, setTxToDelete] = useState<any>(null);
+  const [deleteReason, setDeleteReason] = useState('');
+
+
+
   // Filters
   const [searchTrackUser, setSearchTrackUser] = useState('');
   const [startDate, setStartDate] = useState('');
@@ -1079,20 +1095,52 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
     }
   };
 
-  const handleDelete = async (txId: string) => {
+  const handleDelete = (t: any) => {
     if (!isAdmin) return;
-    if (!confirm('Are you sure you want to delete this transaction? This cannot be undone.')) return;
-    setDeletingId(txId);
+    setTxToDelete(t);
+    setDeleteReason('');
+    setShowDeleteModal(true);
+  };
+
+  const executeDelete = async () => {
+    if (!txToDelete || !deleteReason.trim()) return;
+    setDeletingId(txToDelete.id);
+    setShowDeleteModal(false);
     try {
-      await deleteDoc(doc(db, 'transactions', txId));
-      setTransactions(prev => prev.filter(t => t.id !== txId));
+      const res = txToDelete.response_payload ? JSON.parse(txToDelete.response_payload) : null;
+      const total = res ? (res.total || res.amountSubtotals?.landedCostTotal || 0) : 0;
+      
+      // Log the deletion to audit trail
+      await addDoc(collection(db, 'deletion_logs'), {
+        deleted_by_id: user.id || auth.currentUser?.uid,
+        deleted_by_name: user.full_name || user.email || 'Admin',
+        reason: deleteReason,
+        deleted_at: serverTimestamp(),
+        original_transaction: {
+          id: txToDelete.id,
+          user_id: txToDelete.user_id || 'N/A',
+          user_name: txToDelete.user_name || 'Unknown',
+          post_office: txToDelete.post_office || 'N/A',
+          tracking_number: txToDelete.tracking_number || 'N/A',
+          total_cost: total,
+          currency: txToDelete.currency || 'GHS',
+          created_at: txToDelete.created_at || serverTimestamp()
+        }
+      });
+
+      // Execute actual deletion
+      await deleteDoc(doc(db, 'transactions', txToDelete.id));
+      setTransactions(prev => prev.filter(t => t.id !== txToDelete.id));
     } catch (err) {
       console.error('Failed to delete transaction', err);
       alert('Failed to delete transaction. Please try again.');
     } finally {
       setDeletingId(null);
+      setTxToDelete(null);
+      setDeleteReason('');
     }
   };
+
 
   const handlePrintSingle = (t: any) => {
     setPrintMode('SINGLE');
@@ -1593,7 +1641,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
                             </button>
                             {user.role === 'ADMIN' && (
                               <button
-                                onClick={() => handleDelete(t.id)}
+                                onClick={() => handleDelete(t)}
                                 disabled={deletingId === t.id}
                                 title="Delete this record"
                                 className="p-2 rounded-xl text-red-400 hover:bg-red-50 hover:text-red-600 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
@@ -1643,10 +1691,292 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             </div>
           </div>
         )}
+
+        {/* Deletion Reason Modal */}
+        <AnimatePresence>
+          {showDeleteModal && (
+            <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowDeleteModal(false)}
+                className="absolute inset-0 bg-black/60 backdrop-blur-md"
+              />
+              <motion.div
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
+                className="relative w-full max-w-md bg-white rounded-[32px] shadow-2xl overflow-hidden border border-white/20 p-8"
+              >
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-red-50 flex items-center justify-center">
+                    <Trash2 className="text-red-500" size={24} />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-900 leading-tight">Confirm Deletion</h3>
+                    <p className="text-sm font-medium text-gray-500">Provide a reason for record removal</p>
+                  </div>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-red-50/50 p-4 rounded-2xl border border-red-100 mb-6">
+                    <p className="text-xs font-bold text-red-700 uppercase tracking-widest mb-1">Transaction to Delete:</p>
+                    <p className="text-sm font-bold text-gp-blue">{txToDelete?.tracking_number || 'N/A'}</p>
+                    <p className="text-[10px] font-bold text-red-600/60 uppercase mt-1">This action cannot be undone and will be logged.</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-[10px] font-black uppercase text-gp-blue/40 mb-2 ml-1">Reason for Deletion</label>
+                    <textarea
+                      value={deleteReason}
+                      onChange={(e) => setDeleteReason(e.target.value)}
+                      placeholder="Enter reason (e.g., Duplicate entry, Testing...)"
+                      className="w-full px-4 py-3 rounded-2xl border border-black/5 bg-gp-light focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 min-h-[120px] text-sm font-medium transition-all"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 pt-2">
+                    <button
+                      onClick={() => setShowDeleteModal(false)}
+                      className="px-6 py-3.5 rounded-2xl font-bold text-sm text-gray-500 hover:bg-gray-100 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={executeDelete}
+                      disabled={deleteReason.trim().length < 5}
+                      className="px-6 py-3.5 rounded-2xl font-bold text-sm bg-red-500 text-white shadow-lg shadow-red-500/20 hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+                    >
+                      Delete Record
+                    </button>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
 }
+
+// --- Deletion Logs Component ---
+function DeletionLogs({ formatDate }: { formatDate: any }) {
+  const [logs, setLogs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Filters & Pagination
+  const [searchQuery, setSearchQuery] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [logPage, setLogPage] = useState(1);
+  const LOGS_PER_PAGE = 20;
+
+  const fetchLogs = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const q = query(collection(db, 'deletion_logs'), orderBy('deleted_at', 'desc'));
+      const snapshot = await getDocs(q);
+      setLogs(snapshot.docs.map(d => ({ id: d.id, ...d.data() })));
+    } catch (err) {
+      console.error("Failed to fetch deletion logs", err);
+      setError("Failed to load audit logs.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const filteredLogs = logs.filter(log => {
+    const orig = log.original_transaction || {};
+    const searchStr = searchQuery.toLowerCase();
+    const matchSearch = 
+      (log.deleted_by_name?.toLowerCase() || '').includes(searchStr) ||
+      (orig.tracking_number?.toLowerCase() || '').includes(searchStr) ||
+      (orig.user_name?.toLowerCase() || '').includes(searchStr);
+
+    let matchDate = true;
+    if (startDate || endDate) {
+      const d = formatDate(log.deleted_at);
+      const logDate = d ? d.toISOString().substring(0, 10) : '';
+      if (startDate && logDate < startDate) matchDate = false;
+      if (endDate && logDate > endDate) matchDate = false;
+    }
+
+    return matchSearch && matchDate;
+  });
+
+  const totalPages = Math.max(1, Math.ceil(filteredLogs.length / LOGS_PER_PAGE));
+  const paginatedLogs = filteredLogs.slice((logPage - 1) * LOGS_PER_PAGE, logPage * LOGS_PER_PAGE);
+
+  // Reset page on filter change
+  useEffect(() => { setLogPage(1); }, [searchQuery, startDate, endDate]);
+
+  return (
+    <div className="space-y-6">
+      <div className="flex justify-between items-end">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-gp-blue">
+            <Lock className="text-gp-blue" />
+            Deletion Audit History
+          </h2>
+          <p className="text-sm text-gp-blue/60 font-medium mt-1">Audit trail of all deleted transaction records</p>
+        </div>
+        <button 
+          onClick={fetchLogs}
+          className="p-2 bg-white rounded-xl border border-black/5 hover:bg-gp-light transition-all text-gp-blue shadow-sm"
+        >
+          <RefreshCcw size={18} />
+        </button>
+      </div>
+
+      {/* Filter Bar */}
+      <div className="bg-white p-4 rounded-3xl shadow-sm border border-black/5 flex flex-wrap gap-4 items-center justify-between sticky top-0 z-30">
+        <div className="flex items-center gap-3 flex-1 min-w-[300px]">
+          <div className="relative flex-1 group">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gp-blue/30 group-focus-within:text-gp-orange transition-colors" size={16} />
+            <input
+              type="text"
+              placeholder="Search by Tracking #, Admin, or Original User..."
+              value={searchQuery}
+              onChange={e => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-black/5 bg-gp-light/50 text-sm focus:outline-none focus:ring-2 focus:ring-gp-orange/20 transition-all font-medium"
+            />
+          </div>
+
+          <div className="flex items-center gap-1 bg-gp-light/50 p-1 rounded-2xl border border-black/5">
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
+              <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">From</span>
+              <input
+                type="date"
+                value={startDate}
+                onChange={e => setStartDate(e.target.value)}
+                className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
+              />
+            </div>
+            <div className="w-[1px] h-4 bg-black/5"></div>
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl hover:bg-white transition-all">
+              <span className="text-[9px] font-black text-gp-blue/30 uppercase tracking-tighter">To</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={e => setEndDate(e.target.value)}
+                className="bg-transparent border-none text-xs font-bold text-gp-blue focus:outline-none w-28"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-white rounded-[32px] shadow-sm border border-black/5 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead>
+              <tr className="border-b border-black/5 bg-gp-light/30">
+                <th className="p-5 text-xs font-black uppercase tracking-widest text-gp-blue/40">Deleted Info</th>
+                <th className="p-5 text-xs font-black uppercase tracking-widest text-gp-blue/40">Original Record</th>
+                <th className="p-5 text-xs font-black uppercase tracking-widest text-gp-blue/40">Cost Saved</th>
+                <th className="p-5 text-xs font-black uppercase tracking-widest text-gp-blue/40">Reason for Deletion</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/5">
+              {paginatedLogs.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="p-12 text-center text-gp-blue/30 font-bold italic">
+                    {loading ? "Loading audit trail..." : "No matching deletion logs found."}
+                  </td>
+                </tr>
+              ) : (
+                paginatedLogs.map(log => {
+                  const orig = log.original_transaction || {};
+                  return (
+                    <tr key={log.id} className="hover:bg-gp-light/20 transition-colors">
+                      <td className="p-5">
+                        <p className="font-bold text-gray-900">{log.deleted_by_name}</p>
+                        <p className="text-[10px] font-bold text-gp-blue/40 uppercase tracking-widest mt-0.5">
+                          {log.deleted_at ? formatDate(log.deleted_at).toLocaleString() : 'N/A'}
+                        </p>
+                      </td>
+                      <td className="p-5">
+                        <div className="space-y-0.5">
+                          <p className="text-[10px] font-black text-gp-orange uppercase tracking-widest">Tracking No:</p>
+                          <p className="text-sm font-bold text-gp-blue">{orig.tracking_number}</p>
+                          <p className="text-[10px] font-medium text-gray-500 uppercase italic">
+                            Originally By: {orig.user_name} ({orig.post_office})
+                          </p>
+                        </div>
+                      </td>
+                      <td className="p-5">
+                         <p className="text-sm font-black text-gray-900 uppercase">
+                           {orig.currency} {(orig.total_cost || 0).toFixed(2)}
+                         </p>
+                      </td>
+                      <td className="p-5">
+                        <div className="max-w-xs">
+                           <p className="text-sm font-medium text-gray-700 bg-red-50/50 p-3 rounded-xl border border-red-100/50 italic">
+                             "{log.reason}"
+                           </p>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Pagination Bar */}
+      {filteredLogs.length > LOGS_PER_PAGE && (
+        <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-black/5">
+          <p className="text-xs font-bold text-gp-blue/40">
+            Showing {(logPage - 1) * LOGS_PER_PAGE + 1}–{Math.min(logPage * LOGS_PER_PAGE, filteredLogs.length)} of {filteredLogs.length} logs
+          </p>
+          <div className="flex items-center gap-1">
+            <button 
+              onClick={() => setLogPage(p => Math.max(1, p - 1))} 
+              disabled={logPage === 1}
+              className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronLeft size={16} className="text-gp-blue" />
+            </button>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(p => p === 1 || p === totalPages || Math.abs(p - logPage) <= 1)
+                .map((p, idx, arr) => (
+                  <React.Fragment key={p}>
+                    {idx > 0 && arr[idx - 1] !== p - 1 && <span className="px-1 text-gp-blue/30">...</span>}
+                    <button 
+                      onClick={() => setLogPage(p)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${logPage === p ? 'bg-gp-orange text-white shadow-md' : 'text-gp-blue hover:bg-gp-light'}`}
+                    >
+                      {p}
+                    </button>
+                  </React.Fragment>
+                ))}
+            </div>
+            <button 
+              onClick={() => setLogPage(p => Math.min(totalPages, p + 1))} 
+              disabled={logPage === totalPages}
+              className="p-2 rounded-lg hover:bg-gp-light disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+            >
+              <ChevronRight size={16} className="text-gp-blue" />
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+
 
 function AdminUsers() {
   const [users, setUsers] = useState<any[]>([]);
@@ -3411,9 +3741,2266 @@ function Dashboard({ user, setView, formatDate, isAdmin }: { user: any, setView:
   );
 }
 
+const GHANA_POST_OFFICES = [
+  "GENERAL POST OFFICE", "ARTS CENTRE POST OFFICE", "31ST DEC. MKT POST OFFICE", "EXAM COUNCIL POST OFFICE",
+  "ADABRAKA POST OFFICE", "JAMES TOWN POST OFFICE", "TUC POST OFFICE", "MAMPROBI POST OFFICE", "MINISTRIES POST OFFICE",
+  "SPORTS STADIUM POST OFFICE (ACCRA)", "VALLEY VIEW POST OFFICE", "CASTLE POST OFFICE", "LA POST OFFICE",
+  "OSU POST OFFICE", "TESHIE NUNGUA ESTATE P.OFFICE", "TESHIE POST OFFICE", "TRADE FAIR POST OFFICE",
+  "KOTOKA INTER. AIRPORT P.O", "Airport Transhipment", "BURMA CAMP POST OFFICE", "MADINA POST OFFICE",
+  "ABOKOBI POST OFFICE", "DODOWA POST OFFICE", "NUNGUA POST OFFICE", "STATE HOUSE", "ACCRA NORTH POST OFFICE",
+  "CANTONMENTS POST OFFICE", "LEGON POST OFFICE", "NIMA POST OFFICE", "ACCRA NEW TOWN POST OFF.", "ACHIMOTA POST OFFICE",
+  "ALAJO CONTAINER POST OFFICE", "AMASAMAN POST OFFICE", "OFANKOR POST OFFICE", "MILE 7 CONTAINER POST OFFICE",
+  "TAIFA CONTAINER POST OFFICE", "ACHIMOTA MARKET POST OFFICE", "KOTOBABI CONTAINER POST OFFICE", "KANDA POST OFFICE",
+  "ADENTA POST OFFICE", "KANESHIE POST OFFICE", "DANSOMAN ESTATE POST OFFICE", "KORLE- BU POST OFFICE",
+  "DANSOMAN COMMUNITY P.O.", "ABEKA POST OFFICE", "MALLAM POST OFFICE", "ABOSSEY OKAI POST OFFICE", "DARKUMAN POST OFFICE",
+  "S.T.C. CONTAINER POST OFFICE", "ODORKOR CONTAINER POST OFFICE", "WEIJA GICEL POST OFFICE", "Lartebiokorshie Post Office",
+  "NII BOI TOWN POST OFFICE", "TEMA COM 1 POST OFFICE", "TEMA COMM. 2 POST OFFICE", "TEMA COMM. 7 POST OFFICE",
+  "TEMA COMM. 11 POST OFFICE", "SAKUMONO POST OFFICE", "Ashiaman Post Office", "VALCO FLATS POST OFFICE",
+  "ADA FOAH POST OFFICE", "PRAMPRAM POST OFFICE", "SPINTEX ROAD", "TEMA NEW TOWN POST OFFICE", "TEMA SHOPPING CENTRE P. OFF",
+  "Koforidua Post Office", "AKOSOMBO POST OFFICE", "ABURI POST OFFICE", "AKROPONG AKWAPIM P.OFFICE", "AFIDWASE (ER) POST OFFICE",
+  "ASESEWA POST OFFICE", "MAMPONG -AKWAPIM P.OFFICE", "SOMANYA POST OFFICE", "ADUKROM POST OFFICE", "MAMFE POST OFFICE",
+  "LARTEH POST OFFICE", "AKUSE POST OFFICE", "ANUM POST OFFICE", "JUMAPO POST OFFICE", "MANGOASE POST OFFICE",
+  "CHARLIE JUNCTION POST OFFICE", "ODUMASI KROBO POST OFFICE", "Oyoko Post Office", "NEW AKRADE POST OFFICE",
+  "APEGUSO POST OFFICE", "ASOKORE (ER) POST OFFICE", "MPRAESO POST OFFICE", "ANYINAM POST OFFICE", "NKAWKAW POST OFFICE",
+  "DONKOKROM POST OFFICE", "ABETIFI POST OFFICE", "NKWATIA POST OFFICE", "Obo Post Office", "KWABENG POST OFFICE",
+  "KWAHU PRASO POST OFFICE", "KWAHU TAFO POST OFFICE", "Osino Post Office", "NEW ABIREM POST OFFICE", "BEGORO POST OFFICE",
+  "Suhum Post Office", "ASAMANKESE POST OFFICE", "New Tafo (Eastern) Post Office", "Kukurantumi Post Ofice", "BOSUSO POST OFFICE",
+  "KIBI POST OFFICE", "ASIAKWA POST OFFICE", "MEPOM POST OFFICE", "Old Tafo Post Office", "ADEISO POST OFFCIE",
+  "NSAWAM POST OFFICE", "APEDWA POST OFFICE", "KRABOA COALTAR POST OFFICE", "Bunso Post Office", "ADOAGYIRI POST OFFICE",
+  "ODA POST OFFICE", "AKWATIA POST OFFICE", "AKIM SWEDRU POST OFFICE", "KADE POST OFFICE", "AKROSO POST OFFICE",
+  "AKIM MANSO POST OFFICE", "ASUOM POST OFFICE", "ACHIASE POST OFFICE", "Ho Post Office", "Mawuli Post Office",
+  "DZODZE POST OFFICE", "Peki Post Office", "AMEDZOFE POST OFFICE", "Tsito Post Office", "AGOTIME-KPETOE POST OFFICE",
+  "JUAPONG POST OFFICE", "Vane Post Office", "KPEDZE POST OFFICE", "KPEVE POST OFFICE", "KPANDO POST OFFICE",
+  "HOHOE POST OFFICE", "KETE-KRACHI POST OFFICE", "NKONYA-AHENKRO POST OFFICE", "Vakpo Post Office", "WORAWORA POST OFFICE",
+  "JASIKAN POST OFFICE", "KADJEBI POST OFFICE", "ANFOEGA POST OFFICE", "DODI-PAPASE POST OFFICE", "GOLOKWATI POST OFFICE",
+  "NKWANTA POST OFFICE", "AGBOSOME POST OFFICE", "DENU POST OFFICE", "AKATSI POST OFFICE", "KETA POST OFFICE",
+  "ADIDOME POST OFFICE", "AFLAO POST OFFICE", "SOGAKOFE POST OFFICE", "ANLOGA POST OFFICE", "Adisadel Post Office",
+  "DUNKWA ON OFFIN POST OFFICE", "Elmina Post Office", "ASSIN-FOSU POST OFFICE", "Kotokuraba Post Office", "MANKESSIM POST OFFICE",
+  "Twifo-Praso Post Office", "Cape Coast Post Office", "ANOMABU POST OFFICE", "ABURA DUNKWA POST OFFICE", "KOMENDA POST OFFICE",
+  "SALTPOND POST OFFICE", "SWEDRU POST OFFICE", "BAWJIASE POST OFFICE", "BREMAN ESIKUMA POST OFFICE", "Winneba Post Office",
+  "KASOA NYANYANU POST OFFICE", "MARKET AVENUE/SWEDRU", "KOJO BEEDU POST OFFICE", "AJUMAKO POST OFFICE", "APAM POST OFFICE",
+  "BISEASE POST OFFICE", "ESIAM POST OFFICE", "KWANYAKU POST OFFICE", "AGONA DUAKWA POST OFFICE", "ANKAMU POST OFFICE",
+  "Pinanko Post Office", "Odoben Post Office", "SENYA BEREKU", "NSABA POST OFFICE", "Nyakrom Post Office", "ODUPONG KPEHE",
+  "TAKORADI POST OFFICE", "TARKWA POST OFFICE", "AIYINASI POST OFFICE", "AXIM POST OFFICE", "HALF ASSINI POST OFFICE",
+  "Market Circle Post Office", "Lagoon Road Post Office", "AXIM ROAD P.OFFICE, TAKORADI", "Effia Nkwanta Post Office",
+  "Effiakuma Post Office", "ELUBO POST OFFICE", "KETAN CONTAINER POST OFFICE", "Kojokrom Container Post Office", "Shama Post Office",
+  "ABOSO POST OFFICE", "NSUTA WASSAW POST OFFICE", "ESIAMA POST OFFICE", "BEYIN POST OFFICE", "Kwesimintsim Post Office",
+  "BONYERE POST OFFICE", "Sekondi Post Office", "NKROFUL POST OFFICE", "DABOASE POST OFFICE", "Apowa Post Office",
+  "SEFWI WIAWSO POST OFFICE", "BIBIANI POST OFFICE", "ENCHI POST OFFICE", "SEFWI BEKWAI POST OFFICE", "PRESTEA POST OFFICE",
+  "ASANKRAGWA POST OFFICE", "BOGOSO POST OFFICE", "SAMREBOI POST OFFICE", "AWASO POST OFFICE", "AKROPONG WASSAW POST OFF.",
+  "HUNI VALLEY POST OFFICE", "ATIEKU POST OFFICE", "JUABESO POST OFFICE", "Kumasi General Post Office", "KEJETIA POST OFFICE",
+  "Fanti New Town Post Office", "AKUMADAN POST OFFICE", "OFFINSO POST OFFICE", "TEPA POST OFFICE", "Railways Container P.Office",
+  "Santasi Post Office", "Bantama Post Office", "Bohyen-Ampabame P.Office", "Kwadaso Post Office", "KWADASO ACADEMY POST OFFICE",
+  "NKAWIE POST OFFICE", "NKENKASU POST OFFICE", "Asuoyeboa Post Office", "AKROPONG KUMASI POST OFFICE", "Ahensan Post Office",
+  "Suame Post Office", "Sports Stadium Post Office (Kumasi)", "University Post Office KNUST", "Ashanti New Town P.Office",
+  "Aboabo Container Post Office", "MANPONTEN POST OFFICE", "ANLOGA CONT. ASHANTI POST OFFICE", "CHIRAPATRE CONT. POST OFFICE",
+  "Tafo Asante Post Office", "New Tafo (Ashanti) Post Office", "Asawase Post Office", "SEPE APAMPINAM POST OFFICE",
+  "KONONGO POST OFFICE", "AGOGO POST OFFICE", "Ejisu Post Office", "JUANSA POST OFFICE", "BOMPATA POST OFFICE",
+  "JUASO POST OFFICE", "BOMFA POST OFFICE", "ODUMASI POST OFFICE", "BEKWAI ASHANTI POST OFFICE", "OBUASI POST OFFICE",
+  "FOMENA POST OFFICE", "AKROKERI POST OFFICE", "AKROPONG BEKWAI POST OFFICE", "AKROFUOM POST OFFICE", "JACHI POST OFFICE",
+  "MAMPONG-ASHANTI POST OFFICE", "AGONA (ASHANTI) POST OFFICE", "JAMASI (ASHANTI) POST OFFICE", "EJURA POST OFFICE",
+  "BONWIRE POST OFFICE", "NSUTA-ASH. POST OFFICE", "KUMAWU POST OFFICE", "EFFIDUASI (ASH) POST OFFICE", "JUABEN-ASHANTI POST OFFICE",
+  "NEW EDUBIASE", "Sunyani Post Office", "BEREKUM POST OFFICE", "NSOATRE POST OFFICE", "GYAPEKROM POST OFFICE", "DROBO POST OFFICE",
+  "DORMAA AHENKRO POST OFFICE", "CHIRAA POST OFFICE", "SAMPA POST OFFICE", "WAMFIE POST OFFICE", "BECHEM POST OFFICE",
+  "MIM-AHAFO POST OFFICE", "HWIDIEM POST OFFICE", "GOASO POST OFFICE", "KUKUOM POST OFFICE", "KENYASI POST OFFICE",
+  "DUAYAW NKWANTA POST OFFICE", "AKYERENSUA POST OFFICE", "Techimentia Post Office", "NKORANZA POST OFFICE", "KINTAMPO POST OFFICE",
+  "ATEBUBU POST OFFICE", "PRANG POST OFFICE", "TECHIMAN POST OFFICE", "WENCHI POST OFFICE", "YEJI POST OFFICE", "JEMA POST OFFICE",
+  "Tamale Gen. Post Office", "EDUCATION RIDGE POST OFFICE", "YENDI POST OFFICE", "DAMONGO POST OFFICE", "SALAGA POST OFFICE",
+  "BIMBILLA POST OFFICE", "BOLE POST OFFICE", "GAMBAGA POST OFFICE", "WALEWALE POST OFFICE", "Savulugu Post Office",
+  "Bolgatanga Post Office", "BAWKU POST OFFICE", "NAVRONGO POST OFFICE", "PAGA POST OFFICE", "SANDEMA POSTAL AGENCY",
+  "PUSIGA POSTAL AGENCY", "ZEBILLA POSTAL AGENCY", "GARU POSTAL AGENCY", "BONGO POSTAL AGENCY", "WA (MAIN) POST OFFICE",
+  "LAWRA POST OFFICE", "TUMU POST OFFICE", "JIRAPA POST OFFICE", "NADOWLI POST OFFICE", "HAMILE POST OFFICE", "NANDOM POST OFFICE",
+  "BABILE POSTAL AGENCY", "FUNSI POSTAL AGENCY", "FIELMUO POSTAL AGENCY", "TAIFA-BURKINA POST OFFICE", "DOME-KWABENYA POST OFFICE",
+  "KPANDAI POST OFFICE", "Madina Redco Post Office", "BIG ADA POST OFFICE", "KPONE POST OFFICE", "GOMOA ESHIEM POST OFFICE",
+  "GOMOA ODINA POST OFFICE", "UNIVERSITY (CAPE COAST) POST OFFICE", "NEW ODUMAN POST OFFICE", "Head-Quarters",
+  "ASAMANG (ASHANTI) POST OFFICE", "KWAMANG (ASHANTI) POST OFFICE", "SEKYEDUMASE POST OFFICE", "WIAMOASE (ASHANTI) POST OFFICE",
+  "NYINAHIN POST OFFICE", "BOAMANG POST OFFICE", "Prempeh College Post Office", "ADAWSO POST OFFICE", "Osiem Post Office",
+  "MANYA KPONGUNOR POST OFFICE", "ASOKORE (ASH) POST OFFICE", "TONGO POSTAL AGENCY", "UDS Post Office (Wa)", "ABOR POST OFFICE",
+  "APESOKUBI POST OFFICE", "KOKOFU POST OFFICE", "Takoradi Poly Post Office", "NSUAEM POST OFFICE", "AGONA AHANTA POSTAL AGENCY",
+  "BUIPE POST OFFICE", "UDS-TAMALE POST OFFICE", "BISCO POST OFFICE", "NORTH KANESHIE POST OFFICE", "DAMBAI POST OFFICE",
+  "GHANASS", "CENTRAL UNIVERSITY POST OFFICE", "PINANKO POST OFFICE", "GOMOA AFRANSI", "DWENASE POST OFFICE", "SAWLA POST OFFICE",
+  "TUNA POST OFFICE", "GWOLLU POST OFFICE", "WECHAU POST OFFICE", "WEST AFRICAN SHS", "OYIBI POST OFFICE", "BAMAHU CIC POST OFFICE",
+  "UEW-K POST OFFICE", "HO STADIUM POST OFFICE", "AIRPORT KUMASI", "DOMPOASE POST OFFIICE", "ONLINE SALES", "JUMIA GHANA OFFICE",
+  "DAWHENYA POST OFFICE", "BULK MAIL", "ABURI CRAFT VILLAGE POST OFFICE", "TRAINING1 POST OFFICE", "TRAINING2 POST OFFICE",
+  "ANKAFUL PSYCHIATRIC POST OFFICE", "SPEEDLINK", "MANKRASO POST OFFICE", "ABUAKWA POST OFFICE", "ODUMASE SUNYANI POST OFFICE",
+  "LINK", "SCUTTLE PARCEL BOX", "OFOASE AYIREBI POST OFFICE", "KOMFO ANOKYE TEACHING HOSPITAL", "DHL WAREHOUSE", "DVLA HEAD OFFICE",
+  "STANDARD CHARTERED", "PASSPORT OFFICE", "WA POST OFFICE", "SEFWI AKONTOMBRA POST OFFICE"
+].sort();
+
+const POST_OFFICE_OPTIONS = GHANA_POST_OFFICES.map(po => ({ value: po, label: po }));
+
+function TotalAmountSummaryBox({ 
+  total = 0, 
+  duty = 0, 
+  carton = 0, 
+  shipping = 0,
+  currency = "GHS" 
+}: { 
+  total?: number; 
+  duty?: number; 
+  carton?: number; 
+  shipping?: number;
+  currency?: string;
+}) {
+  return (
+    <div className="bg-yellow-50 border border-yellow-200 px-8 py-4 rounded-3xl flex flex-col items-end shadow-sm animate-in fade-in zoom-in duration-300">
+      <div className="flex items-center gap-6 mb-2 border-b border-yellow-200/50 pb-2 w-full justify-end">
+        <div className="flex flex-col items-end">
+          <span className="text-[10px] font-bold text-yellow-700/70 uppercase tracking-widest">Duty Cost</span>
+          <span className="text-sm font-black text-yellow-900">{currency} {duty.toFixed(2)}</span>
+        </div>
+        <div className="w-px h-6 bg-yellow-200/80" />
+        <div className="flex flex-col items-end">
+          <span className="text-[10px] font-bold text-yellow-700/70 uppercase tracking-widest">Carton Cost</span>
+          <span className="text-sm font-black text-yellow-900">{currency} {carton.toFixed(2)}</span>
+        </div>
+        <div className="w-px h-6 bg-yellow-200/80" />
+        <div className="flex flex-col items-end">
+          <span className="text-[10px] font-bold text-yellow-700/70 uppercase tracking-widest">Shipping Cost</span>
+          <span className="text-sm font-black text-yellow-900">{currency} {shipping.toFixed(2)}</span>
+        </div>
+      </div>
+      <span className="text-xs font-bold text-yellow-800 uppercase tracking-widest mb-1">TOTAL AMOUNT ({currency}):</span>
+      <span className="text-4xl font-black text-red-600 leading-none">
+        {total.toFixed(2)}
+      </span>
+    </div>
+  );
+}
+
+function AddForeignParcel({ user }: { user: any }) {
+  const inputCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all uppercase";
+  const labelCls = "block text-[10px] font-bold uppercase tracking-wider text-gp-blue/50 mb-1.5 ml-0.5";
+  const selectCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-gray-700";
+
+  const [originPO, setOriginPO] = React.useState('');
+  const [hsCodesData, setHsCodesData] = React.useState<{ code: string, desc: string }[]>([]);
+  const [items, setItems] = React.useState([{ id: 1, description: '', hsCode: '' }]);
+
+  React.useEffect(() => {
+    fetch('/data/hs-codes.json')
+      .then(res => res.json())
+      .then(data => setHsCodesData(data))
+      .catch(() => {});
+  }, []);
+
+  const descOptions = hsCodesData.map((d: any) => ({ label: d.desc, sub: d.code, original: d }));
+  const hsOptions = Array.from(new Set(hsCodesData.map((d: any) => d.code))).map(code => {
+    const match = hsCodesData.find((d: any) => d.code === code);
+    return { label: code as string, sub: match?.desc || '', original: match };
+  });
+  const addItem = () => setItems(prev => [...prev, { id: Date.now(), description: '', hsCode: '' }]);
+  const removeItem = (id: number) => setItems(prev => prev.filter(it => it.id !== id));
+  const updateItem = (id: number, field: string, value: string) =>
+    setItems(prev => prev.map(it => it.id === id ? { ...it, [field]: value } : it));
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center">
+              <Package size={20} className="text-gp-blue" />
+            </div>
+            New Foreign Parcel
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">Create a new foreign parcel consignment entry</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all">
+            <RefreshCcw size={15} />
+            Reset Form
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gp-blue/20 hover:bg-gp-blue/5 text-sm font-semibold text-gp-blue transition-all">
+            <Search size={15} />
+            Find Consignment
+          </button>
+        </div>
+      </div>
+
+      {/* Shipper & Consignee */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Shipper Card */}
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+              <Globe size={16} className="text-white" />
+            </div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Shipper (Sender)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div>
+              <label className={labelCls}>Name</label>
+              <input type="text" placeholder="Full name" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Digital Address</label>
+              <input type="text" placeholder="e.g. GA-123-4567" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Location Address</label>
+              <textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`}></textarea>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Post/Zip Code</label>
+                <input type="text" placeholder="Zip code" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>State/Region</label>
+                <input type="text" placeholder="Region" className={inputCls} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>City/Town</label>
+                <input type="text" placeholder="City" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Tel</label>
+                <input type="text" placeholder="Phone number" className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Origin (Post Office)</label>
+              <SearchableSelect options={POST_OFFICE_OPTIONS} value={originPO} onChange={setOriginPO} placeholder="Search post office..." className="w-full" />
+            </div>
+          </div>
+        </div>
+
+        {/* Consignee Card */}
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-orange">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+              <Package size={16} className="text-white" />
+            </div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Consignee (Recipient)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div>
+              <label className={labelCls}>Name</label>
+              <input type="text" placeholder="Full name" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Digital Address</label>
+              <input type="text" placeholder="Digital address" className={inputCls} />
+            </div>
+            <div>
+              <label className={labelCls}>Location Address</label>
+              <textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`}></textarea>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>Post/Zip Code</label>
+                <input type="text" placeholder="Zip code" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>State/Region</label>
+                <input type="text" placeholder="Region" className={inputCls} />
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className={labelCls}>City/Town</label>
+                <input type="text" placeholder="City" className={inputCls} />
+              </div>
+              <div>
+                <label className={labelCls}>Tel</label>
+                <input type="text" placeholder="Phone number" className={inputCls} />
+              </div>
+            </div>
+            <div>
+              <label className={labelCls}>Destination Country</label>
+              <div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold flex items-center gap-2">
+                <Globe size={14} className="text-gp-blue" /> United States of America (US)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Parcel Details Card */}
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center">
+            <Package size={16} className="text-white" />
+          </div>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Foreign Parcel Consignment Details</h3>
+        </div>
+        <div className="p-6 space-y-8">
+
+          {/* ── DUTY COST ITEMS ── */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2">
+                  <Calculator size={15} className="text-gp-blue" />
+                  Parcel Items <span className="text-[10px] font-bold text-gp-blue/50 uppercase tracking-wider ml-1">(for duty cost)</span>
+                </h4>
+                <div className="flex flex-wrap items-center gap-2 mt-2 ml-5">
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Currency: GHS</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Origin: GH</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Destination — auto-linked from Consignee</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Tracking No. — auto-generated on save</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Shipping Cost — auto-calculated</span>
+                </div>
+              </div>
+              <button onClick={addItem} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gp-blue/10 text-gp-blue text-xs font-bold hover:bg-gp-blue/20 transition-all">
+                <Plus size={13} /> Add Item
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {items.map((item, idx) => (
+                <div key={item.id} className="bg-gp-blue/[0.02] rounded-2xl border border-gp-blue/5 p-4 space-y-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gp-blue/50">Item {idx + 1}</span>
+                    {items.length > 1 && (
+                      <button onClick={() => removeItem(item.id)} className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 transition-colors px-3 py-1.5 rounded-xl hover:bg-red-50">
+                        <Trash2 size={13} /> Remove
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <AutocompleteInput
+                        label="Description"
+                        placeholder="e.g. Cotton T-shirt"
+                        value={item.description}
+                        onChange={(val) => updateItem(item.id, 'description', val)}
+                        onSelect={(val, original) => {
+                          setItems(prev => prev.map(it => it.id === item.id ? { ...it, description: val, hsCode: original?.code || it.hsCode } : it));
+                        }}
+                        options={descOptions}
+                      />
+                    </div>
+                    <div>
+                      <AutocompleteInput
+                        label="HS Code"
+                        placeholder="e.g. 6109.10"
+                        value={item.hsCode}
+                        onChange={(val) => updateItem(item.id, 'hsCode', val)}
+                        onSelect={(val, original) => {
+                          setItems(prev => prev.map(it => it.id === item.id ? { ...it, hsCode: val, description: original?.desc || it.description } : it));
+                        }}
+                        options={hsOptions}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><label className={labelCls}>Unit Price (GHS)</label><input type="number" placeholder="0.00" className={inputCls} /></div>
+                    <div><label className={labelCls}>Quantity</label><input type="number" placeholder="1" className={inputCls} /></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-black/5"></div>
+
+          {/* ── OTHER PARCEL DETAILS ── */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div>
+                <label className={labelCls}>Service</label>
+                <div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold">DEMAND - FOREIGN</div>
+              </div>
+              <div>
+                <label className={labelCls}>Parcel Type</label>
+                <select className={selectCls}>
+                  <option value="">-Select Option-</option>
+                  <option>Document</option>
+                  <option>Non-Documents</option>
+                  <option>Merchandise</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>No. of Items</label>
+                <select className={selectCls}>
+                  <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+                </select>
+              </div>
+              <div>
+                <label className={labelCls}>Weight</label>
+                <div className="flex items-center gap-3">
+                  <input type="number" placeholder="0.00" className={`${inputCls} flex-1`} />
+                  <span className="text-sm font-bold text-gray-600 bg-black/5 px-4 py-2.5 rounded-xl border border-black/10">kg</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className={labelCls}>Content Description / Manufacturing Country</label>
+                <textarea placeholder="Describe contents and country of manufacture" className={`${inputCls} h-24 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea>
+              </div>
+              <div>
+                <label className={labelCls}>Add Insurance</label>
+                <select className={selectCls}><option>No</option><option>Yes</option></select>
+              </div>
+              <div>
+                <label className={labelCls}>Carton Type &amp; Quantity</label>
+                <div className="flex items-center gap-2">
+                  <select className={`${selectCls} flex-1`}>
+                    <option value="">Select Carton Type</option>
+                    <option>EMS Cartons Extra Large</option>
+                    <option>EMS Cartons Large</option>
+                    <option>EMS Cartons Medium</option>
+                    <option>EMS Cartons Small</option>
+                    <option>EMS Cartons Very Small</option>
+                    <option>Parcel Cartons Extra Large</option>
+                    <option>Parcel Cartons Extra Small</option>
+                    <option>Parcel Cartons Large</option>
+                    <option>Parcel Cartons Medium</option>
+                    <option>Parcel Cartons Small</option>
+                  </select>
+                  <input type="number" placeholder="Qty" className="w-20 px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-center" min="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Submit */}
+          <div className="pt-6 border-t border-black/5 flex items-center justify-between gap-4">
+            <TotalAmountSummaryBox total={0} duty={0} carton={0} shipping={0} />
+            <button className="flex items-center justify-center gap-2 w-[280px] py-3.5 bg-gp-orange text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 active:scale-[0.98] transition-all"><Plus size={18} /> Create Foreign Parcel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SearchableSelect({ 
+  options, 
+  value, 
+  onChange, 
+  placeholder, 
+  icon: Icon, 
+  className = "w-full md:w-48"
+}: { 
+  options: { value: string; label: string }[]; 
+  value: string; 
+  onChange: (val: string) => void; 
+  placeholder: string; 
+  icon?: any;
+  className?: string;
+}) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const selectedOption = options.find(opt => opt.value === value);
+  const filteredOptions = options.filter(opt => 
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className={`relative ${className}`} ref={dropdownRef}>
+      <button 
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full h-[46px] px-4 flex items-center justify-between gap-3 bg-white border border-black/5 rounded-2xl shadow-sm hover:border-gp-blue/30 transition-all text-sm font-medium text-gray-700 active:scale-[0.98]"
+      >
+        <div className="flex items-center gap-2 truncate">
+          {Icon && <Icon size={16} className={value ? "text-gp-blue" : "text-gray-400"} />}
+          <span className={!value ? "text-gray-400" : "truncate"}>{selectedOption ? selectedOption.label : placeholder}</span>
+        </div>
+        <ChevronDown size={14} className={`text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+            animate={{ opacity: 1, y: 5, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+            transition={{ duration: 0.15 }}
+            className="absolute z-[100] top-full left-0 w-64 mt-2 bg-white rounded-2xl shadow-2xl border border-black/5 overflow-hidden flex flex-col"
+          >
+            <div className="p-3 border-b border-black/5 bg-gray-50/50">
+              <div className="relative">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <input 
+                  autoFocus
+                  type="text"
+                  placeholder="Type to search..."
+                  className="w-full pl-9 pr-3 py-2 bg-white border border-black/5 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-gp-blue/20"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="max-h-64 overflow-y-auto p-1.5 custom-scrollbar">
+              {filteredOptions.length > 0 ? (
+                filteredOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      onChange(opt.value);
+                      setIsOpen(false);
+                      setSearchTerm('');
+                    }}
+                    className={`w-full text-left px-3 py-2.5 rounded-xl text-xs font-medium transition-all flex items-center justify-between ${
+                      value === opt.value 
+                        ? "bg-gp-blue text-white shadow-md shadow-gp-blue/20" 
+                        : "text-gray-600 hover:bg-gp-blue/5 hover:text-gp-blue"
+                    }`}
+                  >
+                    {opt.label}
+                    {value === opt.value && <div className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />}
+                  </button>
+                ))
+              ) : (
+                <div className="py-8 px-4 text-center">
+                   <p className="text-xs text-gray-400 font-medium">No results found</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+function ConsignmentDetailsModal({ isOpen, onClose, consignment }: { isOpen: boolean; onClose: () => void; consignment: any }) {
+  if (!isOpen || !consignment) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity" 
+        onClick={onClose}
+      />
+      
+      {/* Modal Container */}
+      <div className="relative w-full max-w-5xl bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200">
+        
+        {/* Header Ribbon */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gp-blue text-white px-6 py-4 gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
+              <Package size={20} className="text-white" />
+            </div>
+            <div>
+              <h2 className="text-lg font-bold tracking-wide">Consignment Tracking No.: {consignment.tracking}</h2>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap items-center gap-2">
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
+              <RefreshCcw size={14} /> Refresh
+            </button>
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors border border-white/20">
+              <Printer size={14} /> Print
+            </button>
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors border border-white/20">
+              <ScanBarcode size={14} /> Print Barcode
+            </button>
+            <button className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gp-orange hover:bg-orange-600 text-white text-xs font-bold transition-colors shadow-lg shadow-black/10">
+              <Edit size={14} /> Edit
+            </button>
+            <button onClick={onClose} className="ml-2 p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors">
+              <X size={18} />
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable Content View */}
+        <div className="overflow-y-auto flex-1 bg-gray-50/50 p-6 space-y-6">
+          
+          {/* Pricing Banner */}
+          <div className="bg-gradient-to-r from-orange-50 to-orange-100/50 rounded-2xl border border-orange-200 p-5 shadow-sm">
+            <div className="flex items-center justify-between border-b border-orange-200/60 pb-3 mb-3">
+              <span className="text-sm font-bold text-gray-700">Tracking No.: <span className="text-gp-blue">{consignment.tracking}</span></span>
+              <span className="text-sm font-bold text-gray-700">DATE: <span className="text-gp-blue">{consignment.date}</span></span>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+              <div>
+                <span className="block text-[10px] font-bold text-gray-500 uppercase">Price</span>
+                <span className="font-extrabold text-gp-blue">1,012.00 GHC</span>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">NHIL:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">Basket:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">GetFund:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">Fish:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">Covid:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">Carton:</span> <span className="text-xs font-bold text-gray-800">15.00 GHC</span></div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">VAT:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+                <div className="flex justify-between"><span className="text-[10px] font-bold text-gray-500 uppercase">LCA:</span> <span className="text-xs font-bold text-gray-800">0.00 GHC</span></div>
+              </div>
+            </div>
+            
+            <div className="mt-4 pt-3 border-t border-orange-200/60 flex justify-between items-center bg-white/40 px-4 py-2 rounded-xl">
+              <span className="text-xs font-bold text-gray-500 uppercase">INS: 7.20 GHC</span>
+              <div className="text-right">
+                <span className="text-xs font-bold text-gray-500 uppercase mr-2">Total Price:</span>
+                <span className="text-xl font-black text-gp-blue tracking-tight">1,034.20 GHC</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Status Strip */}
+          <div className="flex items-center gap-3 bg-red-50 text-red-600 px-5 py-3 rounded-xl border border-red-100 font-bold text-xs uppercase tracking-wide">
+            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            Current Status: FRI, 10 APR 2026: 06:11:21 PM: ITEM DISPATCHED WITH MANIFEST GP10010046P5GP TO GENERAL POST OFFICE
+          </div>
+
+          {/* Party Details (Shipper & Consignee) */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Shipper */}
+            <div className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-sm">
+              <div className="bg-gp-blue text-white px-5 py-3 font-bold flex items-center gap-2">
+                <User size={16} /> Shipper (Sender)
+              </div>
+              <div className="p-5 divide-y divide-gray-100">
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Name:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3">{consignment.shipper}</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Address:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase text-right">P.O. BOX 5090 ACCRA NORTH</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Post/Zip Code:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase">GA183</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">City/Town:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase">{consignment.sCity}</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Tel:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3">0548216116</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Origin PO:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3">General Post Office</span></div>
+              </div>
+            </div>
+
+            {/* Consignee */}
+            <div className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-sm">
+              <div className="bg-gp-blue text-white px-5 py-3 font-bold flex items-center gap-2">
+                <User size={16} /> Consignee (Receiver)
+              </div>
+              <div className="p-5 divide-y divide-gray-100">
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Name:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3">{consignment.consignee}</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Address:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase text-right">YANGYING LANGWANGSHAN XUYI</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Post/Zip Code:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase">211731</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">City/Town:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase">{consignment.rCity}</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Tel:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3">+8617849180207</span></div>
+                <div className="py-2.5 flex justify-between"><span className="text-xs font-bold text-gray-500 w-1/3">Destination:</span> <span className="text-sm font-bold text-gray-900 text-right w-2/3 uppercase">China</span></div>
+              </div>
+            </div>
+          </div>
+
+          {/* Consignment Details Block */}
+          <div className="bg-white rounded-2xl border border-black/5 overflow-hidden shadow-sm">
+            <div className="bg-gp-blue text-white px-5 py-3 font-bold flex items-center gap-2">
+              <FileText size={16} /> Foreign Parcel Consignment Details
+            </div>
+            <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12">
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Service:</span> <span className="text-sm font-bold text-gray-900 uppercase">DEMAND - FOREIGN</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Content Description:</span> <span className="text-sm font-bold text-gray-900 uppercase text-right">2PC FRUIT BEVERAGE</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Parcel Type:</span> <span className="text-sm font-bold text-gray-900 uppercase">NON DOCUMENTS</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Value of Item:</span> <span className="text-sm font-bold text-gray-900">360.00 GHC</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">No. of Items:</span> <span className="text-sm font-bold text-gray-900">1</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Item Insured:</span> <span className="text-sm font-bold text-gray-900 text-gp-blue">Yes</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Weight:</span> <span className="text-sm font-bold text-gray-900">2.43kg</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Issued By:</span> <span className="text-sm font-bold text-gray-900 uppercase">GRACE QUARTEY</span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500 invisible">Spacer</span> <span className="text-sm font-bold text-gray-900"></span></div>
+              <div className="flex justify-between items-center py-2 border-b border-gray-50"><span className="text-xs font-bold text-gray-500">Last Updated By:</span> <span className="text-sm font-bold text-gray-900">-</span></div>
+            </div>
+          </div>
+
+      </div>
+    </div>
+  </div>
+);
+}
+
+function EditConsignmentModal({ isOpen, onClose, consignment }: { isOpen: boolean; onClose: () => void; consignment: any }) {
+  const [formData, setFormData] = useState<any>(null);
+
+  useEffect(() => {
+    if (consignment) {
+      setFormData({ 
+        shipper: consignment.shipper || '',
+        sAddress: 'P.O. BOX 5090 ACCRA NORTH',
+        sZip: 'GA183',
+        sCity: consignment.sCity || '',
+        sTel: '0548216116',
+        originPO: 'General Post Office',
+        consignee: consignment.consignee || '',
+        rAddress: 'YANGYING LANGWANGSHAN MUDIAN XUYI COUNTY JIANGSU',
+        rZip: '211731',
+        rCity: consignment.rCity || '',
+        rTel: '+8617849180207',
+        destination: 'China',
+        service: 'DEMAND - FOREIGN',
+        parcelType: 'Non Documents',
+        items: 1,
+        weight: '2.43',
+        value: '360',
+        content: '2PC FRUIT BEVERAGE',
+        insurance: 'Yes',
+        tracking: consignment.tracking,
+        date: consignment.date
+      });
+    }
+  }, [consignment]);
+
+  const handleChange = (e: any) => {
+    const { name, value } = e.target;
+    setFormData((prev: any) => prev ? ({ ...prev, [name]: value }) : null);
+  };
+
+  if (!isOpen || !consignment || !formData) return null;
+
+  const inputCls = "w-full px-3 py-2 rounded-lg border border-black/10 bg-black/[0.02] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all";
+  const labelCls = "block text-[10px] font-bold uppercase tracking-wider text-gray-500 mb-1 ml-0.5";
+  const selectCls = "w-full px-3 py-2 rounded-lg border border-black/10 bg-black/[0.02] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-gray-700 appearance-none";
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-md transition-opacity" onClick={onClose} />
+      
+      {/* Modal Container */}
+      <div className="relative w-full max-w-5xl bg-white rounded-[32px] shadow-2xl overflow-hidden flex flex-col max-h-[95vh] animate-in fade-in zoom-in-95 duration-200 border border-white/20">
+        
+        {/* Header Ribbon */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-gp-blue text-white px-8 py-5 gap-4 shadow-lg z-10">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/10">
+              <Pencil size={24} className="text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold tracking-tight">Edit Consignment</h2>
+              <p className="text-xs text-white/60 font-medium">Modify tracking details and pricing</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3">
+             <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/10"><RefreshCcw size={14} /> Refresh</button>
+             <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/10"><Printer size={14} /> Print</button>
+             <button className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-all border border-white/10"><Search size={14} /> Find Consignment</button>
+             <button onClick={onClose} className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-all"><X size={20} /></button>
+          </div>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto flex-1 bg-gray-50/30">
+          <div className="p-8 space-y-8">
+            
+            {/* Pricing Summary Banner (Mockup Style) */}
+            <div className="bg-gradient-to-r from-orange-50 to-orange-100/30 rounded-3xl border border-orange-200/50 p-6 shadow-sm overflow-hidden relative">
+              <div className="flex flex-wrap items-center justify-between gap-6 relative z-10">
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest">Tracking No:</span>
+                  <p className="text-lg font-black text-gp-blue leading-none">{formData.tracking}</p>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest">Price Breakdown:</span>
+                  <div className="flex gap-4">
+                    <p className="text-sm font-bold text-gray-600">PRICE: <span className="text-gp-blue">1,019.20 GHS</span></p>
+                    <p className="text-sm font-bold text-gray-600">INS: <span className="text-gp-blue">7.20 GHS</span></p>
+                    <p className="text-sm font-bold text-gray-600">VAT&NHIL: <span className="text-gp-blue">0.00 GHS</span></p>
+                  </div>
+                </div>
+                <div className="space-y-1 text-right">
+                  <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest">Total Price:</span>
+                  <p className="text-2xl font-black text-gp-blue leading-none">1,026.40 GHS</p>
+                </div>
+                <div className="space-y-1 text-right border-l border-orange-200 pl-6 ml-2">
+                   <span className="text-[10px] font-black text-orange-400 uppercase tracking-widest">Date:</span>
+                   <p className="text-sm font-bold text-gray-900">{formData.date}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Shipper Section */}
+              <div className="bg-white rounded-[24px] border border-black/5 shadow-sm overflow-hidden">
+                <div className="bg-gp-blue px-6 py-4 flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center"><User size={16} className="text-white" /></div>
+                   <h3 className="text-sm font-bold text-white uppercase tracking-wider">Shipper (Sender)</h3>
+                </div>
+                <div className="p-6 space-y-4">
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Name:</label>
+                      <input type="text" name="shipper" value={formData.shipper} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-start gap-4">
+                      <label className={labelCls + " mt-2"}>Location:</label>
+                      <textarea name="sAddress" value={formData.sAddress} onChange={handleChange} className={inputCls + " h-20 resize-none font-medium"} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Zip Code:</label>
+                      <input type="text" name="sZip" value={formData.sZip} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>City/Town:</label>
+                      <input type="text" name="sCity" value={formData.sCity} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Tel:</label>
+                      <input type="text" name="sTel" value={formData.sTel} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Origin PO:</label>
+                      <div className="relative">
+                        <select name="originPO" value={formData.originPO} onChange={handleChange} className={selectCls}>
+                          <option>General Post Office</option>
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                      </div>
+                   </div>
+                </div>
+              </div>
+
+              {/* Consignee Section */}
+              <div className="bg-white rounded-[24px] border border-black/5 shadow-sm overflow-hidden">
+                <div className="bg-gp-blue px-6 py-4 flex items-center gap-3">
+                   <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center"><User size={16} className="text-white" /></div>
+                   <h3 className="text-sm font-bold text-white uppercase tracking-wider">Consignee (Recipient)</h3>
+                </div>
+                <div className="p-6 space-y-4">
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Name:</label>
+                      <input type="text" name="consignee" value={formData.consignee} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-start gap-4">
+                      <label className={labelCls + " mt-2"}>Location:</label>
+                      <textarea name="rAddress" value={formData.rAddress} onChange={handleChange} className={inputCls + " h-20 resize-none font-medium"} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Zip Code:</label>
+                      <input type="text" name="rZip" value={formData.rZip} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>City/Town:</label>
+                      <input type="text" name="rCity" value={formData.rCity} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Tel:</label>
+                      <input type="text" name="rTel" value={formData.rTel} onChange={handleChange} className={inputCls} />
+                   </div>
+                   <div className="grid grid-cols-[100px_1fr] items-center gap-4">
+                      <label className={labelCls}>Destination:</label>
+                      <div className="relative">
+                        <select name="destination" value={formData.destination} onChange={handleChange} className={selectCls}>
+                          <option>China</option>
+                          <option>United States</option>
+                        </select>
+                        <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                      </div>
+                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Consignment Details Block */}
+            <div className="bg-white rounded-[24px] border border-black/5 shadow-sm overflow-hidden mb-4">
+               <div className="bg-gp-blue px-6 py-4 flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center"><FileText size={16} className="text-white" /></div>
+                  <h3 className="text-sm font-bold text-white uppercase tracking-wider">Foreign Parcel Consignment Details</h3>
+               </div>
+               <div className="p-8 grid grid-cols-1 md:grid-cols-2 gap-12">
+                  <div className="space-y-5">
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>Service:</label>
+                        <div className="relative">
+                          <select name="service" className={selectCls} value={formData.service} onChange={handleChange}>
+                            <option>DEMAND - FOREIGN</option>
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>Parcel Type:</label>
+                        <div className="relative">
+                          <select name="parcelType" className={selectCls} value={formData.parcelType} onChange={handleChange}>
+                            <option>Non Documents</option>
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>No. of Items:</label>
+                        <input type="number" name="items" value={formData.items} onChange={handleChange} className={inputCls} />
+                     </div>
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>Weight:</label>
+                        <div className="flex items-center gap-2">
+                           <input type="text" name="weight" value={formData.weight} onChange={handleChange} className={inputCls} />
+                           <span className="text-xs font-bold text-gray-400 px-3 py-2 bg-gray-100 rounded-lg border border-black/5">kg</span>
+                        </div>
+                     </div>
+                  </div>
+
+                  <div className="space-y-5">
+                    <div className="grid grid-cols-[140px_1fr] items-start gap-4">
+                        <label className={labelCls + " mt-2"}>Description:</label>
+                        <textarea name="content" className={inputCls + " h-20 resize-none"} value={formData.content} onChange={handleChange} />
+                     </div>
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>Value of Item:</label>
+                        <div className="flex items-center gap-2">
+                           <input type="text" name="value" value={formData.value} onChange={handleChange} className={inputCls} />
+                           <span className="text-xs font-bold text-gray-400 px-3 py-2 bg-gray-100 rounded-lg border border-black/5">GHC</span>
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-[140px_1fr] items-center gap-4">
+                        <label className={labelCls}>Add Insurance:</label>
+                        <div className="relative">
+                          <select name="insurance" className={selectCls} value={formData.insurance} onChange={handleChange}>
+                            <option>Yes</option>
+                            <option>No</option>
+                          </select>
+                          <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" size={14} />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+          </div>
+        </div>
+
+      {/* Footer Actions */}
+        <div className="p-6 bg-gray-100/50 border-t border-black/5 flex justify-center">
+           <button 
+             onClick={onClose}
+             className="px-12 py-4 bg-gp-orange text-white rounded-2xl font-bold text-xs uppercase tracking-widest shadow-xl shadow-gp-orange/20 hover:bg-opacity-90 transition-all active:scale-[0.98] border border-white/5"
+           >
+             Update Consignment
+           </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewForeignParcels({ user }: { user: any }) {
+  const [selectedConsignment, setSelectedConsignment] = useState<any>(null);
+  const [editingConsignment, setEditingConsignment] = useState<any>(null);
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const branchOptions = [
+    { value: "", label: "All Branches" },
+    { value: "general", label: "GPO Accra" },
+    { value: "accra-north", label: "Accra North" },
+    { value: "kumasi", label: "Kumasi Central" },
+    { value: "takoradi", label: "Takoradi Harbor" },
+  ];
+
+  const userOptions = [
+    { value: "", label: "All Users" },
+    { value: "user1", label: "John Doe" },
+    { value: "user2", label: "Jane Smith" },
+    { value: "user3", label: "Robert Mensah" },
+    { value: "user4", label: "Sarah Owusu" },
+  ];
+
+  const mockData = [
+    { id: 1, tracking: 'CG066454599GH', date: '10th Apr 2026', shipper: 'SHANGTON AND DIVINE', consignee: 'TONY YAO', sCity: 'ACCRA', rCity: 'XUYI, JIANGSU' },
+    { id: 2, tracking: 'CG066453695GH', date: '10th Apr 2026', shipper: 'HARRIET SIMONS', consignee: 'JACOB BENNETT', sCity: 'ACCRA', rCity: 'HAYES,MIDDLESEX' },
+    { id: 3, tracking: 'CG066452615GH', date: '10th Apr 2026', shipper: 'MILLICENT PAPPOE', consignee: 'JACQUELYN SACKIE-MENSAH', sCity: 'ACCRA', rCity: 'CREST HILL,IL' },
+    { id: 4, tracking: 'CG066452425GH', date: '10th Apr 2026', shipper: 'DORIS WIAFE-ANNOR', consignee: 'SARAH RICHARDS', sCity: 'ACCRA', rCity: 'BETHANY, OKLAHOMA' },
+    { id: 5, tracking: 'CG066451270GH', date: '10th Apr 2026', shipper: 'PRINCE NYARKO', consignee: 'WINIFRED GYAMEA', sCity: 'ACCRA', rCity: 'ABERDEEN,MD' },
+    { id: 6, tracking: 'CG066451204GH', date: '10th Apr 2026', shipper: 'MARJORIE A. DJOKOTEO', consignee: 'MARIE FOFANAH', sCity: 'ACCRA', rCity: 'RICHMOND BC' },
+    { id: 7, tracking: 'CG066451133GH', date: '10th Apr 2026', shipper: 'OWUSU KWABENA DAMOAH', consignee: 'GLADYS PEPRAH', sCity: 'ACCRA', rCity: 'VIENNA, VA SOUTH WEST' },
+    { id: 8, tracking: 'CG066449449GH', date: '10th Apr 2026', shipper: 'SAMUEL A. KELLSON', consignee: 'ALFRED NYAMPONG', sCity: 'ACCRA', rCity: 'NORTHWEST EDMONTON,AB' },
+    { id: 9, tracking: 'CG066449214GH', date: '10th Apr 2026', shipper: 'ERIC Y. OTOPAH', consignee: 'AFIA ATAA', sCity: 'ACCRA', rCity: 'HARLOW-ESSEX' },
+    { id: 10, tracking: 'CG066448695GH', date: '10th Apr 2026', shipper: 'RICHARD AMANING', consignee: 'TAI DIXON', sCity: 'ACCRA', rCity: 'BOWIE, MD' },
+  ];
+
+  return (
+    <div className="space-y-6">
+      {/* Page Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center">
+              <Package size={20} className="text-gp-blue" />
+            </div>
+            Foreign Parcels
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">List of all foreign parcel consignments</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all">
+            <RefreshCcw size={15} />
+            Refresh
+          </button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all">
+            <Plus size={15} />
+            New Parcel
+          </button>
+        </div>
+      </div>
+
+      {/* Table Card */}
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        {/* Search, Filters & Reports Bar */}
+        <div className="flex flex-col gap-5 p-6 border-b border-black/5 bg-gradient-to-r from-gp-blue/[0.03] to-transparent">
+          <div className="flex flex-col xl:flex-row items-center gap-4 w-full">
+            <div className="relative flex-1 w-full xl:w-auto">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gp-blue/40" size={18} />
+              <input
+                type="text"
+                placeholder="Search by tracking no, shipper, consignee..."
+                className="w-full h-[46px] pl-11 pr-4 py-3 rounded-2xl border border-black/5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm font-medium text-gray-700 transition-all placeholder:text-gray-400"
+              />
+            </div>
+            
+            <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full xl:w-auto">
+              <div className="flex items-center gap-3 w-full md:w-auto bg-white border border-black/5 rounded-2xl shadow-sm px-4 h-[46px]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">From:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date From" />
+                </div>
+                <div className="w-px h-6 bg-black/5 hidden md:block" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">To:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date To" />
+                </div>
+              </div>
+              
+              <SearchableSelect 
+                options={branchOptions} 
+                value={selectedBranch} 
+                onChange={setSelectedBranch} 
+                placeholder="All Branches" 
+                icon={MapPin} 
+              />
+              
+              <SearchableSelect 
+                options={userOptions} 
+                value={selectedUser} 
+                onChange={setSelectedUser} 
+                placeholder="All Users" 
+                icon={User} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full pt-1">
+            <div className="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-sm inline-flex items-center gap-2">
+              Viewing <span className="font-bold text-gp-blue bg-gp-blue/10 px-2 py-0.5 rounded-md">1–10</span> of <span className="font-bold text-gray-900">5000</span> records
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue text-sm font-bold transition-all active:scale-95 group">
+                <Printer size={16} className="group-hover:scale-110 transition-transform" /> Print Report
+              </button>
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all active:scale-95 group">
+                <Download size={16} className="group-hover:translate-y-0.5 transition-transform" /> Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead>
+              <tr className="bg-gp-blue/[0.04] border-b border-black/5">
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">#</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Date</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue">Tracking No.</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Shipper</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Consignee</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Sender's City</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Receiver's City</th>
+                <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/[0.04]">
+              {mockData.map((item, idx) => (
+                <tr key={idx} onClick={() => setSelectedConsignment(item)} className="hover:bg-gp-blue/[0.02] transition-colors group cursor-pointer">
+                  <td className="py-4 px-6 text-gray-400 text-xs font-bold">{item.id}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.date}</td>
+                  <td className="py-4 px-6">
+                    <span className="font-bold text-gp-blue text-sm tracking-wide">{item.tracking}</span>
+                  </td>
+                  <td className="py-4 px-6 font-semibold text-gray-800 text-sm">{item.shipper}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.consignee}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.sCity}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.rCity}</td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setSelectedConsignment(item); }}
+                        className="p-2 bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue rounded-xl transition-all hover:scale-110"
+                        title="View Details"
+                      >
+                        <Eye size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setEditingConsignment(item); }}
+                        className="p-2 bg-gp-orange/10 hover:bg-gp-orange/20 text-gp-orange rounded-xl transition-all hover:scale-110"
+                        title="Edit Consignment"
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); }}
+                        className="p-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all hover:scale-110"
+                        title="Delete record"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex items-center justify-between px-6 py-4 border-t border-black/5">
+          <div className="text-sm text-gray-500">
+            Showing <span className="font-bold text-gray-900">1</span> to <span className="font-bold text-gray-900">10</span> of <span className="font-bold text-gray-900">5000</span> results
+          </div>
+          <div className="flex gap-2">
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">
+              <ChevronLeft size={16} /> Previous
+            </button>
+            <button className="px-4 py-2 bg-gp-blue text-white rounded-xl text-sm font-bold shadow-sm hover:bg-opacity-90 transition-all">1</button>
+            <button className="px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">2</button>
+            <button className="px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">3</button>
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">
+              Next <ChevronRight size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+      <ConsignmentDetailsModal isOpen={!!selectedConsignment} onClose={() => setSelectedConsignment(null)} consignment={selectedConsignment} />
+      <EditConsignmentModal isOpen={!!editingConsignment} onClose={() => setEditingConsignment(null)} consignment={editingConsignment} />
+    </div>
+  );
+}
+
+// ─── EXPRESS MAIL SERVICE (EMS) PAGES ───────────────────────────────────────
+
+function AddForeignEMS({ user }: { user: any }) {
+  const inputCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all uppercase";
+  const labelCls = "block text-[10px] font-bold uppercase tracking-wider text-gp-blue/50 mb-1.5 ml-0.5";
+  const selectCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-gray-700";
+
+  const [originPO, setOriginPO] = React.useState('');
+  const [hsCodesData, setHsCodesData] = React.useState<{ code: string, desc: string }[]>([]);
+  const [items, setItems] = React.useState([{ id: 1, description: '', hsCode: '' }]);
+
+  React.useEffect(() => {
+    fetch('/data/hs-codes.json').then(res => res.json()).then(data => setHsCodesData(data)).catch(() => {});
+  }, []);
+
+  const descOptions = hsCodesData.map((d: any) => ({ label: d.desc, sub: d.code, original: d }));
+  const hsOptions = Array.from(new Set(hsCodesData.map((d: any) => d.code))).map(code => {
+    const match = hsCodesData.find((d: any) => d.code === code);
+    return { label: code as string, sub: match?.desc || '', original: match };
+  });
+  const addItem = () => setItems(prev => [...prev, { id: Date.now(), description: '', hsCode: '' }]);
+  const removeItem = (id: number) => setItems(prev => prev.filter(it => it.id !== id));
+  const updateItem = (id: number, field: string, value: string) =>
+    setItems(prev => prev.map(it => it.id === id ? { ...it, [field]: value } : it));
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center"><Zap size={20} className="text-gp-blue" /></div>
+            New Foreign EMS
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">Create a new Express Mail Service consignment entry</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all"><RefreshCcw size={15} /> Reset Form</button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gp-blue/20 hover:bg-gp-blue/5 text-sm font-semibold text-gp-blue transition-all"><Search size={15} /> Find Consignment</button>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Globe size={16} className="text-white" /></div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Shipper (Sender)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div><label className={labelCls}>Name</label><input type="text" placeholder="Full name" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Digital Address</label><input type="text" placeholder="e.g. GA-123-4567" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Location Address</label><textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>Post/Zip Code</label><input type="text" placeholder="Zip code" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>State/Region</label><input type="text" placeholder="Region" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>City/Town</label><input type="text" placeholder="City" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>Tel</label><input type="text" placeholder="Phone number" className={inputCls} /></div>
+            </div>
+            <div>
+              <label className={labelCls}>Origin (Post Office)</label>
+              <SearchableSelect options={POST_OFFICE_OPTIONS} value={originPO} onChange={setOriginPO} placeholder="Search post office..." className="w-full" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-orange">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Zap size={16} className="text-white" /></div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Consignee (Recipient)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div><label className={labelCls}>Name</label><input type="text" placeholder="Full name" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Digital Address</label><input type="text" placeholder="Digital address" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Location Address</label><textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>Post/Zip Code</label><input type="text" placeholder="Zip code" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>State/Region</label><input type="text" placeholder="Region" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>City/Town</label><input type="text" placeholder="City" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>Tel</label><input type="text" placeholder="Phone number" className={inputCls} /></div>
+            </div>
+            <div><label className={labelCls}>Destination Country</label>
+              <div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold flex items-center gap-2">
+                <Globe size={14} className="text-gp-blue" /> United States of America (US)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Zap size={16} className="text-white" /></div>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Foreign EMS Consignment Details</h3>
+        </div>
+        <div className="p-6 space-y-8">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2"><Calculator size={15} className="text-gp-blue" />EMS Items <span className="text-[10px] font-bold text-gp-blue/50 uppercase tracking-wider ml-1">(for duty cost)</span></h4>
+                <div className="flex flex-wrap items-center gap-2 mt-2 ml-5">
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Currency: GHS</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Origin: GH</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Destination — auto-linked from Consignee</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Tracking No. — auto-generated on save</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Shipping Cost — auto-calculated</span>
+                </div>
+              </div>
+              <button onClick={addItem} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gp-blue/10 text-gp-blue text-xs font-bold hover:bg-gp-blue/20 transition-all"><Plus size={13} /> Add Item</button>
+            </div>
+            <div className="space-y-3">
+              {items.map((item, idx) => (
+                <div key={item.id} className="bg-gp-blue/[0.02] rounded-2xl border border-gp-blue/5 p-4 space-y-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gp-blue/50">Item {idx + 1}</span>
+                    {items.length > 1 && (
+                      <button onClick={() => removeItem(item.id)} className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 transition-colors px-3 py-1.5 rounded-xl hover:bg-red-50">
+                        <Trash2 size={13} /> Remove
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <AutocompleteInput label="Description" placeholder="e.g. Documents" value={item.description}
+                        onChange={(val) => updateItem(item.id, 'description', val)}
+                        onSelect={(val, original) => { setItems(prev => prev.map(it => it.id === item.id ? { ...it, description: val, hsCode: original?.code || it.hsCode } : it)); }}
+                        options={descOptions} />
+                    </div>
+                    <div>
+                      <AutocompleteInput label="HS Code" placeholder="e.g. 4901.10" value={item.hsCode}
+                        onChange={(val) => updateItem(item.id, 'hsCode', val)}
+                        onSelect={(val, original) => { setItems(prev => prev.map(it => it.id === item.id ? { ...it, hsCode: val, description: original?.desc || it.description } : it)); }}
+                        options={hsOptions} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><label className={labelCls}>Unit Price (GHS)</label><input type="number" placeholder="0.00" className={inputCls} /></div>
+                    <div><label className={labelCls}>Quantity</label><input type="number" placeholder="1" className={inputCls} /></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-black/5"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div><label className={labelCls}>Service</label><div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold">DEMAND - FOREIGN</div></div>
+              <div><label className={labelCls}>Parcel Type</label><select className={selectCls}><option value="">-Select Option-</option><option>Document</option><option>Non-Documents</option><option>Merchandise</option></select></div>
+              <div><label className={labelCls}>No. of Items</label><select className={selectCls}><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+              <div><label className={labelCls}>Weight</label><div className="flex items-center gap-3"><input type="number" placeholder="0.00" className={`${inputCls} flex-1`} /><span className="text-sm font-bold text-gray-600 bg-black/5 px-4 py-2.5 rounded-xl border border-black/10">kg</span></div></div>
+            </div>
+            <div className="space-y-4">
+              <div><label className={labelCls}>Content Description / Manufacturing Country</label><textarea placeholder="Describe contents and country of manufacture" className={`${inputCls} h-24 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+              <div><label className={labelCls}>Add Insurance</label><select className={selectCls}><option>No</option><option>Yes</option></select></div>
+              <div>
+                <label className={labelCls}>Carton Type &amp; Quantity</label>
+                <div className="flex items-center gap-2">
+                  <select className={`${selectCls} flex-1`}>
+                    <option value="">Select Carton Type</option>
+                    <option>EMS Cartons Extra Large</option>
+                    <option>EMS Cartons Large</option>
+                    <option>EMS Cartons Medium</option>
+                    <option>EMS Cartons Small</option>
+                    <option>EMS Cartons Very Small</option>
+                    <option>Parcel Cartons Extra Large</option>
+                    <option>Parcel Cartons Extra Small</option>
+                    <option>Parcel Cartons Large</option>
+                    <option>Parcel Cartons Medium</option>
+                    <option>Parcel Cartons Small</option>
+                  </select>
+                  <input type="number" placeholder="Qty" className="w-20 px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-center" min="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-black/5 flex items-center justify-between gap-4">
+            <TotalAmountSummaryBox total={0} duty={0} carton={0} shipping={0} />
+            <button className="flex items-center justify-center gap-2 w-[280px] py-3.5 bg-gp-orange text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 active:scale-[0.98] transition-all"><Plus size={18} /> Create EMS Consignment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewForeignEMS({ user }: { user: any }) {
+  const [selectedConsignment, setSelectedConsignment] = useState<any>(null);
+  const [editingConsignment, setEditingConsignment] = useState<any>(null);
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const branchOptions = [
+    { value: "", label: "All Branches" },
+    { value: "general", label: "GPO Accra" },
+    { value: "accra-north", label: "Accra North" },
+    { value: "kumasi", label: "Kumasi Central" },
+    { value: "takoradi", label: "Takoradi Harbor" },
+  ];
+
+  const userOptions = [
+    { value: "", label: "All Users" },
+    { value: "user1", label: "John Doe" },
+    { value: "user2", label: "Jane Smith" },
+    { value: "user3", label: "Robert Mensah" },
+    { value: "user4", label: "Sarah Owusu" },
+  ];
+
+  const mockData = [
+    { id: 1, tracking: 'EE066454599GH', date: '10th Apr 2026', shipper: 'KWAME ASANTE', consignee: 'JOHN MENSAH', sCity: 'ACCRA', rCity: 'NEW YORK, NY' },
+    { id: 2, tracking: 'EE066453695GH', date: '10th Apr 2026', shipper: 'ABENA BOATENG', consignee: 'CLAIRE ADAMS', sCity: 'ACCRA', rCity: 'LONDON, UK' },
+    { id: 3, tracking: 'EE066452615GH', date: '10th Apr 2026', shipper: 'KOFI AGYEMANG', consignee: 'PETER NKRUMAH', sCity: 'ACCRA', rCity: 'TORONTO, ON' },
+    { id: 4, tracking: 'EE066452425GH', date: '10th Apr 2026', shipper: 'AKOSUA FRIMPONG', consignee: 'LINDA OSEI', sCity: 'ACCRA', rCity: 'SYDNEY, NSW' },
+    { id: 5, tracking: 'EE066451270GH', date: '10th Apr 2026', shipper: 'YEBOAH AMPONSAH', consignee: 'GRACE APPIAH', sCity: 'ACCRA', rCity: 'BERLIN, DE' },
+  ];
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center"><Zap size={20} className="text-gp-blue" /></div>
+            Foreign EMS Consignments
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">List of all Express Mail Service consignments</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all"><RefreshCcw size={15} /> Refresh</button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all"><Plus size={15} /> New EMS</button>
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex flex-col gap-5 p-6 border-b border-black/5 bg-gradient-to-r from-gp-blue/[0.03] to-transparent">
+          <div className="flex flex-col xl:flex-row items-center gap-4 w-full">
+            <div className="relative flex-1 w-full xl:w-auto">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gp-blue/40" size={18} />
+              <input
+                type="text"
+                placeholder="Search by tracking no, shipper, consignee..."
+                className="w-full h-[46px] pl-11 pr-4 py-3 rounded-2xl border border-black/5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm font-medium text-gray-700 transition-all placeholder:text-gray-400"
+              />
+            </div>
+            
+            <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full xl:w-auto">
+              <div className="flex items-center gap-3 w-full md:w-auto bg-white border border-black/5 rounded-2xl shadow-sm px-4 h-[46px]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">From:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date From" />
+                </div>
+                <div className="w-px h-6 bg-black/5 hidden md:block" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">To:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date To" />
+                </div>
+              </div>
+              
+              <SearchableSelect 
+                options={branchOptions} 
+                value={selectedBranch} 
+                onChange={setSelectedBranch} 
+                placeholder="All Branches" 
+                icon={MapPin} 
+              />
+              
+              <SearchableSelect 
+                options={userOptions} 
+                value={selectedUser} 
+                onChange={setSelectedUser} 
+                placeholder="All Users" 
+                icon={User} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full pt-1">
+            <div className="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-sm inline-flex items-center gap-2">
+              Viewing <span className="font-bold text-gp-blue bg-gp-blue/10 px-2 py-0.5 rounded-md">1–5</span> of <span className="font-bold text-gray-900">5000</span> records
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue text-sm font-bold transition-all active:scale-95 group">
+                <Printer size={16} className="group-hover:scale-110 transition-transform" /> Print Report
+              </button>
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all active:scale-95 group">
+                <Download size={16} className="group-hover:translate-y-0.5 transition-transform" /> Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead>
+              <tr className="bg-gp-blue/[0.04] border-b border-black/5">
+                {['#','Date','Tracking No.','Shipper','Consignee',"Sender's City","Receiver's City",'Action'].map((h, i) => (
+                  <th key={i} className={`py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider ${i === 2 ? 'text-gp-blue' : 'text-gp-blue/60'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/[0.04]">
+              {mockData.map((item, idx) => (
+                <tr key={idx} onClick={() => setSelectedConsignment(item)} className="hover:bg-gp-blue/[0.02] transition-colors group cursor-pointer">
+                  <td className="py-4 px-6 text-gray-400 text-xs font-bold">{item.id}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.date}</td>
+                  <td className="py-4 px-6"><span className="font-bold text-gp-blue text-sm tracking-wide">{item.tracking}</span></td>
+                  <td className="py-4 px-6 font-semibold text-gray-800 text-sm">{item.shipper}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.consignee}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.sCity}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.rCity}</td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setSelectedConsignment(item); }}
+                        className="p-2 bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue rounded-xl transition-all hover:scale-110"
+                        title="View Details"
+                      >
+                        <Eye size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setEditingConsignment(item); }}
+                        className="p-2 bg-gp-orange/10 hover:bg-gp-orange/20 text-gp-orange rounded-xl transition-all hover:scale-110"
+                        title="Edit Consignment"
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); }}
+                        className="p-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all hover:scale-110"
+                        title="Delete record"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-center justify-between px-6 py-4 border-t border-black/5">
+          <div className="text-sm text-gray-500">Showing <span className="font-bold text-gray-900">1</span> to <span className="font-bold text-gray-900">5</span> of <span className="font-bold text-gray-900">5000</span> results</div>
+          <div className="flex gap-2">
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600"><ChevronLeft size={16} /> Previous</button>
+            <button className="px-4 py-2 bg-gp-blue text-white rounded-xl text-sm font-bold shadow-sm">1</button>
+            <button className="px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">2</button>
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">Next <ChevronRight size={16} /></button>
+          </div>
+        </div>
+      </div>
+      <ConsignmentDetailsModal isOpen={!!selectedConsignment} onClose={() => setSelectedConsignment(null)} consignment={selectedConsignment} />
+      <EditConsignmentModal isOpen={!!editingConsignment} onClose={() => setEditingConsignment(null)} consignment={editingConsignment} />
+    </div>
+  );
+}
+
+// ─── LETTERS PAGES ───────────────────────────────────────────────────────────
+
+function AddForeignLetter({ user }: { user: any }) {
+  const inputCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all uppercase";
+  const labelCls = "block text-[10px] font-bold uppercase tracking-wider text-gp-blue/50 mb-1.5 ml-0.5";
+  const selectCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-gray-700";
+
+  const [originPO, setOriginPO] = React.useState('');
+  const [hsCodesData, setHsCodesData] = React.useState<{ code: string, desc: string }[]>([]);
+  const [items, setItems] = React.useState([{ id: 1, description: '', hsCode: '' }]);
+
+  React.useEffect(() => {
+    fetch('/data/hs-codes.json').then(res => res.json()).then(data => setHsCodesData(data)).catch(() => {});
+  }, []);
+
+  const descOptions = hsCodesData.map((d: any) => ({ label: d.desc, sub: d.code, original: d }));
+  const hsOptions = Array.from(new Set(hsCodesData.map((d: any) => d.code))).map(code => {
+    const match = hsCodesData.find((d: any) => d.code === code);
+    return { label: code as string, sub: match?.desc || '', original: match };
+  });
+  const addItem = () => setItems(prev => [...prev, { id: Date.now(), description: '', hsCode: '' }]);
+  const removeItem = (id: number) => setItems(prev => prev.filter(it => it.id !== id));
+  const updateItem = (id: number, field: string, value: string) =>
+    setItems(prev => prev.map(it => it.id === id ? { ...it, [field]: value } : it));
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center"><Mail size={20} className="text-gp-blue" /></div>
+            New Foreign Letter
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">Create a new foreign letter consignment entry</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all"><RefreshCcw size={15} /> Reset Form</button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-gp-blue/20 hover:bg-gp-blue/5 text-sm font-semibold text-gp-blue transition-all"><Search size={15} /> Find Consignment</button>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Globe size={16} className="text-white" /></div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Shipper (Sender)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div><label className={labelCls}>Name</label><input type="text" placeholder="Full name" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Digital Address</label><input type="text" placeholder="e.g. GA-123-4567" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Location Address</label><textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>Post/Zip Code</label><input type="text" placeholder="Zip code" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>State/Region</label><input type="text" placeholder="Region" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>City/Town</label><input type="text" placeholder="City" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>Tel</label><input type="text" placeholder="Phone number" className={inputCls} /></div>
+            </div>
+            <div>
+              <label className={labelCls}>Origin (Post Office)</label>
+              <SearchableSelect options={POST_OFFICE_OPTIONS} value={originPO} onChange={setOriginPO} placeholder="Search post office..." className="w-full" />
+            </div>
+          </div>
+        </div>
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          <div className="flex items-center gap-3 px-6 py-4 bg-gp-orange">
+            <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Mail size={16} className="text-white" /></div>
+            <h3 className="font-bold text-white text-sm uppercase tracking-wide">Consignee (Recipient)</h3>
+          </div>
+          <div className="p-6 space-y-4">
+            <div><label className={labelCls}>Name</label><input type="text" placeholder="Full name" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Digital Address</label><input type="text" placeholder="Digital address" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            <div><label className={labelCls}>Location Address</label><textarea placeholder="Full physical address" className={`${inputCls} h-20 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>Post/Zip Code</label><input type="text" placeholder="Zip code" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>State/Region</label><input type="text" placeholder="Region" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
+              <div><label className={labelCls}>City/Town</label><input type="text" placeholder="City" className={inputCls} onChange={e => e.target.value = e.target.value.toUpperCase()} /></div>
+              <div><label className={labelCls}>Tel</label><input type="text" placeholder="Phone number" className={inputCls} /></div>
+            </div>
+            <div><label className={labelCls}>Destination Country</label>
+              <div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold flex items-center gap-2">
+                <Globe size={14} className="text-gp-blue" /> United States of America (US)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Mail size={16} className="text-white" /></div>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Foreign Letter Consignment Details</h3>
+        </div>
+        <div className="p-6 space-y-8">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-bold text-gray-800 flex items-center gap-2"><Calculator size={15} className="text-gp-blue" />Letter Items <span className="text-[10px] font-bold text-gp-blue/50 uppercase tracking-wider ml-1">(for duty cost)</span></h4>
+                <div className="flex flex-wrap items-center gap-2 mt-2 ml-5">
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Currency: GHS</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-blue/10 text-gp-blue">Origin: GH</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Destination — auto-linked from Consignee</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Tracking No. — auto-generated on save</span>
+                  <span className="text-[10px] font-bold px-2 py-1 rounded-lg bg-gp-orange/10 text-gp-orange">🔗 Shipping Cost — auto-calculated</span>
+                </div>
+              </div>
+              <button onClick={addItem} className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gp-blue/10 text-gp-blue text-xs font-bold hover:bg-gp-blue/20 transition-all"><Plus size={13} /> Add Item</button>
+            </div>
+            <div className="space-y-3">
+              {items.map((item, idx) => (
+                <div key={item.id} className="bg-gp-blue/[0.02] rounded-2xl border border-gp-blue/5 p-4 space-y-3">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-gp-blue/50">Item {idx + 1}</span>
+                    {items.length > 1 && (
+                      <button onClick={() => removeItem(item.id)} className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 transition-colors px-3 py-1.5 rounded-xl hover:bg-red-50">
+                        <Trash2 size={13} /> Remove
+                      </button>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div>
+                      <AutocompleteInput label="Description" placeholder="e.g. Personal Letter" value={item.description}
+                        onChange={(val) => updateItem(item.id, 'description', val)}
+                        onSelect={(val, original) => { setItems(prev => prev.map(it => it.id === item.id ? { ...it, description: val, hsCode: original?.code || it.hsCode } : it)); }}
+                        options={descOptions} />
+                    </div>
+                    <div>
+                      <AutocompleteInput label="HS Code" placeholder="e.g. 4901.10" value={item.hsCode}
+                        onChange={(val) => updateItem(item.id, 'hsCode', val)}
+                        onSelect={(val, original) => { setItems(prev => prev.map(it => it.id === item.id ? { ...it, hsCode: val, description: original?.desc || it.description } : it)); }}
+                        options={hsOptions} />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div><label className={labelCls}>Unit Price (GHS)</label><input type="number" placeholder="0.00" className={inputCls} /></div>
+                    <div><label className={labelCls}>Quantity</label><input type="number" placeholder="1" className={inputCls} /></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="border-t border-black/5"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div><label className={labelCls}>Service</label><select className={selectCls}><option value="">-Select Option-</option><option>DEMAND-Bulk Registered</option><option>DEMAND-Registered</option><option>DEMAND-Tracked</option><option>DEMAND-Goods/Merchandise</option></select></div>
+              <div><label className={labelCls}>Parcel Type</label><select className={selectCls}><option value="">-Select Option-</option><option>Document</option><option>Non-Documents</option><option>Merchandise</option></select></div>
+              <div><label className={labelCls}>No. of Items</label><select className={selectCls}><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+              <div><label className={labelCls}>Weight</label><div className="flex items-center gap-3"><input type="number" placeholder="0.00" className={`${inputCls} flex-1`} /><span className="text-sm font-bold text-gray-600 bg-black/5 px-4 py-2.5 rounded-xl border border-black/10">kg</span></div></div>
+            </div>
+            <div className="space-y-4">
+              <div><label className={labelCls}>Content Description / Manufacturing Country</label><textarea placeholder="Describe letter contents" className={`${inputCls} h-24 resize-none`} onChange={e => e.target.value = e.target.value.toUpperCase()}></textarea></div>
+              <div><label className={labelCls}>Add Insurance</label><select className={selectCls}><option>No</option><option>Yes</option></select></div>
+              <div>
+                <label className={labelCls}>Carton Type &amp; Quantity</label>
+                <div className="flex items-center gap-2">
+                  <select className={`${selectCls} flex-1`}>
+                    <option value="">Select Carton Type</option>
+                    <option>EMS Cartons Extra Large</option>
+                    <option>EMS Cartons Large</option>
+                    <option>EMS Cartons Medium</option>
+                    <option>EMS Cartons Small</option>
+                    <option>EMS Cartons Very Small</option>
+                    <option>Parcel Cartons Extra Large</option>
+                    <option>Parcel Cartons Extra Small</option>
+                    <option>Parcel Cartons Large</option>
+                    <option>Parcel Cartons Medium</option>
+                    <option>Parcel Cartons Small</option>
+                  </select>
+                  <input type="number" placeholder="Qty" className="w-20 px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-center" min="1" />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-black/5 flex items-center justify-between gap-4">
+            <TotalAmountSummaryBox total={0} duty={0} carton={0} shipping={0} />
+            <button className="flex items-center justify-center gap-2 w-[280px] py-3.5 bg-gp-orange text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 active:scale-[0.98] transition-all"><Plus size={18} /> Create Letter Consignment</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewForeignLetters({ user }: { user: any }) {
+  const [selectedConsignment, setSelectedConsignment] = useState<any>(null);
+  const [editingConsignment, setEditingConsignment] = useState<any>(null);
+  const [selectedBranch, setSelectedBranch] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+
+  const branchOptions = [
+    { value: "", label: "All Branches" },
+    { value: "general", label: "GPO Accra" },
+    { value: "accra-north", label: "Accra North" },
+    { value: "kumasi", label: "Kumasi Central" },
+    { value: "takoradi", label: "Takoradi Harbor" },
+  ];
+
+  const userOptions = [
+    { value: "", label: "All Users" },
+    { value: "user1", label: "John Doe" },
+    { value: "user2", label: "Jane Smith" },
+    { value: "user3", label: "Robert Mensah" },
+    { value: "user4", label: "Sarah Owusu" },
+  ];
+
+  const mockData = [
+    { id: 1, tracking: 'RR066454599GH', date: '10th Apr 2026', shipper: 'KWAME ASANTE', consignee: 'JOHN MENSAH', sCity: 'ACCRA', rCity: 'NEW YORK, NY' },
+    { id: 2, tracking: 'RR066453695GH', date: '10th Apr 2026', shipper: 'ABENA BOATENG', consignee: 'CLAIRE ADAMS', sCity: 'ACCRA', rCity: 'LONDON, UK' },
+    { id: 3, tracking: 'RR066452615GH', date: '10th Apr 2026', shipper: 'KOFI AGYEMANG', consignee: 'PETER NKRUMAH', sCity: 'ACCRA', rCity: 'TORONTO, ON' },
+    { id: 4, tracking: 'RR066452425GH', date: '10th Apr 2026', shipper: 'AKOSUA FRIMPONG', consignee: 'LINDA OSEI', sCity: 'ACCRA', rCity: 'SYDNEY, NSW' },
+    { id: 5, tracking: 'RR066451270GH', date: '10th Apr 2026', shipper: 'YEBOAH AMPONSAH', consignee: 'GRACE APPIAH', sCity: 'ACCRA', rCity: 'BERLIN, DE' },
+  ];
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gp-blue/10 flex items-center justify-center"><Mail size={20} className="text-gp-blue" /></div>
+            Foreign Letter Consignments
+          </h2>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">List of all foreign letter consignments</p>
+        </div>
+        <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all"><RefreshCcw size={15} /> Refresh</button>
+          <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all"><Plus size={15} /> New Letter</button>
+        </div>
+      </div>
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex flex-col gap-5 p-6 border-b border-black/5 bg-gradient-to-r from-gp-blue/[0.03] to-transparent">
+          <div className="flex flex-col xl:flex-row items-center gap-4 w-full">
+            <div className="relative flex-1 w-full xl:w-auto">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gp-blue/40" size={18} />
+              <input
+                type="text"
+                placeholder="Search by tracking no, shipper, consignee..."
+                className="w-full h-[46px] pl-11 pr-4 py-3 rounded-2xl border border-black/5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm font-medium text-gray-700 transition-all placeholder:text-gray-400"
+              />
+            </div>
+            
+            <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full xl:w-auto">
+              <div className="flex items-center gap-3 w-full md:w-auto bg-white border border-black/5 rounded-2xl shadow-sm px-4 h-[46px]">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">From:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date From" />
+                </div>
+                <div className="w-px h-6 bg-black/5 hidden md:block" />
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">To:</span>
+                  <input type="date" className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" title="Date To" />
+                </div>
+              </div>
+              
+              <SearchableSelect 
+                options={branchOptions} 
+                value={selectedBranch} 
+                onChange={setSelectedBranch} 
+                placeholder="All Branches" 
+                icon={MapPin} 
+              />
+              
+              <SearchableSelect 
+                options={userOptions} 
+                value={selectedUser} 
+                onChange={setSelectedUser} 
+                placeholder="All Users" 
+                icon={User} 
+              />
+            </div>
+          </div>
+          
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full pt-1">
+            <div className="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-sm inline-flex items-center gap-2">
+              Viewing <span className="font-bold text-gp-blue bg-gp-blue/10 px-2 py-0.5 rounded-md">1–5</span> of <span className="font-bold text-gray-900">5000</span> records
+            </div>
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue text-sm font-bold transition-all active:scale-95 group">
+                <Printer size={16} className="group-hover:scale-110 transition-transform" /> Print Report
+              </button>
+              <button className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all active:scale-95 group">
+                <Download size={16} className="group-hover:translate-y-0.5 transition-transform" /> Export CSV
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm whitespace-nowrap">
+            <thead>
+              <tr className="bg-gp-blue/[0.04] border-b border-black/5">
+                {['#','Date','Tracking No.','Shipper','Consignee',"Sender's City","Receiver's City",'Action'].map((h, i) => (
+                  <th key={i} className={`py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider ${i === 2 ? 'text-gp-blue' : 'text-gp-blue/60'}`}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-black/[0.04]">
+              {mockData.map((item, idx) => (
+                <tr key={idx} onClick={() => setSelectedConsignment(item)} className="hover:bg-gp-blue/[0.02] transition-colors group cursor-pointer">
+                  <td className="py-4 px-6 text-gray-400 text-xs font-bold">{item.id}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.date}</td>
+                  <td className="py-4 px-6"><span className="font-bold text-gp-blue text-sm tracking-wide">{item.tracking}</span></td>
+                  <td className="py-4 px-6 font-semibold text-gray-800 text-sm">{item.shipper}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.consignee}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.sCity}</td>
+                  <td className="py-4 px-6 text-gray-500 text-sm">{item.rCity}</td>
+                  <td className="py-4 px-6">
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setSelectedConsignment(item); }}
+                        className="p-2 bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue rounded-xl transition-all hover:scale-110"
+                        title="View Details"
+                      >
+                        <Eye size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setEditingConsignment(item); }}
+                        className="p-2 bg-gp-orange/10 hover:bg-gp-orange/20 text-gp-orange rounded-xl transition-all hover:scale-110"
+                        title="Edit Consignment"
+                      >
+                        <Pencil size={15} />
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); }}
+                        className="p-2 bg-red-50 hover:bg-red-100 text-red-500 rounded-xl transition-all hover:scale-110"
+                        title="Delete record"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="flex items-center justify-between px-6 py-4 border-t border-black/5">
+          <div className="text-sm text-gray-500">Showing <span className="font-bold text-gray-900">1</span> to <span className="font-bold text-gray-900">5</span> of <span className="font-bold text-gray-900">5000</span> results</div>
+          <div className="flex gap-2">
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600"><ChevronLeft size={16} /> Previous</button>
+            <button className="px-4 py-2 bg-gp-blue text-white rounded-xl text-sm font-bold shadow-sm">1</button>
+            <button className="px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">2</button>
+            <button className="flex items-center gap-1 px-4 py-2 border border-black/10 rounded-xl hover:bg-black/5 transition-colors text-sm font-medium text-gray-600">Next <ChevronRight size={16} /></button>
+          </div>
+        </div>
+      </div>
+      <ConsignmentDetailsModal isOpen={!!selectedConsignment} onClose={() => setSelectedConsignment(null)} consignment={selectedConsignment} />
+      <EditConsignmentModal isOpen={!!editingConsignment} onClose={() => setEditingConsignment(null)} consignment={editingConsignment} />
+    </div>
+  );
+}
+
+function SellCarton({ user, onSave }: { user: any, onSave: (sale: any) => void }) {
+  const inputCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all";
+  const labelCls = "block text-[10px] font-bold uppercase tracking-wider text-gp-blue/50 mb-1.5 ml-0.5";
+  const selectCls = "w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.03] focus:bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm transition-all text-gray-700";
+
+  const [originPO, setOriginPO] = React.useState(user?.post_office || '');
+  const [cartonName, setCartonName] = React.useState('');
+  const [price, setPrice] = React.useState(0);
+  const [quantity, setQuantity] = React.useState(1);
+  const [receivedFrom, setReceivedFrom] = React.useState('');
+  const [tel, setTel] = React.useState('');
+
+  const cartons = [
+    { name: "EMS Cartons Extra Large", price: 25.00 },
+    { name: "EMS Cartons Large", price: 20.00 },
+    { name: "EMS Cartons Medium", price: 15.00 },
+    { name: "EMS Cartons Small", price: 10.00 },
+    { name: "EMS Cartons Very Small", price: 5.00 },
+    { name: "Parcel Cartons Extra Large", price: 25.00 },
+    { name: "Parcel Cartons Extra Small", price: 5.00 },
+    { name: "Parcel Cartons Large", price: 20.00 },
+    { name: "Parcel Cartons Medium", price: 15.00 },
+    { name: "Parcel Cartons Small", price: 10.00 }
+  ];
+
+  const handleCartonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.value;
+    setCartonName(name);
+    const selected = cartons.find(c => c.name.toUpperCase() === name.toUpperCase());
+    setPrice(selected ? selected.price : 0);
+  };
+
+  const handleSave = () => {
+    if (!cartonName || !originPO) {
+      alert("Please select a Carton and Post Office");
+      return;
+    }
+    const saleNo = `PC${Math.floor(100000 + Math.random() * 899999)}${new Date().getDate()}${new Date().getMonth() + 1}${new Date().getFullYear().toString().slice(-2)}GP`;
+    const newSale = {
+      id: Date.now().toString(),
+      sale_no: saleNo,
+      date_purchased: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase(),
+      carton_name: cartonName.toUpperCase(),
+      qty: quantity,
+      unit_price: price,
+      total_price: price * quantity,
+      post_office: originPO,
+      received_from: receivedFrom,
+      tel: tel,
+      sold_by: user?.full_name || 'SYSTEM ADMIN'
+    };
+    onSave(newSale);
+  };
+
+  return (
+    <div className="space-y-6 max-w-5xl">
+      <div className="flex items-center justify-between">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <h2 className="text-2xl font-black text-gray-800 tracking-tight">New Parcel Carton Sale</h2>
+            <div className="px-2 py-0.5 rounded-md bg-gp-orange/20 text-gp-orange text-[10px] font-bold uppercase tracking-widest">Sale</div>
+          </div>
+          <p className="text-sm text-gray-500 mt-1 ml-[52px]">Process a new parcel carton sale</p>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+        <div className="flex items-center gap-3 px-6 py-4 bg-gp-blue">
+          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center"><Box size={16} className="text-white" /></div>
+          <h3 className="font-bold text-white text-sm uppercase tracking-wide">Sale Details</h3>
+        </div>
+        <div className="p-6 space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+            <div className="space-y-4">
+              <div>
+                <label className={labelCls}>Post Office(branch)</label>
+                <SearchableSelect options={POST_OFFICE_OPTIONS} value={originPO} onChange={setOriginPO} placeholder="Search branch..." className="w-full" />
+              </div>
+              <div><label className={labelCls}>Carton Name</label>
+                <select className={selectCls} value={cartonName} onChange={handleCartonChange}>
+                  <option value="">Please Select Carton Type</option>
+                  {cartons.map(c => <option key={c.name} value={c.name.toUpperCase()}>{c.name.toUpperCase()}</option>)}
+                </select>
+              </div>
+              <div><label className={labelCls}>Price</label><div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/[0.06] text-sm text-gray-700 font-semibold">{price.toFixed(2)}</div></div>
+              <div><label className={labelCls}>Quantity</label><input type="number" className={inputCls} value={quantity} onChange={e => setQuantity(Number(e.target.value))} min="1" /></div>
+            </div>
+            
+            <div className="space-y-4">
+              <div><label className={labelCls}>Received From</label><input type="text" className={inputCls} placeholder="Customer Name" value={receivedFrom} onChange={e => setReceivedFrom(e.target.value)} /></div>
+              <div><label className={labelCls}>Tel. / Mobile</label><input type="text" className={inputCls} placeholder="Phone Number" value={tel} onChange={e => setTel(e.target.value)} /></div>
+            </div>
+
+            {/* Total Display */}
+            <div className="absolute right-0 bottom-0 bg-yellow-50 border border-yellow-200 px-6 py-4 rounded-2xl flex flex-col items-end shadow-sm">
+              <span className="text-xs font-bold text-yellow-800 uppercase tracking-widest mb-1">TOTAL AMT:</span>
+              <span className="text-3xl font-black text-red-600">{(price * quantity).toFixed(2)}</span>
+            </div>
+          </div>
+          <div className="pt-6 border-t border-black/5 flex justify-start">
+            <button 
+              onClick={handleSave}
+              className="flex items-center gap-2 px-8 py-3.5 bg-gp-orange text-white rounded-xl font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 active:scale-[0.98] transition-all"
+            >
+              <Plus size={18} /> Add New Parcel Carton Sale
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ViewCartonSales({ 
+    user, 
+    cartonSales, 
+    onViewDetails,
+    onAddSale
+  }: { 
+    user: any, 
+    cartonSales: any[], 
+    onViewDetails: (sale: any) => void,
+    onAddSale: () => void 
+  }) {
+    const [searchTerm, setSearchTerm] = useState('');
+    const [searchBy, setSearchBy] = useState('Carton Sales No.');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [cartonTypeFilter, setCartonTypeFilter] = useState('');
+    const [selectedBranch, setSelectedBranch] = useState('');
+  
+    const cartons = [
+      "EMS Cartons Extra Large", "EMS Cartons Large", "EMS Cartons Medium", "EMS Cartons Small", "EMS Cartons Very Small",
+      "Parcel Cartons Extra Large", "Parcel Cartons Extra Small", "Parcel Cartons Large", "Parcel Cartons Medium", "Parcel Cartons Small"
+    ];
+
+    const cartonOptions = [
+      { value: "", label: "All Carton Types" },
+      ...cartons.map(c => ({ value: c.toUpperCase(), label: c.toUpperCase() }))
+    ];
+  
+    const filteredSales = cartonSales.filter(sale => {
+      const matchesSearch = !searchTerm || (
+        searchBy === 'Carton Sales No.' ? sale.sale_no.toLowerCase().includes(searchTerm.toLowerCase()) :
+        searchBy === 'Customer Name' ? sale.received_from?.toLowerCase().includes(searchTerm.toLowerCase()) :
+        true
+      );
+      const matchesType = !cartonTypeFilter || sale.carton_name.toUpperCase() === cartonTypeFilter.toUpperCase();
+      const matchesBranch = !selectedBranch || sale.post_office.toUpperCase() === selectedBranch.toUpperCase();
+      return matchesSearch && matchesType && matchesBranch;
+    });
+  
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-black text-gray-800 tracking-tight flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-gp-orange/10 flex items-center justify-center">
+                <Box size={20} className="text-gp-orange" />
+              </div>
+              List of Cartons Sold
+            </h2>
+            <p className="text-sm text-gray-500 mt-1 ml-[52px]">View and manage all carton sales</p>
+          </div>
+          <div className="flex items-center gap-2 ml-[52px] sm:ml-0">
+            <button className="flex items-center gap-2 px-4 py-2.5 rounded-xl border border-black/10 hover:bg-black/5 text-sm font-semibold text-gray-600 transition-all">
+              <RefreshCcw size={15} /> Refresh
+            </button>
+            <button 
+                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all"
+                onClick={onAddSale}
+              >
+                <Plus size={15} /> New Sale
+            </button>
+          </div>
+        </div>
+
+        <div className="bg-white rounded-3xl shadow-sm border border-black/5 overflow-hidden">
+          {/* Joint Search, Filters & Reports Bar */}
+          <div className="flex flex-col gap-5 p-6 border-b border-black/5 bg-gradient-to-r from-gp-blue/[0.03] to-transparent">
+            <div className="flex flex-col xl:flex-row items-center gap-4 w-full">
+              <div className="relative flex-1 w-full xl:w-auto">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gp-blue/40" size={18} />
+                <input
+                  type="text"
+                  placeholder="Search by sales no, customer name..."
+                  value={searchTerm}
+                  onChange={e => setSearchTerm(e.target.value)}
+                  className="w-full h-[46px] pl-11 pr-4 py-3 rounded-2xl border border-black/5 bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-gp-blue/20 focus:border-gp-blue/40 text-sm font-medium text-gray-700 transition-all placeholder:text-gray-400"
+                />
+              </div>
+              
+              <div className="flex flex-wrap md:flex-nowrap items-center gap-3 w-full xl:w-auto">
+                <div className="flex items-center gap-3 w-full md:w-auto bg-white border border-black/5 rounded-2xl shadow-sm px-4 h-[46px]">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">From:</span>
+                    <input 
+                      type="date" 
+                      className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" 
+                      value={startDate} 
+                      onChange={e => setStartDate(e.target.value)}
+                    />
+                  </div>
+                  <div className="w-px h-6 bg-black/5 hidden md:block" />
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-tight">To:</span>
+                    <input 
+                      type="date" 
+                      className="px-1 py-2 rounded-xl bg-transparent focus:outline-none text-sm font-medium text-gray-600 uppercase tracking-wide cursor-pointer" 
+                      value={endDate}
+                      onChange={e => setEndDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+                
+                <SearchableSelect 
+                  options={cartonOptions} 
+                  value={cartonTypeFilter} 
+                  onChange={setCartonTypeFilter} 
+                  placeholder="All Carton Types" 
+                  icon={Box} 
+                  className="w-full md:w-56"
+                />
+
+                <SearchableSelect 
+                  options={[{ value: "", label: "All Branches" }, ...POST_OFFICE_OPTIONS]} 
+                  value={selectedBranch} 
+                  onChange={setSelectedBranch} 
+                  placeholder="All Branches" 
+                  icon={MapPin} 
+                  className="w-full md:w-56"
+                />
+              </div>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 w-full pt-1">
+              <div className="text-sm font-medium text-gray-500 bg-white px-4 py-2 rounded-xl border border-black/5 shadow-sm inline-flex items-center gap-2">
+                Viewing <span className="font-bold text-gp-blue bg-gp-blue/10 px-2 py-0.5 rounded-md">{filteredSales.length > 0 ? `1–${filteredSales.length}` : '0'}</span> of <span className="font-bold text-gray-900">{filteredSales.length}</span> records
+              </div>
+              <div className="flex items-center gap-3 w-full sm:w-auto">
+                <button 
+                  onClick={() => alert("Printing report...")} 
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-blue/10 hover:bg-gp-blue/20 text-gp-blue text-sm font-bold transition-all active:scale-95 group"
+                >
+                  <Printer size={16} className="group-hover:scale-110 transition-transform" /> Print Report
+                </button>
+                <button 
+                  onClick={() => alert("Exporting report...")} 
+                  className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-gp-orange text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:bg-opacity-90 transition-all active:scale-95 group"
+                >
+                  <Download size={16} className="group-hover:translate-y-0.5 transition-transform" /> Export CSV
+                </button>
+              </div>
+            </div>
+          </div>
+  
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left whitespace-nowrap">
+              <thead>
+                <tr className="bg-gp-blue/[0.04] border-b border-black/5">
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">#</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Date</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue">Carton Sales No.</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Carton Name</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Customer Name</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Tel.</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Post Office</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60 text-center">Qty</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60 text-right">Unit Price</th>
+                  <th className="py-3.5 px-6 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60 text-right">Amt(GHC)</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-black/[0.04]">
+                {filteredSales.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} className="px-6 py-12 text-center text-gray-400 font-medium">
+                      <div className="flex flex-col items-center justify-center">
+                        <Box size={40} className="mb-2 opacity-20" />
+                        No sales recorded yet.
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filteredSales.map((sale, idx) => (
+                    <tr 
+                      key={sale.id} 
+                      className="hover:bg-gp-blue/[0.02] transition-colors cursor-pointer group"
+                      onClick={() => onViewDetails(sale)}
+                    >
+                      <td className="py-4 px-6 text-gray-400 text-xs font-bold">{idx + 1}</td>
+                      <td className="py-4 px-6 text-gray-500 text-sm">{sale.date_purchased}</td>
+                      <td className="py-4 px-6">
+                        <span className="font-bold text-gp-blue text-sm tracking-wide uppercase px-2 py-1 bg-gp-blue/5 rounded-lg border border-gp-blue/10 group-hover:bg-gp-blue/10 transition-colors">{sale.sale_no}</span>
+                      </td>
+                      <td className="py-4 px-6 font-semibold text-gray-800 text-sm">{sale.carton_name}</td>
+                      <td className="py-4 px-6 text-gray-500 text-sm font-medium">{sale.received_from || '-'}</td>
+                      <td className="py-4 px-6 text-gray-500 text-sm">{sale.tel || '-'}</td>
+                      <td className="py-4 px-6 text-[10px] font-bold text-gray-500 uppercase tracking-wider">{sale.post_office}</td>
+                      <td className="py-4 px-6 text-center font-bold text-gp-blue">{sale.qty}</td>
+                      <td className="py-4 px-6 text-right text-gray-600 font-medium">{sale.unit_price.toFixed(2)}</td>
+                      <td className="py-4 px-6 text-right font-black text-gray-800">{sale.total_price.toFixed(2)}</td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex items-center justify-between px-6 py-4 border-t border-black/5 bg-gray-50">
+            <span className="text-xs text-gray-500 font-medium">{filteredSales.length} records found</span>
+            <div className="flex items-center gap-1">
+              <button className="p-1.5 rounded-lg hover:bg-black/5 text-gray-500 transition-colors"><ChevronLeft size={16} /></button>
+              <button className="p-1.5 rounded-lg hover:bg-black/5 text-gray-500 transition-colors"><ChevronRight size={16} /></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+
+  function CartonSaleDetails({ 
+    user, 
+    sale, 
+    onBack 
+  }: { 
+    user: any, 
+    sale: any, 
+    onBack: () => void 
+  }) {
+    if (!sale) return null;
+  
+    return (
+      <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="flex items-center justify-between bg-white px-6 py-3 rounded-2xl shadow-sm border border-black/5">
+           <div className="flex items-center gap-4">
+             <button onClick={onBack} className="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500"><ChevronLeft size={20} /></button>
+             <div className="h-6 w-px bg-black/5 mx-1"></div>
+             <button onClick={() => window.location.reload()} className="flex items-center gap-2 text-xs font-bold text-gp-blue hover:text-gp-blue/80 transition-colors"><RefreshCcw size={14} /> Refresh</button>
+             <div className="h-6 w-px bg-black/5 mx-1"></div>
+             <button onClick={() => window.print()} className="flex items-center gap-2 text-xs font-bold text-gp-orange hover:text-gp-orange/80 transition-colors"><Printer size={14} /> Print Receipt</button>
+           </div>
+           <div className="flex items-center gap-4">
+             <div className="flex items-center gap-2 bg-gray-50 border border-black/5 rounded-xl px-3 py-2">
+                <label className="text-[10px] font-bold uppercase text-gray-400">Search Text:</label>
+                <input type="text" className="bg-transparent outline-none text-xs w-32" />
+                <Search size={14} className="text-gray-400" />
+                <div className="h-4 w-px bg-black/5 mx-1"></div>
+                <label className="text-[10px] font-bold uppercase text-gray-400">Search By:</label>
+                <select className="bg-transparent outline-none text-xs font-bold text-gp-blue">
+                  <option>Priority Number</option>
+                </select>
+             </div>
+           </div>
+        </div>
+  
+        <div className="bg-white rounded-3xl shadow-xl border border-black/5 overflow-hidden">
+          <div className="bg-gp-blue px-6 py-4 flex items-center justify-between">
+            <h3 className="text-sm font-black text-white uppercase tracking-widest">
+              Carton Sale: {sale.carton_name} ({sale.sale_no})
+            </h3>
+            <div className="flex items-center gap-2">
+               <ChevronDown size={18} className="text-white/50" />
+               <Settings size={18} className="text-white/50" />
+            </div>
+          </div>
+  
+          <div className="p-0">
+            <table className="w-full border-collapse">
+              <tbody className="text-xs">
+                {[
+                  { label: "Carton No.", value: sale.sale_no, bold: true },
+                  { label: "Post Office:", value: sale.post_office, bold: true },
+                  { label: "Carton Name:", value: sale.carton_name, bold: true },
+                  { label: "Qty:", value: sale.qty },
+                  { label: "Unit Price:", value: `GHC ${sale.unit_price.toFixed(2)}`, bold: true },
+                  { label: "Total Price:", value: `GHC ${sale.total_price.toFixed(2)}`, bold: true },
+                  { label: "Recieved From:", value: sale.received_from || '' },
+                  { label: "Tel. / Mobile", value: sale.tel || '' },
+                  { label: "Date Purchased:", value: sale.date_purchased, bold: true },
+                  { label: "Sold By:", value: sale.sold_by, bold: true },
+                ].map((row, i) => (
+                  <tr key={i} className="border-b border-black/5 last:border-0 hover:bg-gray-50 transition-colors relative group">
+                    <td className="px-6 py-3.5 text-gray-500 font-medium w-48 border-r border-black/5">{row.label}</td>
+                    <td className={`px-6 py-3.5 text-gray-900 ${row.bold ? 'font-black uppercase tracking-wide' : 'font-medium'}`}>
+                      {row.value}
+                      
+                      {row.label === "Total Price:" && (
+                        <div className="absolute right-6 top-1/2 -translate-y-1/2 bg-yellow-50 border border-yellow-200 px-6 py-4 rounded-xl flex flex-col items-end shadow-sm">
+                           <span className="text-[10px] font-bold text-yellow-800 uppercase tracking-widest mb-0.5">TOTAL AMT:</span>
+                           <span className="text-2xl font-black text-red-600">{(sale.total_price).toFixed(2)}</span>
+                        </div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
 export default function App() {
   const [user, setUser] = useState<any>(null);
   const [view, setView] = useState('dashboard');
+  const [isParcelsOpen, setIsParcelsOpen] = useState(false);
+  const [isEmsOpen, setIsEmsOpen] = useState(false);
+  const [isLettersOpen, setIsLettersOpen] = useState(false);
+  const [isCartonSalesOpen, setIsCartonSalesOpen] = useState(false);
+  const [cartonSales, setCartonSales] = useState<any[]>([]);
+  const [selectedCartonSale, setSelectedCartonSale] = useState<any>(null);
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -3507,6 +6094,206 @@ export default function App() {
             <span className="hidden md:block font-medium text-sm">Dashboard</span>
           </button>
 
+          {process.env.NEXT_PUBLIC_SHOW_BETA === 'true' && (
+            <div className="space-y-1">
+              <button
+                onClick={() => setIsParcelsOpen(!isParcelsOpen)}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
+                  ['add-foreign-parcel', 'view-foreign-parcels'].includes(view) || isParcelsOpen
+                    ? 'bg-gp-orange/10 text-white' 
+                    : 'text-white/60 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Package size={20} className={['add-foreign-parcel', 'view-foreign-parcels'].includes(view) ? 'text-gp-orange' : ''} />
+                  <span className="hidden md:block font-medium text-sm">Parcels</span>
+                </div>
+                <div className="hidden md:block">
+                  <ChevronRight size={16} className={`transition-transform duration-200 ${isParcelsOpen ? 'rotate-90 text-gp-orange' : ''}`} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {isParcelsOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden flex flex-col gap-1 ml-4 border-l border-white/10 pl-2"
+                  >
+                    <button
+                      onClick={() => setView('add-foreign-parcel')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'add-foreign-parcel' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Plus size={16} />
+                      <span className="hidden md:block font-medium">Add a Foreign Parcel</span>
+                    </button>
+                    <button
+                      onClick={() => setView('view-foreign-parcels')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'view-foreign-parcels' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Package size={16} />
+                      <span className="hidden md:block font-medium">View Foreign Parcels</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {process.env.NEXT_PUBLIC_SHOW_BETA === 'true' && (
+            <div className="space-y-1">
+              <button
+                onClick={() => setIsEmsOpen(!isEmsOpen)}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
+                  ['add-foreign-ems', 'view-foreign-ems'].includes(view) || isEmsOpen
+                    ? 'bg-gp-orange/10 text-white'
+                    : 'text-white/60 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Zap size={20} className={['add-foreign-ems', 'view-foreign-ems'].includes(view) ? 'text-gp-orange' : ''} />
+                  <span className="hidden md:block font-medium text-sm">Express Mail Service</span>
+                </div>
+                <div className="hidden md:block">
+                  <ChevronRight size={16} className={`transition-transform duration-200 ${isEmsOpen ? 'rotate-90 text-gp-orange' : ''}`} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {isEmsOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden flex flex-col gap-1 ml-4 border-l border-white/10 pl-2"
+                  >
+                    <button
+                      onClick={() => setView('add-foreign-ems')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'add-foreign-ems' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Plus size={16} />
+                      <span className="hidden md:block font-medium">Add a Foreign EMS</span>
+                    </button>
+                    <button
+                      onClick={() => setView('view-foreign-ems')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'view-foreign-ems' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Zap size={16} />
+                      <span className="hidden md:block font-medium">View Foreign EMS</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {process.env.NEXT_PUBLIC_SHOW_BETA === 'true' && (
+            <div className="space-y-1">
+              <button
+                onClick={() => setIsLettersOpen(!isLettersOpen)}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
+                  ['add-foreign-letter', 'view-foreign-letters'].includes(view) || isLettersOpen
+                    ? 'bg-gp-orange/10 text-white'
+                    : 'text-white/60 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Mail size={20} className={['add-foreign-letter', 'view-foreign-letters'].includes(view) ? 'text-gp-orange' : ''} />
+                  <span className="hidden md:block font-medium text-sm">Letters</span>
+                </div>
+                <div className="hidden md:block">
+                  <ChevronRight size={16} className={`transition-transform duration-200 ${isLettersOpen ? 'rotate-90 text-gp-orange' : ''}`} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {isLettersOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden flex flex-col gap-1 ml-4 border-l border-white/10 pl-2"
+                  >
+                    <button
+                      onClick={() => setView('add-foreign-letter')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'add-foreign-letter' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Plus size={16} />
+                      <span className="hidden md:block font-medium">Add a Foreign Letter</span>
+                    </button>
+                    <button
+                      onClick={() => setView('view-foreign-letters')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'view-foreign-letters' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Mail size={16} />
+                      <span className="hidden md:block font-medium">View Foreign Letters</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
+          {process.env.NEXT_PUBLIC_SHOW_BETA === 'true' && (
+            <div className="space-y-1">
+              <button
+                onClick={() => setIsCartonSalesOpen(!isCartonSalesOpen)}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all ${
+                  ['sell-carton', 'view-carton-sales'].includes(view) || isCartonSalesOpen
+                    ? 'bg-gp-orange/10 text-white'
+                    : 'text-white/60 hover:bg-white/5'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <Box size={20} className={['sell-carton', 'view-carton-sales'].includes(view) ? 'text-gp-orange' : ''} />
+                  <span className="hidden md:block font-medium text-sm">Packaging Box Sale</span>
+                </div>
+                <div className="hidden md:block">
+                  <ChevronRight size={16} className={`transition-transform duration-200 ${isCartonSalesOpen ? 'rotate-90 text-gp-orange' : ''}`} />
+                </div>
+              </button>
+              <AnimatePresence>
+                {isCartonSalesOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden flex flex-col gap-1 ml-4 border-l border-white/10 pl-2"
+                  >
+                    <button
+                      onClick={() => setView('sell-carton')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'sell-carton' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Plus size={16} />
+                      <span className="hidden md:block font-medium">Sell Carton</span>
+                    </button>
+                    <button
+                      onClick={() => setView('view-carton-sales')}
+                      className={`w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-all text-sm ${
+                        view === 'view-carton-sales' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5 hover:text-white'
+                      }`}
+                    >
+                      <Box size={16} />
+                      <span className="hidden md:block font-medium">View Carton sales</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          )}
+
           {(!user.permissions || (user.permissions?.pages || []).includes('calculator')) && (
             <button
               onClick={() => setView('landed')}
@@ -3548,6 +6335,13 @@ export default function App() {
               >
                 <Settings size={20} />
                 <span className="hidden md:block font-medium text-sm">Admin Settings</span>
+              </button>
+              <button
+                onClick={() => setView('deletion-logs')}
+                className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'deletion-logs' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+              >
+                <Lock size={20} />
+                <span className="hidden md:block font-medium text-sm">Deletion History</span>
               </button>
             </>
           )}
@@ -3614,6 +6408,36 @@ export default function App() {
               {view === 'admin-permissions' && user.role === 'ADMIN' && <UserPermissionRole />}
               {view === 'settings' && <UserSettings user={user} />}
               {view === 'admin-settings' && user.role === 'ADMIN' && <AdminSettings user={user} setView={setView} />}
+              {view === 'deletion-logs' && user.role === 'ADMIN' && <DeletionLogs formatDate={formatDate} />}
+              {process.env.NEXT_PUBLIC_SHOW_BETA === 'true' && (
+                <>
+                  {view === 'add-foreign-parcel' && <AddForeignParcel user={user} />}
+                  {view === 'view-foreign-parcels' && <ViewForeignParcels user={user} />}
+                  {view === 'add-foreign-ems' && <AddForeignEMS user={user} />}
+                  {view === 'view-foreign-ems' && <ViewForeignEMS user={user} />}
+                  {view === 'add-foreign-letter' && <AddForeignLetter user={user} />}
+                  {view === 'view-foreign-letters' && <ViewForeignLetters user={user} />}
+                  {view === 'sell-carton' && <SellCarton user={user} onSave={(sale) => {
+                    setCartonSales(prev => [sale, ...prev]);
+                    setSelectedCartonSale(sale);
+                    setView('carton-sale-details');
+                  }} />}
+                  {view === 'view-carton-sales' && <ViewCartonSales 
+                    user={user} 
+                    cartonSales={cartonSales} 
+                    onViewDetails={(sale) => {
+                      setSelectedCartonSale(sale);
+                      setView('carton-sale-details');
+                    }} 
+                    onAddSale={() => setView('sell-carton')}
+                  />}
+                  {view === 'carton-sale-details' && <CartonSaleDetails 
+                    user={user} 
+                    sale={selectedCartonSale} 
+                    onBack={() => setView('view-carton-sales')} 
+                  />}
+                </>
+              )}
             </motion.div>
           </AnimatePresence>
         </div>

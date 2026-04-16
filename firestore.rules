@@ -16,5 +16,12 @@ service cloud.firestore {
       allow delete: if request.auth != null && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN';
     }
+
+    // Deletion Logs: Only admins can create (when deleting) and read (to view history)
+    match /deletion_logs/{logId} {
+      allow read, create: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'ADMIN';
+    }
   }
 }
+
