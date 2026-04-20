@@ -1275,7 +1275,7 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             </div>
             <div className="text-right">
               <p className="text-xs font-bold text-black/40 uppercase tracking-widest">{scope === 'ALL' ? 'All Branches' : `Branch: ${user.post_office || 'General Post Office'}`}</p>
-              <p className="text-[10px] font-bold text-black/30 mt-1 uppercase">Printed By: {user.full_name || user.email}</p>
+              <p className="text-[10px] font-bold text-black/30 mt-1 uppercase">Printed By: {user.full_name ? user.full_name.trim().split(/\s+/).map((n: string) => n[0]).join('').toUpperCase() : user.email}</p>
             </div>
           </div>
           <table className="w-full text-left text-sm border-collapse">
@@ -1375,7 +1375,10 @@ function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, is
             const result = selectedTx.response_payload ? JSON.parse(selectedTx.response_payload) : {};
             const dateStr = formatDate(selectedTx.created_at)?.toLocaleDateString() || new Date().toLocaleDateString();
             const branchName = selectedTx.post_office;
-            const userName = selectedTx.user_name || 'System';
+            const rawUserName = selectedTx.user_name || 'System';
+            const userName = rawUserName !== 'System'
+              ? rawUserName.trim().split(/\s+/).map((n: string) => n[0]).join('').toUpperCase()
+              : 'System';
 
             const SingleReceipt = () => (
               <div className="w-full h-full flex flex-col justify-start">
