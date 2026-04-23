@@ -1030,6 +1030,422 @@ function LandedCostForm({ user }: { user: any }) {
   );
 };
 
+function DutyEstimateChecker({ user }: { user: any }) {
+  const [hsCodesData, setHsCodesData] = useState<{ code: string, desc: string }[]>([]);
+  const [descOptions, setDescOptions] = useState<any[]>([]);
+  const [uniqueHsCodes, setUniqueHsCodes] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch('/data/hs-codes.json')
+      .then(res => res.json())
+      .then(data => {
+        setHsCodesData(data);
+        setDescOptions(data.map((d: any) => ({ label: d.desc, sub: d.code, original: d })));
+        const unique = Array.from(new Set(data.map((d: any) => d.code)));
+        setUniqueHsCodes(unique.map(code => {
+          const match = data.find((d: any) => d.code === code);
+          return { label: code as string, sub: match?.desc || '', original: match };
+        }));
+      })
+      .catch(err => console.error("Failed to load HS codes", err));
+  }, []);
+
+  const [formData, setFormData] = useState({
+    currency: 'GHS',
+    ship_from_country: 'GH',
+    tracking_number: 'CP225658529GH',
+    ship_to: { country: 'US', state: 'NEW YORK', postal_code: '10001', city: 'NEW YORK' },
+    items: [{ id: Date.now() + Math.random(), description: '', amount: 0, quantity: '', hs_code: '', country_of_origin: 'GH' }],
+    shipping: { amount: 0, service_level: 'standard' }
+  });
+  const [result, setResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleCalculate = async () => {
+    // Item validations
+    for (let i = 0; i < formData.items.length; i++) {
+      const item = formData.items[i];
+      const itemNum = formData.items.length > 1 ? ` for item ${i + 1}` : "";
+
+      if (!item.description?.trim()) {
+        setError(`Please provide a Description${itemNum}`);
+        return;
+      }
+      if (!item.amount || Number(item.amount) <= 0) {
+        setError(`Please provide a valid Price${itemNum}`);
+        return;
+      }
+      if (!item.quantity || Number(item.quantity) <= 0) {
+        setError(`Please provide a valid Quantity${itemNum}`);
+        return;
+      }
+      if (!item.hs_code?.trim()) {
+        setError(`Please provide an HS Code${itemNum}`);
+        return;
+      }
+    }
+
+    if (formData.shipping.amount === undefined || formData.shipping.amount === null) {
+      setError("Please provide a Shipping Cost (use 0 if included)");
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    setResult(null);
+    const cleanedData = {
+      ...formData,
+      items: formData.items.map(it => ({
+        ...it,
+        quantity: it.quantity === '' ? 1 : it.quantity
+      }))
+    };
+
+    try {
+      const res = await API.getLandedCost(cleanedData);
+      setResult(res);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setFormData(prev => ({
+      ...prev,
+      items: [{ id: Date.now() + Math.random(), description: '', amount: 0, quantity: '', hs_code: '', country_of_origin: 'GH' }],
+      shipping: { amount: 0, service_level: 'standard' }
+    }));
+    setResult(null);
+    setError('');
+  };
+
+  const addItem = () => {
+    setFormData(prev => ({
+      ...prev,
+      items: [...prev.items, { id: Date.now() + Math.random(), description: '', amount: 0, quantity: '', hs_code: '', country_of_origin: 'GH' }]
+    }));
+  };
+
+  const removeItem = (index: number) => {
+    setFormData(prev => ({
+      ...prev,
+      items: prev.items.filter((_, i) => i !== index)
+    }));
+  };
+
+  const updateItem = (index: number, field: string, value: any) => {
+    setFormData(prev => {
+      const newItems = [...prev.items];
+      newItems[index] = { ...newItems[index], [field]: value };
+      return { ...prev, items: newItems };
+    });
+  };
+
+  const updateMultipleItemFields = (index: number, updates: Record<string, any>) => {
+    setFormData(prev => {
+      const newItems = [...prev.items];
+      newItems[index] = { ...newItems[index], ...updates };
+      return { ...prev, items: newItems };
+    });
+  };
+
+  return (
+    <div className="space-y-6 relative">
+      <div className="print:hidden space-y-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Input Section */}
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 space-y-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold flex items-center gap-2">
+                <Calculator className="text-gp-blue" />
+                Duty Estimate Checker
+              </h2>
+              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gp-blue/5 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">
+                <Globe size={12} />
+                Zonos API Active
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-xs font-semibold uppercase text-gp-blue mb-1">Currency</label>
+                <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium">
+                  GHS (Ghana Cedis)
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold uppercase text-gp-blue mb-1">Origin Country Code</label>
+                <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium tracking-widest">
+                  GH
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Tracking</h3>
+              <div>
+                <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Tracking Number</label>
+                <input
+                  readOnly
+                  value={formData.tracking_number}
+                  className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Destination</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Country Code</label>
+                  <input
+                    readOnly
+                    value={formData.ship_to.country}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">State/Region</label>
+                  <input
+                    readOnly
+                    value={formData.ship_to.state}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">City</label>
+                  <input
+                    readOnly
+                    value={formData.ship_to.city}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Zip Code</label>
+                  <input
+                    readOnly
+                    value={formData.ship_to.postal_code}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Items</h3>
+                <button onClick={addItem} className="text-gp-blue hover:bg-gp-blue/10 p-1 rounded-full transition-colors">
+                  <Plus size={20} />
+                </button>
+              </div>
+              {formData.items.map((item: any, idx) => (
+                <div key={item.id} className="p-4 bg-gp-light rounded-2xl relative space-y-4 border border-gp-blue/5">
+                  {formData.items.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeItem(idx)}
+                      className="absolute top-3 right-3 z-20 text-red-500 hover:bg-red-50 p-2 rounded-full transition-all active:scale-95 shadow-sm bg-white/80"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  )}
+                  <AutocompleteInput
+                    label="Description"
+                    placeholder="e.g. Cotton T-shirt"
+                    value={item.description}
+                    onChange={(val) => updateItem(idx, 'description', val)}
+                    onSelect={(val, original) => {
+                      updateMultipleItemFields(idx, {
+                        description: val,
+                        hs_code: original.code
+                      });
+                    }}
+                    options={descOptions}
+                  />
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Unit Price</label>
+                      <input
+                        type="number"
+                        placeholder="0.00"
+                        value={item.amount || ''}
+                        onChange={(e) => updateItem(idx, 'amount', e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Quantity</label>
+                      <input
+                        type="number"
+                        placeholder="1"
+                        value={item.quantity || ''}
+                        onChange={(e) => updateItem(idx, 'quantity', e.target.value)}
+                        className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                      />
+                    </div>
+                    <AutocompleteInput
+                      label="HS Code"
+                      placeholder="e.g. 6109.10"
+                      value={item.hs_code}
+                      onChange={(val) => updateItem(idx, 'hs_code', val)}
+                      onSelect={(val, original) => {
+                        const updates: any = { hs_code: val };
+                        if (!item.description) {
+                          updates.description = original.desc;
+                        }
+                        updateMultipleItemFields(idx, updates);
+                      }}
+                      options={uniqueHsCodes}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Shipping</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Shipping Cost</label>
+                  <input
+                    type="number"
+                    placeholder="0.00"
+                    value={formData.shipping.amount || ''}
+                    onChange={(e) => setFormData({ ...formData, shipping: { ...formData.shipping, amount: Number(e.target.value) } })}
+                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Service Level</label>
+                  <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium">
+                    Standard
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button
+              onClick={handleCalculate}
+              disabled={loading}
+              className="w-full bg-gp-orange text-white py-4 rounded-2xl font-bold text-lg hover:bg-gp-orange/90 transition-all shadow-lg shadow-gp-orange/20 disabled:opacity-50"
+            >
+              {loading ? 'Checking...' : 'Check Estimated Duty Cost'}
+            </button>
+          </div>
+
+          {/* Result Section */}
+          <div className="space-y-6">
+            <AnimatePresence mode="wait">
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-red-50 border border-red-100 p-6 rounded-3xl flex items-start gap-4"
+                >
+                  <AlertCircle className="text-red-500 shrink-0" />
+                  <div>
+                    <h3 className="font-bold text-red-900">Estimation Failed</h3>
+                    <p className="text-red-700 text-sm">{error}</p>
+                  </div>
+                </motion.div>
+              )}
+
+              {result ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-white p-8 rounded-3xl shadow-sm border border-black/5 space-y-8"
+                >
+                  <div className="flex justify-between items-center">
+                    <h2 className="text-2xl font-bold text-gp-blue">Estimated Result</h2>
+                    <div className="bg-gp-orange/10 text-gp-orange px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
+                      <CheckCircle2 size={14} />
+                      Verified
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                    <div className="bg-gp-blue p-6 rounded-3xl text-center text-white">
+                      <p className="text-white/70 text-sm uppercase font-bold tracking-widest mb-1">Total Duty Cost</p>
+                      <p className="text-4xl font-bold">
+                        {formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center py-3 border-b border-black/5">
+                        <span className="text-gp-blue font-medium">Items Total</span>
+                        <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-b border-black/5">
+                        <span className="text-gp-blue font-medium">Duties</span>
+                        <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-b border-black/5">
+                        <span className="text-gp-blue font-medium">Taxes</span>
+                        <span className="font-bold">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-b border-black/5">
+                        <span className="text-gp-blue font-medium">Fees</span>
+                        <span className="font-bold">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between items-center py-3 border-b border-black/5">
+                        <span className="text-gp-blue font-medium">Shipping</span>
+                        <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-bold uppercase tracking-widest text-gp-blue/40">Duty & Tax Details</h3>
+                    {(result.duties || []).map((duty: any, idx: number) => (
+                      <div key={`duty-${idx}`} className="flex justify-between items-center p-4 bg-white rounded-2xl border border-gp-blue/5">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gp-blue">{duty.description || 'Import Duty'}</span>
+                          <span className="text-[10px] text-gp-blue/60 uppercase tracking-widest">{duty.item?.productId || duty.type || 'Duty'}</span>
+                        </div>
+                        <span className="text-sm font-bold">{duty.currency || formData.currency} {Number(duty.amount || 0).toFixed(2)}</span>
+                      </div>
+                    ))}
+                    {(result.taxes || []).map((tax: any, idx: number) => (
+                      <div key={`tax-${idx}`} className="flex justify-between items-center p-4 bg-white rounded-2xl border border-gp-blue/5">
+                        <div className="flex flex-col">
+                          <span className="text-sm font-bold text-gp-blue">{tax.description || 'Import Tax'}</span>
+                          <span className="text-[10px] text-gp-blue/60 uppercase tracking-widest">{tax.type || 'Tax'}</span>
+                        </div>
+                        <span className="text-sm font-bold">{tax.currency || formData.currency} {Number(tax.amount || 0).toFixed(2)}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-4 pt-4 border-t border-black/5">
+                    <button
+                      onClick={handleReset}
+                      className="flex-1 bg-black/5 text-gp-blue py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/10 transition-colors"
+                    >
+                      <RefreshCcw size={20} />
+                      Start New Calculation
+                    </button>
+                  </div>
+                </motion.div>
+              ) : !loading && !error && (
+                <div className="h-full flex flex-col items-center justify-center text-gp-blue/40 p-12 border-2 border-dashed border-black/5 rounded-3xl">
+                  <Package size={48} className="mb-4 opacity-20" />
+                  <p className="text-center font-medium">Enter shipment details to estimate duty cost.</p>
+                </div>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 function Reports({ user, formatDate, isAdmin }: { user: any, formatDate: any, isAdmin: boolean }) {
   // Users with 'ALL' report access default to 'ALL' scope
   const [scope, setScope] = useState<'MINE' | 'ALL'>((isAdmin || user?.permissions?.reportAccess === 'ALL') ? 'ALL' : 'MINE');
@@ -6307,6 +6723,16 @@ export default function App() {
             </button>
           )}
 
+          {(!user.permissions || (user.permissions?.pages || []).includes('calculator')) && (
+            <button
+              onClick={() => setView('duty-estimate')}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${view === 'duty-estimate' ? 'bg-gp-orange text-white shadow-lg shadow-gp-orange/20' : 'text-white/60 hover:bg-white/5'}`}
+            >
+              <Calculator size={20} />
+              <span className="hidden md:block font-medium text-sm">Duty Estimate Checker</span>
+            </button>
+          )}
+
           {(!user.permissions || (user.permissions?.pages || []).includes('reports')) && (
             <button
               onClick={() => setView('reports')}
@@ -6376,7 +6802,7 @@ export default function App() {
           <div className="flex items-center gap-2 text-gp-blue/60 text-sm font-medium">
             <span>Dashboard</span>
             <ChevronRight size={14} />
-            <span className="text-[#1a1a1a] capitalize">{view === 'landed' ? 'Duty Cost' : view}</span>
+            <span className="text-[#1a1a1a] capitalize">{view === 'landed' ? 'Duty Cost' : view === 'duty-estimate' ? 'Duty Estimate Checker' : view}</span>
           </div>
           <div className="flex items-center gap-4">
             <div
@@ -6406,6 +6832,7 @@ export default function App() {
             >
               {view === 'dashboard' && <Dashboard user={user} setView={setView} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
               {view === 'landed' && (!user.permissions || (user.permissions?.pages || []).includes('calculator')) && <LandedCostForm user={user} />}
+              {view === 'duty-estimate' && (!user.permissions || (user.permissions?.pages || []).includes('calculator')) && <DutyEstimateChecker user={user} />}
               {view === 'reports' && (!user.permissions || (user.permissions?.pages || []).includes('reports')) && <Reports user={user} formatDate={formatDate} isAdmin={user.role === 'ADMIN'} />}
               {view === 'admin' && user.role === 'ADMIN' && <AdminUsers />}
               {view === 'admin-permissions' && user.role === 'ADMIN' && <UserPermissionRole />}
