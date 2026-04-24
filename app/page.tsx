@@ -1155,291 +1155,261 @@ function DutyEstimateChecker({ user }: { user: any }) {
   return (
     <div className="space-y-6 relative">
       <div className="print:hidden space-y-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Input Section */}
-          <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 space-y-6">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-xl font-bold flex items-center gap-2">
-                <Calculator className="text-gp-blue" />
-                Duty Estimate Checker
-              </h2>
-              <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gp-blue/5 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">
-                <Globe size={12} />
-                Zonos API Active
+        
+        {/* Top Summary Bar */}
+        <div className="bg-white p-4 rounded-3xl shadow-sm border border-black/5 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-4">
+            <div className="bg-gp-blue/5 p-3 rounded-2xl">
+              <Calculator className="text-gp-blue" size={24} />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-gp-blue">Duty Estimate Checker</h2>
+              <p className="text-sm text-gray-500 font-medium">Quick and accurate estimates.</p>
+            </div>
+          </div>
+          
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex flex-col items-end">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Routing</span>
+              <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
+                <span>{formData.ship_from_country}</span>
+                <ChevronRight size={14} className="text-gray-400" />
+                <span>{formData.ship_to.country} ({formData.ship_to.state}, {formData.ship_to.city})</span>
               </div>
             </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-semibold uppercase text-gp-blue mb-1">Currency</label>
-                <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium">
-                  GHS (Ghana Cedis)
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-semibold uppercase text-gp-blue mb-1">Origin Country Code</label>
-                <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium tracking-widest">
-                  GH
-                </div>
-              </div>
+            
+            <div className="flex flex-col items-end">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">Tracking</span>
+              <span className="text-sm font-bold text-gray-700 font-mono tracking-wider">{formData.tracking_number}</span>
             </div>
-
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Tracking</h3>
-              <div>
-                <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Tracking Number</label>
-                <input
-                  readOnly
-                  value={formData.tracking_number}
-                  className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
-                />
-              </div>
+            
+            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gp-blue/5 text-[10px] font-bold uppercase tracking-wider text-gp-blue/60">
+              <Globe size={12} />
+              Zonos
             </div>
+          </div>
+        </div>
 
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Destination</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Country Code</label>
-                  <input
-                    readOnly
-                    value={formData.ship_to.country}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
-                  />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          {/* Left Column - Interactive */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5 space-y-6">
+              
+              <div className="space-y-4">
+                <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-gp-blue">Items to Ship</h3>
+                  <button onClick={addItem} className="flex items-center gap-1 text-sm font-bold text-gp-blue bg-gp-blue/5 px-3 py-1.5 rounded-full hover:bg-gp-blue/10 transition-colors">
+                    <Plus size={16} /> Add Item
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">State/Region</label>
-                  <input
-                    readOnly
-                    value={formData.ship_to.state}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">City</label>
-                  <input
-                    readOnly
-                    value={formData.ship_to.city}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Zip Code</label>
-                  <input
-                    readOnly
-                    value={formData.ship_to.postal_code}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 uppercase cursor-not-allowed"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Items</h3>
-                <button onClick={addItem} className="text-gp-blue hover:bg-gp-blue/10 p-1 rounded-full transition-colors">
-                  <Plus size={20} />
-                </button>
-              </div>
-              {formData.items.map((item: any, idx) => (
-                <div key={item.id} className="p-4 bg-gp-light rounded-2xl relative space-y-4 border border-gp-blue/5">
-                  {formData.items.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => removeItem(idx)}
-                      className="absolute top-3 right-3 z-20 text-red-500 hover:bg-red-50 p-2 rounded-full transition-all active:scale-95 shadow-sm bg-white/80"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  )}
-                  <AutocompleteInput
-                    label="Description"
-                    placeholder="e.g. Cotton T-shirt"
-                    value={item.description}
-                    onChange={(val) => updateItem(idx, 'description', val)}
-                    onSelect={(val, original) => {
-                      updateMultipleItemFields(idx, {
-                        description: val,
-                        hs_code: original.code
-                      });
-                    }}
-                    options={descOptions}
-                  />
-                  <div className="grid grid-cols-3 gap-3">
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Unit Price</label>
-                      <input
-                        type="number"
-                        placeholder="0.00"
-                        value={item.amount || ''}
-                        onChange={(e) => updateItem(idx, 'amount', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Quantity</label>
-                      <input
-                        type="number"
-                        placeholder="1"
-                        value={item.quantity || ''}
-                        onChange={(e) => updateItem(idx, 'quantity', e.target.value)}
-                        className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                      />
-                    </div>
+                {formData.items.map((item: any, idx) => (
+                  <div key={item.id} className="p-4 bg-gp-light rounded-2xl relative space-y-4 border border-gp-blue/5 transition-all hover:border-gp-blue/20 hover:shadow-md">
+                    {formData.items.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => removeItem(idx)}
+                        className="absolute top-3 right-3 z-20 text-red-500 hover:bg-red-50 p-1.5 rounded-full transition-all active:scale-95 shadow-sm bg-white/80"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    )}
                     <AutocompleteInput
-                      label="HS Code"
-                      placeholder="e.g. 6109.10"
-                      value={item.hs_code}
-                      onChange={(val) => updateItem(idx, 'hs_code', val)}
+                      label="Description"
+                      placeholder="e.g. Cotton T-shirt"
+                      value={item.description}
+                      onChange={(val) => updateItem(idx, 'description', val)}
                       onSelect={(val, original) => {
-                        const updates: any = { hs_code: val };
-                        if (!item.description) {
-                          updates.description = original.desc;
-                        }
-                        updateMultipleItemFields(idx, updates);
+                        updateMultipleItemFields(idx, {
+                          description: val,
+                          hs_code: original.code
+                        });
                       }}
-                      options={uniqueHsCodes}
+                      options={descOptions}
+                    />
+                    <div className="grid grid-cols-3 gap-3">
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Unit Price ({formData.currency})</label>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          value={item.amount || ''}
+                          onChange={(e) => updateItem(idx, 'amount', e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-medium"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Quantity</label>
+                        <input
+                          type="number"
+                          placeholder="1"
+                          value={item.quantity || ''}
+                          onChange={(e) => updateItem(idx, 'quantity', e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl border border-black/5 bg-white focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-medium text-center"
+                        />
+                      </div>
+                      <AutocompleteInput
+                        label="HS Code"
+                        placeholder="e.g. 6109.10"
+                        value={item.hs_code}
+                        onChange={(val) => updateItem(idx, 'hs_code', val)}
+                        onSelect={(val, original) => {
+                          const updates: any = { hs_code: val };
+                          if (!item.description) {
+                            updates.description = original.desc;
+                          }
+                          updateMultipleItemFields(idx, updates);
+                        }}
+                        options={uniqueHsCodes}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="space-y-4 pt-4 border-t border-black/5">
+                <h3 className="text-sm font-bold uppercase tracking-wider text-gp-blue">Shipping Details</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Shipping Cost ({formData.currency})</label>
+                    <input
+                      type="number"
+                      placeholder="0.00"
+                      value={formData.shipping.amount || ''}
+                      onChange={(e) => setFormData({ ...formData, shipping: { ...formData.shipping, amount: Number(e.target.value) } })}
+                      className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none font-bold text-lg"
                     />
                   </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-gp-blue/60">Shipping</h3>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Shipping Cost</label>
-                  <input
-                    type="number"
-                    placeholder="0.00"
-                    value={formData.shipping.amount || ''}
-                    onChange={(e) => setFormData({ ...formData, shipping: { ...formData.shipping, amount: Number(e.target.value) } })}
-                    className="w-full px-3 py-2 rounded-xl border border-black/10 focus:outline-none focus:ring-2 focus:ring-gp-blue/10 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  />
-                </div>
-                <div>
-                  <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Service Level</label>
-                  <div className="w-full px-3 py-2 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium">
-                    Standard
+                  <div>
+                    <label className="block text-[10px] font-bold uppercase text-gp-blue/40 mb-1 ml-1">Service Level</label>
+                    <div className="w-full px-3 py-2.5 rounded-xl border border-black/10 bg-black/5 text-gray-500 font-medium">
+                      Standard
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <button
-              onClick={handleCalculate}
-              disabled={loading}
-              className="w-full bg-gp-orange text-white py-4 rounded-2xl font-bold text-lg hover:bg-gp-orange/90 transition-all shadow-lg shadow-gp-orange/20 disabled:opacity-50"
-            >
-              {loading ? 'Checking...' : 'Check Estimated Duty Cost'}
-            </button>
+            </div>
           </div>
 
-          {/* Result Section */}
-          <div className="space-y-6">
-            <AnimatePresence mode="wait">
-              {error && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="bg-red-50 border border-red-100 p-6 rounded-3xl flex items-start gap-4"
-                >
-                  <AlertCircle className="text-red-500 shrink-0" />
-                  <div>
-                    <h3 className="font-bold text-red-900">Estimation Failed</h3>
-                    <p className="text-red-700 text-sm">{error}</p>
-                  </div>
-                </motion.div>
-              )}
+          {/* Right Column - Sticky Result */}
+          <div className="lg:col-span-1 sticky top-6 space-y-6">
+            <div className="bg-white p-6 rounded-3xl shadow-sm border border-black/5">
+              <button
+                onClick={handleCalculate}
+                disabled={loading}
+                className="w-full bg-gp-orange text-white py-4 mb-6 rounded-2xl font-bold text-lg hover:bg-gp-orange/90 transition-all shadow-lg shadow-gp-orange/20 disabled:opacity-50 active:scale-[0.98]"
+              >
+                {loading ? 'Checking...' : 'Check Estimated Duty Cost'}
+              </button>
 
-              {result ? (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-white p-8 rounded-3xl shadow-sm border border-black/5 space-y-8"
-                >
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-bold text-gp-blue">Estimated Result</h2>
-                    <div className="bg-gp-orange/10 text-gp-orange px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-                      <CheckCircle2 size={14} />
-                      Verified
+              <AnimatePresence mode="wait">
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-red-50 border border-red-100 p-4 rounded-2xl flex items-start gap-3 mb-6"
+                  >
+                    <AlertCircle className="text-red-500 shrink-0" size={20} />
+                    <div>
+                      <h3 className="font-bold text-red-900 text-sm">Estimation Failed</h3>
+                      <p className="text-red-700 text-xs mt-1">{error}</p>
                     </div>
-                  </div>
+                  </motion.div>
+                )}
 
-                  <div className="grid grid-cols-1 gap-6">
-                    <div className="bg-gp-blue p-6 rounded-3xl text-center text-white">
-                      <p className="text-white/70 text-sm uppercase font-bold tracking-widest mb-1">Total Duty Cost</p>
-                      <p className="text-4xl font-bold">
+                {result ? (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="space-y-6"
+                  >
+                    <div className="flex justify-between items-center">
+                      <h2 className="text-lg font-bold text-gp-blue">Estimated Result</h2>
+                      <div className="bg-gp-orange/10 text-gp-orange px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider flex items-center gap-1">
+                        <CheckCircle2 size={12} />
+                        Verified
+                      </div>
+                    </div>
+
+                    <div className="bg-gp-blue p-5 rounded-2xl text-center text-white relative overflow-hidden shadow-lg shadow-gp-blue/20">
+                      {/* Decorative elements */}
+                      <div className="absolute -top-10 -right-10 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+                      <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
+                      
+                      <p className="text-white/70 text-[10px] uppercase font-bold tracking-widest mb-1 relative z-10">Total Duty Cost</p>
+                      <p className="text-3xl font-black relative z-10">
                         {formData.currency} {(result.total || result.amountSubtotals?.landedCostTotal || 0).toFixed(2)}
                       </p>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="flex justify-between items-center py-3 border-b border-black/5">
-                        <span className="text-gp-blue font-medium">Items Total</span>
-                        <span className="font-bold">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
+                    <div className="space-y-3 text-sm">
+                      <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                        <span className="text-gray-500 font-medium">Items Total</span>
+                        <span className="font-bold text-gray-800">{formData.currency} {(result.subtotal || result.amountSubtotals?.items || 0).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between items-center py-3 border-b border-black/5">
-                        <span className="text-gp-blue font-medium">Duties</span>
-                        <span className="font-bold">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
+                      <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                        <span className="text-gray-500 font-medium">Duties</span>
+                        <span className="font-bold text-gray-800">{formData.currency} {(result.duty !== undefined ? result.duty : (result.amountSubtotals?.duties || 0)).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between items-center py-3 border-b border-black/5">
-                        <span className="text-gp-blue font-medium">Taxes</span>
-                        <span className="font-bold">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
+                      <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                        <span className="text-gray-500 font-medium">Taxes</span>
+                        <span className="font-bold text-gray-800">{formData.currency} {(result.tax !== undefined ? result.tax : (result.amountSubtotals?.taxes || 0)).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between items-center py-3 border-b border-black/5">
-                        <span className="text-gp-blue font-medium">Fees</span>
-                        <span className="font-bold">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
+                      <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                        <span className="text-gray-500 font-medium">Fees</span>
+                        <span className="font-bold text-gray-800">{formData.currency} {(result.fee !== undefined ? result.fee : (result.amountSubtotals?.fees || 0)).toFixed(2)}</span>
                       </div>
-                      <div className="flex justify-between items-center py-3 border-b border-black/5">
-                        <span className="text-gp-blue font-medium">Shipping</span>
-                        <span className="font-bold">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
+                      <div className="flex justify-between items-center pb-2 border-b border-black/5">
+                        <span className="text-gray-500 font-medium">Shipping</span>
+                        <span className="font-bold text-gray-800">{formData.currency} {(result.shipping !== undefined ? result.shipping : (result.amountSubtotals?.shipping || 0)).toFixed(2)}</span>
                       </div>
                     </div>
-                  </div>
 
-                  <div className="space-y-4">
-                    <h3 className="text-sm font-bold uppercase tracking-widest text-gp-blue/40">Duty & Tax Details</h3>
-                    {(result.duties || []).map((duty: any, idx: number) => (
-                      <div key={`duty-${idx}`} className="flex justify-between items-center p-4 bg-white rounded-2xl border border-gp-blue/5">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gp-blue">{duty.description || 'Import Duty'}</span>
-                          <span className="text-[10px] text-gp-blue/60 uppercase tracking-widest">{duty.item?.productId || duty.type || 'Duty'}</span>
-                        </div>
-                        <span className="text-sm font-bold">{duty.currency || formData.currency} {Number(duty.amount || 0).toFixed(2)}</span>
+                    {((result.duties && result.duties.length > 0) || (result.taxes && result.taxes.length > 0)) && (
+                      <div className="space-y-3 bg-gp-light p-4 rounded-xl border border-gp-blue/5">
+                        <h3 className="text-[10px] font-bold uppercase tracking-widest text-gp-blue/60 mb-2">Duty & Tax Breakdown</h3>
+                        {(result.duties || []).map((duty: any, idx: number) => (
+                          <div key={`duty-${idx}`} className="flex justify-between items-center">
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-gp-blue">{duty.description || 'Import Duty'}</span>
+                              <span className="text-[8px] text-gp-blue/40 uppercase tracking-widest">{duty.item?.productId || duty.type || 'Duty'}</span>
+                            </div>
+                            <span className="text-xs font-bold">{duty.currency || formData.currency} {Number(duty.amount || 0).toFixed(2)}</span>
+                          </div>
+                        ))}
+                        {(result.taxes || []).map((tax: any, idx: number) => (
+                          <div key={`tax-${idx}`} className="flex justify-between items-center">
+                            <div className="flex flex-col">
+                              <span className="text-xs font-bold text-gp-blue">{tax.description || 'Import Tax'}</span>
+                              <span className="text-[8px] text-gp-blue/40 uppercase tracking-widest">{tax.type || 'Tax'}</span>
+                            </div>
+                            <span className="text-xs font-bold">{tax.currency || formData.currency} {Number(tax.amount || 0).toFixed(2)}</span>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                    {(result.taxes || []).map((tax: any, idx: number) => (
-                      <div key={`tax-${idx}`} className="flex justify-between items-center p-4 bg-white rounded-2xl border border-gp-blue/5">
-                        <div className="flex flex-col">
-                          <span className="text-sm font-bold text-gp-blue">{tax.description || 'Import Tax'}</span>
-                          <span className="text-[10px] text-gp-blue/60 uppercase tracking-widest">{tax.type || 'Tax'}</span>
-                        </div>
-                        <span className="text-sm font-bold">{tax.currency || formData.currency} {Number(tax.amount || 0).toFixed(2)}</span>
-                      </div>
-                    ))}
-                  </div>
+                    )}
 
-                  {/* Actions */}
-                  <div className="flex gap-4 pt-4 border-t border-black/5">
-                    <button
-                      onClick={handleReset}
-                      className="flex-1 bg-black/5 text-gp-blue py-4 rounded-2xl font-bold flex items-center justify-center gap-2 hover:bg-black/10 transition-colors"
-                    >
-                      <RefreshCcw size={20} />
-                      Start New Calculation
-                    </button>
+                    {/* Actions */}
+                    <div className="pt-2">
+                      <button
+                        onClick={handleReset}
+                        className="w-full bg-black/5 text-gp-blue py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-black/10 transition-colors text-sm"
+                      >
+                        <RefreshCcw size={16} />
+                        Reset Form
+                      </button>
+                    </div>
+                  </motion.div>
+                ) : !loading && !error && (
+                  <div className="py-8 flex flex-col items-center justify-center text-gp-blue/30 border-2 border-dashed border-black/5 rounded-2xl bg-gp-light/50">
+                    <Package size={40} className="mb-3 opacity-30" />
+                    <p className="text-center font-medium text-sm px-6">Add items and click calculate to see the duty estimate.</p>
                   </div>
-                </motion.div>
-              ) : !loading && !error && (
-                <div className="h-full flex flex-col items-center justify-center text-gp-blue/40 p-12 border-2 border-dashed border-black/5 rounded-3xl">
-                  <Package size={48} className="mb-4 opacity-20" />
-                  <p className="text-center font-medium">Enter shipment details to estimate duty cost.</p>
-                </div>
-              )}
-            </AnimatePresence>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
+
         </div>
       </div>
     </div>
