@@ -7,6 +7,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Ghana Post Duty Cost Portal',
   description: 'A portal for Ghana Post to calculate duty costs via Zonos API, manage users by post office, and view transaction reports.',
+  icons: {
+    icon: '/icon.ico',
+  },
 }
 
 export default function RootLayout({
